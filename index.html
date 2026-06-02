@@ -33,6 +33,13 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.3);
       border-color: rgba(255,255,255,0.15);
     }
+    .glass-card.editing {
+      border-color: rgba(239,68,68,0.4);
+    }
+    .glass-card.editing:hover {
+      transform: none;
+      box-shadow: 0 0 20px rgba(239,68,68,0.15);
+    }
     .filter-btn {
       background: rgba(255,255,255,0.08);
       transition: all 0.2s ease;
@@ -75,10 +82,66 @@
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    .logo-fallback {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: #888;
+      flex-shrink: 0;
+    }
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: rgba(255,255,255,0.1);
+      flex-shrink: 0;
+    }
+    .edit-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ef4444;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: transform 0.15s;
+    }
+    .edit-badge:hover {
+      transform: scale(1.2);
+    }
+    .editing .edit-badge {
+      display: flex;
+    }
+    .edit-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      z-index: 5;
+    }
+    .editing .edit-overlay {
+      display: flex;
+    }
   </style>
 </head>
 <body class="text-white">
-  <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+  <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32">
 
     <!-- Header -->
     <header class="pt-10 pb-6 text-center">
@@ -112,6 +175,14 @@
       </div>
     </div>
 
+    <!-- Edit Mode Banner -->
+    <div id="editBanner" class="hidden mb-4 p-3 rounded-lg bg-red-500/20 border border-red-500/40 text-sm text-red-300 flex items-center gap-2">
+      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+      </svg>
+      编辑模式：点击卡片上的按钮可编辑或删除品牌
+    </div>
+
     <!-- Brand Count -->
     <div class="mb-4 text-sm text-gray-400" id="brandCount"></div>
 
@@ -128,30 +199,46 @@
       <p class="text-sm mt-1">请尝试其他搜索条件</p>
     </div>
 
-    <!-- Add Button (fixed bottom-right) -->
-    <button
-      id="addBtn"
-      class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/30 flex items-center justify-center transition-all hover:scale-110 z-40"
-      title="添加品牌"
-    >
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-      </svg>
-    </button>
+    <!-- Bottom Action Buttons -->
+    <div class="fixed bottom-0 left-0 right-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 pt-4">
+        <div class="flex gap-3 justify-center">
+          <button
+            id="addBtn"
+            class="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/25 transition-all hover:scale-105 text-sm font-medium"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+            </svg>
+            添加
+          </button>
+          <button
+            id="editBtn"
+            class="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/10 shadow-lg transition-all hover:scale-105 text-sm font-medium"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+            </svg>
+            <span id="editBtnText">编辑</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Add Brand Modal -->
-  <div id="addModal" class="fixed inset-0 modal-overlay z-50 hidden items-center justify-center p-4">
+  <!-- Add/Edit Brand Modal -->
+  <div id="brandModal" class="fixed inset-0 modal-overlay z-50 hidden items-center justify-center p-4">
     <div class="glass-card rounded-2xl p-6 w-full max-w-md fade-in">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold">添加品牌</h2>
+        <h2 id="modalTitle" class="text-xl font-semibold">添加品牌</h2>
         <button id="closeModal" class="text-gray-400 hover:text-white transition-colors">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
       </div>
-      <form id="addForm" class="space-y-4">
+      <form id="brandForm" class="space-y-4">
+        <input type="hidden" id="formEditId" value="" />
         <div>
           <label class="block text-sm text-gray-300 mb-1.5">英文名 <span class="text-red-400">*</span></label>
           <input id="formNameEn" type="text" required class="w-full px-3 py-2.5 rounded-lg text-sm" placeholder="如: RELX" />
@@ -188,10 +275,27 @@
             </label>
           </div>
         </div>
-        <button type="submit" class="w-full py-2.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-sm font-medium transition-colors">
+        <button type="submit" id="formSubmitBtn" class="w-full py-2.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-sm font-medium transition-colors">
           添加品牌
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div id="deleteModal" class="fixed inset-0 modal-overlay z-50 hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl p-6 w-full max-w-sm fade-in text-center">
+      <div class="w-14 h-14 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
+        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold mb-2">确认删除</h3>
+      <p class="text-sm text-gray-400 mb-6" id="deleteBrandName">确定要删除此品牌吗？</p>
+      <div class="flex gap-3">
+        <button id="cancelDelete" class="flex-1 py-2.5 rounded-lg bg-white/10 hover:bg-white/15 text-sm transition-colors">取消</button>
+        <button id="confirmDelete" class="flex-1 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-sm font-medium transition-colors">删除</button>
+      </div>
     </div>
   </div>
 
@@ -215,18 +319,23 @@
     let searchQuery = '';
     let debounceTimer = null;
     let logoBase64 = '';
+    let isEditMode = false;
+    let deleteTargetId = null;
 
     const REGIONS = ['全球', '美国', '英国', '俄罗斯', '加拿大'];
     const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
     // ========== Init ==========
     function init() {
-      // Load built-in data
       allBrands = [...BRANDS_DATA];
 
       // Load user-added brands from localStorage
       const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
       allBrands = [...allBrands, ...userBrands];
+
+      // Load user-deleted ids from localStorage
+      const deletedIds = JSON.parse(localStorage.getItem('deletedBrands') || '[]');
+      allBrands = allBrands.filter(b => !deletedIds.includes(b.id));
 
       // Sort by name_en
       allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
@@ -237,19 +346,45 @@
 
       // Events
       document.getElementById('searchInput').addEventListener('input', onSearchInput);
-      document.getElementById('addBtn').addEventListener('click', openModal);
+      document.getElementById('addBtn').addEventListener('click', () => openModal());
+      document.getElementById('editBtn').addEventListener('click', toggleEditMode);
       document.getElementById('closeModal').addEventListener('click', closeModal);
-      document.getElementById('addModal').addEventListener('click', function(e) {
+      document.getElementById('brandModal').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
       });
-      document.getElementById('addForm').addEventListener('submit', onAddBrand);
+      document.getElementById('brandForm').addEventListener('submit', onFormSubmit);
       document.getElementById('formLogo').addEventListener('change', onLogoChange);
+      document.getElementById('cancelDelete').addEventListener('click', closeDeleteModal);
+      document.getElementById('confirmDelete').addEventListener('click', onConfirmDelete);
+      document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) closeDeleteModal();
+      });
+    }
+
+    // ========== Edit Mode ==========
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const btn = document.getElementById('editBtn');
+      const text = document.getElementById('editBtnText');
+      const banner = document.getElementById('editBanner');
+
+      if (isEditMode) {
+        btn.classList.remove('bg-white/10', 'hover:bg-white/15', 'border-white/10');
+        btn.classList.add('bg-red-500/20', 'hover:bg-red-500/30', 'border-red-500/40');
+        text.textContent = '退出编辑';
+        banner.classList.remove('hidden');
+      } else {
+        btn.classList.add('bg-white/10', 'hover:bg-white/15', 'border-white/10');
+        btn.classList.remove('bg-red-500/20', 'hover:bg-red-500/30', 'border-red-500/40');
+        text.textContent = '编辑';
+        banner.classList.add('hidden');
+      }
+      renderBrands();
     }
 
     // ========== Filters ==========
     function buildLetterFilter() {
       const container = document.getElementById('letterFilter');
-      // "全部" button already in HTML
       LETTERS.forEach(letter => {
         const count = allBrands.filter(b => getFirstLetter(b.name_en) === letter).length;
         if (count > 0) {
@@ -261,7 +396,6 @@
           container.appendChild(btn);
         }
       });
-      // All button click
       container.querySelector('[data-letter=""]').addEventListener('click', () => setLetter(''));
     }
 
@@ -269,7 +403,7 @@
       const container = document.getElementById('regionFilter');
       REGIONS.forEach(region => {
         const btn = document.createElement('button');
-        btn.className = 'filter-btn px-3 py-1.5 rounded-md text-xs text-gray-300' + (region === currentRegion ? '' : '');
+        btn.className = 'filter-btn px-3 py-1.5 rounded-md text-xs text-gray-300';
         btn.dataset.region = region;
         btn.textContent = region;
         btn.addEventListener('click', () => setRegion(region));
@@ -313,17 +447,12 @@
     function renderBrands() {
       let brands = [...allBrands];
 
-      // Filter by letter
       if (currentLetter) {
         brands = brands.filter(b => getFirstLetter(b.name_en) === currentLetter);
       }
-
-      // Filter by region
       if (currentRegion) {
         brands = brands.filter(b => b.region === currentRegion);
       }
-
-      // Filter by search
       if (searchQuery) {
         brands = brands.filter(b =>
           b.name_en.toLowerCase().includes(searchQuery) ||
@@ -333,8 +462,6 @@
       }
 
       filteredBrands = brands;
-
-      // Update count
       document.getElementById('brandCount').textContent = `共 ${brands.length} 个品牌`;
 
       const container = document.getElementById('brandList');
@@ -371,15 +498,18 @@
 
     function renderCard(brand) {
       const logoHtml = brand.logo
-        ? `<img src="${brand.logo}" alt="${brand.name_en}" class="w-12 h-12 rounded-lg object-contain bg-white/10" />`
-        : `<div class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center text-lg font-semibold text-gray-400">${brand.name_en[0] || '?'}</div>`;
+        ? `<img src="${escapeHtml(brand.logo)}" alt="${escapeHtml(brand.name_en)}" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${brand.name_en[0] || '?'}</div>`
+        : `<div class="logo-fallback">${brand.name_en[0] || '?'}</div>`;
 
       const nameCnHtml = brand.name_cn
         ? `<span class="text-xs text-gray-400">${escapeHtml(brand.name_cn)}</span>`
         : '';
 
+      const editClass = isEditMode ? ' editing' : '';
+      const clickHandler = isEditMode ? '' : `onclick="window.open('${escapeHtml(brand.url)}', '_blank')"`;
+
       return `
-        <div class="glass-card rounded-xl p-4 transition-all duration-200 cursor-pointer" onclick="window.open('${escapeHtml(brand.url)}', '_blank')">
+        <div class="glass-card${editClass} rounded-xl p-4 transition-all duration-200 relative" ${clickHandler} data-brand-id="${brand.id}">
           <div class="flex items-start gap-3">
             ${logoHtml}
             <div class="flex-1 min-w-0">
@@ -396,6 +526,18 @@
             </svg>
             <span class="truncate">${escapeHtml(brand.url)}</span>
           </div>
+          ${isEditMode ? `
+          <div class="edit-overlay">
+            <button onclick="event.stopPropagation();openModal(${brand.id})" class="px-3 py-1.5 rounded-lg bg-blue-500 hover:bg-blue-600 text-xs font-medium transition-colors flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              编辑
+            </button>
+            <button onclick="event.stopPropagation();openDeleteModal(${brand.id},'${escapeHtml(brand.name_en)}')" class="px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 text-xs font-medium transition-colors flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              删除
+            </button>
+          </div>
+          ` : ''}
         </div>
       `;
     }
@@ -408,17 +550,54 @@
     }
 
     // ========== Modal ==========
-    function openModal() {
-      document.getElementById('addModal').classList.remove('hidden');
-      document.getElementById('addModal').classList.add('flex');
+    function openModal(editId) {
+      const modal = document.getElementById('brandModal');
+      const title = document.getElementById('modalTitle');
+      const submitBtn = document.getElementById('formSubmitBtn');
+      const formEditId = document.getElementById('formEditId');
+
+      if (editId) {
+        // Edit mode
+        const brand = allBrands.find(b => b.id === editId);
+        if (!brand) return;
+
+        title.textContent = '编辑品牌';
+        submitBtn.textContent = '保存修改';
+        formEditId.value = editId;
+
+        document.getElementById('formNameEn').value = brand.name_en;
+        document.getElementById('formNameCn').value = brand.name_cn;
+        document.getElementById('formUrl').value = brand.url;
+        document.getElementById('formRegion').value = brand.region;
+
+        if (brand.logo) {
+          logoBase64 = brand.logo;
+          document.getElementById('logoPreview').innerHTML = `<img src="${escapeHtml(brand.logo)}" class="w-12 h-12 rounded-lg object-contain" onerror="this.parentElement.innerHTML='<span class=\\'text-lg font-semibold text-gray-400\\'>${brand.name_en[0] || '?'}</span>'" />`;
+        } else {
+          logoBase64 = '';
+          resetLogoPreview();
+        }
+      } else {
+        // Add mode
+        title.textContent = '添加品牌';
+        submitBtn.textContent = '添加品牌';
+        formEditId.value = '';
+        document.getElementById('brandForm').reset();
+        logoBase64 = '';
+        resetLogoPreview();
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
       document.body.style.overflow = 'hidden';
     }
 
     function closeModal() {
-      document.getElementById('addModal').classList.add('hidden');
-      document.getElementById('addModal').classList.remove('flex');
+      const modal = document.getElementById('brandModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
       document.body.style.overflow = '';
-      document.getElementById('addForm').reset();
+      document.getElementById('brandForm').reset();
       logoBase64 = '';
       resetLogoPreview();
     }
@@ -442,10 +621,11 @@
       reader.readAsDataURL(file);
     }
 
-    // ========== Add Brand ==========
-    function onAddBrand(e) {
+    // ========== Form Submit (Add or Edit) ==========
+    function onFormSubmit(e) {
       e.preventDefault();
 
+      const editId = document.getElementById('formEditId').value;
       const nameEn = document.getElementById('formNameEn').value.trim();
       const nameCn = document.getElementById('formNameCn').value.trim();
       const url = document.getElementById('formUrl').value.trim();
@@ -453,28 +633,103 @@
 
       if (!nameEn || !url) return;
 
-      const newBrand = {
-        id: Date.now(),
-        name_en: nameEn,
-        name_cn: nameCn,
-        url: url,
-        region: region,
-        level: 3,
-        logo: logoBase64
-      };
+      if (editId) {
+        // Edit existing brand
+        const numId = Number(editId);
+        const brandIndex = allBrands.findIndex(b => b.id === numId);
+        if (brandIndex === -1) return;
 
-      // Save to localStorage
+        allBrands[brandIndex].name_en = nameEn;
+        allBrands[brandIndex].name_cn = nameCn;
+        allBrands[brandIndex].url = url;
+        allBrands[brandIndex].region = region;
+        if (logoBase64) {
+          allBrands[brandIndex].logo = logoBase64;
+        }
+
+        // Check if it's a user brand (stored in localStorage)
+        const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
+        const ubIndex = userBrands.findIndex(b => b.id === numId);
+        if (ubIndex !== -1) {
+          userBrands[ubIndex] = { ...allBrands[brandIndex] };
+          localStorage.setItem('userBrands', JSON.stringify(userBrands));
+        } else {
+          // It's a built-in brand - save override to localStorage
+          const overrides = JSON.parse(localStorage.getItem('brandOverrides') || '{}');
+          overrides[numId] = { ...allBrands[brandIndex] };
+          localStorage.setItem('brandOverrides', JSON.stringify(overrides));
+        }
+
+        // Re-sort
+        allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
+        closeModal();
+        renderBrands();
+        showToast('品牌修改成功！');
+      } else {
+        // Add new brand
+        const newBrand = {
+          id: Date.now(),
+          name_en: nameEn,
+          name_cn: nameCn,
+          url: url,
+          region: region,
+          level: 3,
+          logo: logoBase64
+        };
+
+        const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
+        userBrands.push(newBrand);
+        localStorage.setItem('userBrands', JSON.stringify(userBrands));
+
+        allBrands.push(newBrand);
+        allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
+
+        closeModal();
+        buildLetterFilter();
+        renderBrands();
+        showToast('品牌添加成功！');
+      }
+    }
+
+    // ========== Delete ==========
+    function openDeleteModal(id, name) {
+      deleteTargetId = id;
+      document.getElementById('deleteBrandName').textContent = `确定要删除「${name}」吗？此操作不可撤销。`;
+      const modal = document.getElementById('deleteModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+      const modal = document.getElementById('deleteModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      deleteTargetId = null;
+    }
+
+    function onConfirmDelete() {
+      if (!deleteTargetId) return;
+
+      // Remove from allBrands
+      allBrands = allBrands.filter(b => b.id !== deleteTargetId);
+
+      // Check if it's a user brand
       const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
-      userBrands.push(newBrand);
-      localStorage.setItem('userBrands', JSON.stringify(userBrands));
+      const ubIndex = userBrands.findIndex(b => b.id === deleteTargetId);
+      if (ubIndex !== -1) {
+        userBrands.splice(ubIndex, 1);
+        localStorage.setItem('userBrands', JSON.stringify(userBrands));
+      } else {
+        // Built-in brand - add to deleted list
+        const deletedIds = JSON.parse(localStorage.getItem('deletedBrands') || '[]');
+        deletedIds.push(deleteTargetId);
+        localStorage.setItem('deletedBrands', JSON.stringify(deletedIds));
+      }
 
-      // Add to current list
-      allBrands.push(newBrand);
-      allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
-
-      closeModal();
+      closeDeleteModal();
+      buildLetterFilter();
       renderBrands();
-      showToast('品牌添加成功！');
+      showToast('品牌已删除');
     }
 
     // ========== Toast ==========
