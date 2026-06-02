@@ -465,6 +465,10 @@
         showLoginModal();
         return;
       }
+      doExport();
+    }
+
+    function doExport() {
       try {
         const allBrands = getAllBrands();
         const exportObj = allBrands.map(b => ({
@@ -480,7 +484,6 @@
         const blob = new Blob([json], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.style.display = 'none';
         a.href = url;
         a.download = 'brands_data.json';
         document.body.appendChild(a);
@@ -488,7 +491,7 @@
         setTimeout(() => {
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
-        }, 100);
+        }, 200);
         showToast('数据已导出，请将文件发给开发者更新到 brands.js');
       } catch (e) {
         showToast('导出失败：' + e.message);
@@ -550,7 +553,7 @@
         } else if (pendingAction === 'edit') {
           toggleEditMode();
         } else if (pendingAction === 'export') {
-          exportData();
+          doExport();
         }
         pendingAction = null;
       } else {
