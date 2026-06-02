@@ -282,6 +282,42 @@
     </div>
   </div>
 
+  <!-- Login Modal -->
+  <div id="loginModal" class="fixed inset-0 modal-overlay z-[60] hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl p-6 w-full max-w-sm fade-in">
+      <div class="flex items-center justify-center mb-6">
+        <div class="w-14 h-14 rounded-full bg-blue-500/20 flex items-center justify-center">
+          <svg class="w-7 h-7 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+      </div>
+      <h2 class="text-xl font-semibold text-center mb-2">身份验证</h2>
+      <p class="text-sm text-gray-400 text-center mb-6">请输入管理员账号和密码</p>
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-300 mb-1.5">用户名</label>
+          <input id="loginUsername" type="text" required autocomplete="off"
+            class="w-full px-3 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-400 placeholder-gray-500"
+            placeholder="请输入用户名" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-300 mb-1.5">密码</label>
+          <input id="loginPassword" type="password" required autocomplete="off"
+            class="w-full px-3 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-400 placeholder-gray-500"
+            placeholder="请输入密码" />
+        </div>
+        <p id="loginError" class="text-red-400 text-xs text-center hidden">用户名或密码错误</p>
+        <button type="submit" class="w-full py-2.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-sm font-medium transition-colors">
+          确认登录
+        </button>
+      </form>
+      <button id="loginCancel" class="w-full mt-3 py-2.5 rounded-lg bg-white/10 hover:bg-white/15 text-sm text-gray-300 transition-colors">
+        取消
+      </button>
+    </div>
+  </div>
+
   <!-- Delete Confirm Modal -->
   <div id="deleteModal" class="fixed inset-0 modal-overlay z-50 hidden items-center justify-center p-4">
     <div class="glass-card rounded-2xl p-6 w-full max-w-sm fade-in text-center">
@@ -321,6 +357,8 @@
     let logoBase64 = '';
     let isEditMode = false;
     let deleteTargetId = null;
+    let isAuthenticated = false;
+    let pendingAction = null; // 'add' or 'edit'
 
     const REGIONS = ['全球', '美国', '英国', '俄罗斯', '加拿大'];
     const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -346,8 +384,22 @@
 
       // Events
       document.getElementById('searchInput').addEventListener('input', onSearchInput);
-      document.getElementById('addBtn').addEventListener('click', () => openModal());
-      document.getElementById('editBtn').addEventListener('click', toggleEditMode);
+      document.getElementById('addBtn').addEventListener('click', () => {
+        if (!isAuthenticated) {
+          pendingAction = 'add';
+          openLoginModal();
+        } else {
+          openModal();
+        }
+      });
+      document.getElementById('editBtn').addEventListener('click', () => {
+        if (!isAuthenticated) {
+          pendingAction = 'edit';
+          openLoginModal();
+        } else {
+          toggleEditMode();
+        }
+      });
       document.getElementById('closeModal').addEventListener('click', closeModal);
       document.getElementById('brandModal').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
@@ -358,6 +410,13 @@
       document.getElementById('confirmDelete').addEventListener('click', onConfirmDelete);
       document.getElementById('deleteModal').addEventListener('click', function(e) {
         if (e.target === this) closeDeleteModal();
+      });
+
+      // Login modal events
+      document.getElementById('loginForm').addEventListener('submit', onLoginSubmit);
+      document.getElementById('loginCancel').addEventListener('click', closeLoginModal);
+      document.getElementById('loginModal').addEventListener('click', function(e) {
+        if (e.target === this) closeLoginModal();
       });
     }
 
@@ -380,6 +439,46 @@
         banner.classList.add('hidden');
       }
       renderBrands();
+    }
+
+    // ========== Login ==========
+    function openLoginModal() {
+      const modal = document.getElementById('loginModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.getElementById('loginUsername').value = '';
+      document.getElementById('loginPassword').value = '';
+      document.getElementById('loginError').classList.add('hidden');
+      document.getElementById('loginUsername').focus();
+    }
+
+    function closeLoginModal() {
+      const modal = document.getElementById('loginModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      pendingAction = null;
+    }
+
+    function onLoginSubmit(e) {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      if (username === 'admin' && password === 'funan') {
+        isAuthenticated = true;
+        closeLoginModal();
+        showToast('登录成功');
+
+        // Execute pending action
+        if (pendingAction === 'add') {
+          openModal();
+        } else if (pendingAction === 'edit') {
+          toggleEditMode();
+        }
+        pendingAction = null;
+      } else {
+        document.getElementById('loginError').classList.remove('hidden');
+      }
     }
 
     // ========== Filters ==========
@@ -572,7 +671,7 @@
 
         if (brand.logo) {
           logoBase64 = brand.logo;
-          document.getElementById('logoPreview').innerHTML = `<img src="${escapeHtml(brand.logo)}" class="w-12 h-12 rounded-lg object-contain" onerror="this.parentElement.innerHTML='<span class=\\'text-lg font-semibold text-gray-400\\'>${brand.name_en[0] || '?'}</span>'" />`;
+          document.getElementById('logoPreview').innerHTML = `<img src="${escapeHtml(brand.logo)}" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${brand.name_en[0] || '?'}</div>`;
         } else {
           logoBase64 = '';
           resetLogoPreview();
