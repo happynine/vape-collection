@@ -1,33 +1,492 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="扣子编程，你的 AI 开发伙伴已就位" />
-    <title>扣子编程 - AI 开发伙伴</title>
-    <link rel="stylesheet" href="/styles/main.css" />
-  </head>
-  <body>
-    <div id="app">
-      <main class="main-wrapper">
-        <div class="content-container">
-          <img
-            src="https://lf-coze-web-cdn.coze.cn/obj/eden-cn/lm-lgvj/ljhwZthlaukjlkulzlp/coze-coding/icon/coze-coding.gif"
-            alt="扣子编程 Logo"
-            class="logo-image"
-          />
-          <div>
-            <div class="text-container">
-              <h1 class="heading">
-                应用开发中
-              </h1>
-              <p class="description">
-                请稍后，页面即将呈现
-              </p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vape品牌商官网查找系统</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: { 900: '#0f0f1a', 800: '#1a1a2e', 700: '#252540' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.cn/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+      min-height: 100vh;
+    }
+    .glass-card {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .glass-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      border-color: rgba(255,255,255,0.15);
+    }
+    .filter-btn {
+      background: rgba(255,255,255,0.08);
+      transition: all 0.2s ease;
+    }
+    .filter-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+    .filter-btn.active {
+      background: #ffffff;
+      color: #0f0f1a;
+      font-weight: 600;
+    }
+    .letter-anchor {
+      scroll-margin-top: 80px;
+    }
+    .modal-overlay {
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+    }
+    input, select, textarea {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #60a5fa;
+      background: rgba(255,255,255,0.12);
+    }
+    select option {
+      background: #1a1a2e;
+      color: #fff;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+    .fade-in { animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="text-white">
+  <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+
+    <!-- Header -->
+    <header class="pt-10 pb-6 text-center">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mb-2">Vape品牌商官网查找系统</h1>
+      <p class="text-gray-400 text-sm">快速查找全球 Vape 品牌官方网站信息</p>
+    </header>
+
+    <!-- Search -->
+    <div class="max-w-xl mx-auto mb-6 relative">
+      <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="搜索品牌名称、中文名或官网地址..."
+        class="w-full pl-12 pr-4 py-3 rounded-full text-sm placeholder-gray-400"
+      />
+    </div>
+
+    <!-- A-Z Filter -->
+    <div class="mb-4 overflow-x-auto pb-2">
+      <div id="letterFilter" class="flex gap-1.5 justify-center flex-wrap">
+        <button class="filter-btn px-2.5 py-1 rounded-md text-xs text-gray-300 active" data-letter="">全部</button>
+      </div>
+    </div>
+
+    <!-- Region Filter -->
+    <div class="mb-8 overflow-x-auto pb-2">
+      <div id="regionFilter" class="flex gap-2 justify-center flex-wrap">
+      </div>
+    </div>
+
+    <!-- Brand Count -->
+    <div class="mb-4 text-sm text-gray-400" id="brandCount"></div>
+
+    <!-- Brand Cards Container -->
+    <div id="brandList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden text-center py-20 text-gray-500">
+      <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <p class="text-lg">未找到匹配的品牌</p>
+      <p class="text-sm mt-1">请尝试其他搜索条件</p>
+    </div>
+
+    <!-- Add Button (fixed bottom-right) -->
+    <button
+      id="addBtn"
+      class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/30 flex items-center justify-center transition-all hover:scale-110 z-40"
+      title="添加品牌"
+    >
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Add Brand Modal -->
+  <div id="addModal" class="fixed inset-0 modal-overlay z-50 hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl p-6 w-full max-w-md fade-in">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold">添加品牌</h2>
+        <button id="closeModal" class="text-gray-400 hover:text-white transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <form id="addForm" class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-300 mb-1.5">英文名 <span class="text-red-400">*</span></label>
+          <input id="formNameEn" type="text" required class="w-full px-3 py-2.5 rounded-lg text-sm" placeholder="如: RELX" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-300 mb-1.5">中文名</label>
+          <input id="formNameCn" type="text" class="w-full px-3 py-2.5 rounded-lg text-sm" placeholder="如: 悦刻" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-300 mb-1.5">官网地址 <span class="text-red-400">*</span></label>
+          <input id="formUrl" type="url" required class="w-full px-3 py-2.5 rounded-lg text-sm" placeholder="https://example.com" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-300 mb-1.5">主打地区</label>
+          <select id="formRegion" class="w-full px-3 py-2.5 rounded-lg text-sm">
+            <option value="全球">全球</option>
+            <option value="美国">美国</option>
+            <option value="英国">英国</option>
+            <option value="俄罗斯">俄罗斯</option>
+            <option value="加拿大">加拿大</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-300 mb-1.5">品牌Logo</label>
+          <div class="flex items-center gap-3">
+            <div id="logoPreview" class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden">
+              <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
             </div>
+            <label class="px-3 py-2 rounded-lg text-sm cursor-pointer filter-btn text-gray-300">
+              选择图片
+              <input id="formLogo" type="file" accept="image/*" class="hidden" />
+            </label>
           </div>
         </div>
-      </main>
+        <button type="submit" class="w-full py-2.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-sm font-medium transition-colors">
+          添加品牌
+        </button>
+      </form>
     </div>
-  </body>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-6 right-6 z-50 hidden">
+    <div class="glass-card rounded-lg px-4 py-3 text-sm flex items-center gap-2 fade-in">
+      <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+      </svg>
+      <span id="toastMsg"></span>
+    </div>
+  </div>
+
+  <script src="brands.js"></script>
+  <script>
+    // ========== State ==========
+    let allBrands = [];
+    let filteredBrands = [];
+    let currentLetter = '';
+    let currentRegion = '';
+    let searchQuery = '';
+    let debounceTimer = null;
+    let logoBase64 = '';
+
+    const REGIONS = ['全球', '美国', '英国', '俄罗斯', '加拿大'];
+    const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+    // ========== Init ==========
+    function init() {
+      // Load built-in data
+      allBrands = [...BRANDS_DATA];
+
+      // Load user-added brands from localStorage
+      const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
+      allBrands = [...allBrands, ...userBrands];
+
+      // Sort by name_en
+      allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
+
+      buildLetterFilter();
+      buildRegionFilter();
+      renderBrands();
+
+      // Events
+      document.getElementById('searchInput').addEventListener('input', onSearchInput);
+      document.getElementById('addBtn').addEventListener('click', openModal);
+      document.getElementById('closeModal').addEventListener('click', closeModal);
+      document.getElementById('addModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+      });
+      document.getElementById('addForm').addEventListener('submit', onAddBrand);
+      document.getElementById('formLogo').addEventListener('change', onLogoChange);
+    }
+
+    // ========== Filters ==========
+    function buildLetterFilter() {
+      const container = document.getElementById('letterFilter');
+      // "全部" button already in HTML
+      LETTERS.forEach(letter => {
+        const count = allBrands.filter(b => getFirstLetter(b.name_en) === letter).length;
+        if (count > 0) {
+          const btn = document.createElement('button');
+          btn.className = 'filter-btn px-2.5 py-1 rounded-md text-xs text-gray-300';
+          btn.dataset.letter = letter;
+          btn.textContent = letter;
+          btn.addEventListener('click', () => setLetter(letter));
+          container.appendChild(btn);
+        }
+      });
+      // All button click
+      container.querySelector('[data-letter=""]').addEventListener('click', () => setLetter(''));
+    }
+
+    function buildRegionFilter() {
+      const container = document.getElementById('regionFilter');
+      REGIONS.forEach(region => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn px-3 py-1.5 rounded-md text-xs text-gray-300' + (region === currentRegion ? '' : '');
+        btn.dataset.region = region;
+        btn.textContent = region;
+        btn.addEventListener('click', () => setRegion(region));
+        container.appendChild(btn);
+      });
+    }
+
+    function getFirstLetter(name) {
+      if (!name) return '#';
+      const ch = name[0].toUpperCase();
+      if (ch >= 'A' && ch <= 'Z') return ch;
+      return '#';
+    }
+
+    function setLetter(letter) {
+      currentLetter = letter;
+      document.querySelectorAll('#letterFilter .filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.letter === letter);
+      });
+      renderBrands();
+    }
+
+    function setRegion(region) {
+      currentRegion = currentRegion === region ? '' : region;
+      document.querySelectorAll('#regionFilter .filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.region === currentRegion);
+      });
+      renderBrands();
+    }
+
+    // ========== Search ==========
+    function onSearchInput(e) {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        searchQuery = e.target.value.trim().toLowerCase();
+        renderBrands();
+      }, 1000);
+    }
+
+    // ========== Render ==========
+    function renderBrands() {
+      let brands = [...allBrands];
+
+      // Filter by letter
+      if (currentLetter) {
+        brands = brands.filter(b => getFirstLetter(b.name_en) === currentLetter);
+      }
+
+      // Filter by region
+      if (currentRegion) {
+        brands = brands.filter(b => b.region === currentRegion);
+      }
+
+      // Filter by search
+      if (searchQuery) {
+        brands = brands.filter(b =>
+          b.name_en.toLowerCase().includes(searchQuery) ||
+          b.name_cn.toLowerCase().includes(searchQuery) ||
+          b.url.toLowerCase().includes(searchQuery)
+        );
+      }
+
+      filteredBrands = brands;
+
+      // Update count
+      document.getElementById('brandCount').textContent = `共 ${brands.length} 个品牌`;
+
+      const container = document.getElementById('brandList');
+      const emptyState = document.getElementById('emptyState');
+
+      if (brands.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      // Group by letter
+      const grouped = {};
+      brands.forEach(b => {
+        const letter = getFirstLetter(b.name_en);
+        if (!grouped[letter]) grouped[letter] = [];
+        grouped[letter].push(b);
+      });
+
+      let html = '';
+      const sortedLetters = Object.keys(grouped).sort();
+
+      sortedLetters.forEach(letter => {
+        html += `<div class="col-span-full"><h2 class="text-lg font-semibold text-white mt-6 mb-3 letter-anchor" id="letter-${letter}">${letter}</h2></div>`;
+        grouped[letter].forEach(brand => {
+          html += renderCard(brand);
+        });
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderCard(brand) {
+      const logoHtml = brand.logo
+        ? `<img src="${brand.logo}" alt="${brand.name_en}" class="w-12 h-12 rounded-lg object-contain bg-white/10" />`
+        : `<div class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center text-lg font-semibold text-gray-400">${brand.name_en[0] || '?'}</div>`;
+
+      const nameCnHtml = brand.name_cn
+        ? `<span class="text-xs text-gray-400">${escapeHtml(brand.name_cn)}</span>`
+        : '';
+
+      return `
+        <div class="glass-card rounded-xl p-4 transition-all duration-200 cursor-pointer" onclick="window.open('${escapeHtml(brand.url)}', '_blank')">
+          <div class="flex items-start gap-3">
+            ${logoHtml}
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-white truncate">${escapeHtml(brand.name_en)}</span>
+                ${nameCnHtml}
+              </div>
+              <div class="text-xs text-gray-500 mt-1">主打地区：${escapeHtml(brand.region)}</div>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center gap-1.5 text-blue-400 text-xs hover:text-blue-300 transition-colors">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+            </svg>
+            <span class="truncate">${escapeHtml(brand.url)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ========== Modal ==========
+    function openModal() {
+      document.getElementById('addModal').classList.remove('hidden');
+      document.getElementById('addModal').classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('addModal').classList.add('hidden');
+      document.getElementById('addModal').classList.remove('flex');
+      document.body.style.overflow = '';
+      document.getElementById('addForm').reset();
+      logoBase64 = '';
+      resetLogoPreview();
+    }
+
+    function resetLogoPreview() {
+      document.getElementById('logoPreview').innerHTML = `
+        <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+      `;
+    }
+
+    function onLogoChange(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        logoBase64 = ev.target.result;
+        document.getElementById('logoPreview').innerHTML = `<img src="${logoBase64}" class="w-12 h-12 rounded-lg object-contain" />`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ========== Add Brand ==========
+    function onAddBrand(e) {
+      e.preventDefault();
+
+      const nameEn = document.getElementById('formNameEn').value.trim();
+      const nameCn = document.getElementById('formNameCn').value.trim();
+      const url = document.getElementById('formUrl').value.trim();
+      const region = document.getElementById('formRegion').value;
+
+      if (!nameEn || !url) return;
+
+      const newBrand = {
+        id: Date.now(),
+        name_en: nameEn,
+        name_cn: nameCn,
+        url: url,
+        region: region,
+        level: 3,
+        logo: logoBase64
+      };
+
+      // Save to localStorage
+      const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
+      userBrands.push(newBrand);
+      localStorage.setItem('userBrands', JSON.stringify(userBrands));
+
+      // Add to current list
+      allBrands.push(newBrand);
+      allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
+
+      closeModal();
+      renderBrands();
+      showToast('品牌添加成功！');
+    }
+
+    // ========== Toast ==========
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2500);
+    }
+
+    // ========== Start ==========
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
 </html>
