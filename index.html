@@ -462,7 +462,7 @@
     function exportData() {
       if (!isAuthenticated) {
         pendingAction = 'export';
-        showLoginModal();
+        openLoginModal();
         return;
       }
       doExport();
@@ -470,8 +470,7 @@
 
     function doExport() {
       try {
-        const brands = getAllBrands();
-        const exportObj = brands.map(b => ({
+        const exportObj = allBrands.map(b => ({
           id: b.id,
           name_en: b.name_en,
           name_cn: b.name_cn,
@@ -512,7 +511,7 @@
         showToast('数据已导出，请将文件发给开发者更新到 brands.js');
       } catch (e) {
         // Fallback: open JSON in new window for manual save
-        const json = JSON.stringify(getAllBrands().map(b => ({
+        const json = JSON.stringify(allBrands.map(b => ({
           id: b.id, name_en: b.name_en, name_cn: b.name_cn,
           url: b.url, region: b.region, level: b.level, logo: b.logo || ''
         })), null, 2);
