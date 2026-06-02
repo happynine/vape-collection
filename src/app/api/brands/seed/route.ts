@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseClient } from '@/storage/database/supabase-client';
+import { getServerClient } from '@/storage/database/supabase-client';
 
 // POST /api/brands/seed - Batch import brands
 export async function POST(request: NextRequest) {
-  const client = getSupabaseClient();
+  const client = getServerClient();
   const body = await request.json();
 
   const { brands } = body as { brands: Array<{

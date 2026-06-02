@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseClient } from '@/storage/database/supabase-client';
+import { getServerClient } from '@/storage/database/supabase-client';
 
 export async function GET(request: NextRequest) {
-  const client = getSupabaseClient();
+  const client = getServerClient();
   const { searchParams } = new URL(request.url);
 
   const search = searchParams.get('search') || '';

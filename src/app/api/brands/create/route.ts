@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseClient } from '@/storage/database/supabase-client';
+import { getServerClient } from '@/storage/database/supabase-client';
 
 // POST /api/brands - Create a new brand
 export async function POST(request: NextRequest) {
-  const client = getSupabaseClient();
+  const client = getServerClient();
   const body = await request.json();
 
   const { name_en, name_cn, url, logo_key, region, level, is_published } = body;

@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseClient } from '@/storage/database/supabase-client';
+import { getServerClient } from '@/storage/database/supabase-client';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const client = getSupabaseClient();
+  const client = getServerClient();
 
   const { data, error } = await client
     .from('brands')
@@ -30,7 +30,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const client = getSupabaseClient();
+  const client = getServerClient();
   const body = await request.json();
 
   const updateData: Record<string, unknown> = { updated_at: new Date().toISOString() };
@@ -65,7 +65,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const client = getSupabaseClient();
+  const client = getServerClient();
 
   const { error } = await client
     .from('brands')
