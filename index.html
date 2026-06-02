@@ -470,8 +470,8 @@
 
     function doExport() {
       try {
-        const allBrands = getAllBrands();
-        const exportObj = allBrands.map(b => ({
+        const brands = getAllBrands();
+        const exportObj = brands.map(b => ({
           id: b.id,
           name_en: b.name_en,
           name_cn: b.name_cn,
@@ -481,20 +481,55 @@
           logo: b.logo || ''
         }));
         const json = JSON.stringify(exportObj, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'brands_data.json';
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(() => {
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }, 200);
+        
+        // Method 1: Using navigator.clipboard + prompt as fallback
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          // IE/Edge legacy
+          const blob = new Blob([json], { type: 'application/json' });
+          window.navigator.msSaveOrOpenBlob(blob, 'brands_data.json');
+        } else {
+          // Modern browsers - create blob URL and use window.open
+          const blob = new Blob([json], { type: 'application/octet-stream' });
+          const url = URL.createObjectURL(blob);
+          
+          // Try opening in new window as download
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'brands_data.json';
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          
+          // Use setTimeout to ensure DOM is ready
+          setTimeout(function() {
+            link.click();
+            setTimeout(function() {
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            }, 1000);
+          }, 100);
+        }
+        
         showToast('数据已导出，请将文件发给开发者更新到 brands.js');
       } catch (e) {
-        showToast('导出失败：' + e.message);
+        // Fallback: open JSON in new window for manual save
+        const json = JSON.stringify(getAllBrands().map(b => ({
+          id: b.id, name_en: b.name_en, name_cn: b.name_cn,
+          url: b.url, region: b.region, level: b.level, logo: b.logo || ''
+        })), null, 2);
+        
+        const w = window.open('', '_blank');
+        if (w) {
+          w.document.write('<pre>' + json + '</pre>');
+          w.document.title = 'brands_data.json - 右键另存为保存';
+          showToast('数据已在新窗口打开，请右键另存为保存');
+        } else {
+          // Final fallback: copy to clipboard
+          navigator.clipboard.writeText(json).then(function() {
+            showToast('数据已复制到剪贴板，请粘贴保存');
+          }).catch(function() {
+            showToast('导出失败，请手动复制');
+          });
+        }
       }
     }
 
@@ -544,18 +579,18 @@
 
       if (username === 'admin' && password === 'funan') {
         isAuthenticated = true;
+        const action = pendingAction;
         closeLoginModal();
         showToast('登录成功');
 
         // Execute pending action
-        if (pendingAction === 'add') {
+        if (action === 'add') {
           openModal();
-        } else if (pendingAction === 'edit') {
+        } else if (action === 'edit') {
           toggleEditMode();
-        } else if (pendingAction === 'export') {
+        } else if (action === 'export') {
           doExport();
         }
-        pendingAction = null;
       } else {
         document.getElementById('loginError').classList.remove('hidden');
       }
