@@ -409,6 +409,15 @@
       const deletedIds = JSON.parse(localStorage.getItem('deletedBrands') || '[]');
       allBrands = allBrands.filter(b => !deletedIds.includes(b.id));
 
+      // Load brand overrides (edits to built-in brands) from localStorage
+      const overrides = JSON.parse(localStorage.getItem('brandOverrides') || '{}');
+      allBrands = allBrands.map(b => {
+        if (overrides[b.id]) {
+          return { ...b, ...overrides[b.id] };
+        }
+        return b;
+      });
+
       // Sort by name_en
       allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
 
