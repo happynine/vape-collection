@@ -272,8 +272,9 @@
             <div class="flex-1">
               <!-- Toggle buttons -->
               <div class="flex mb-2 rounded-lg overflow-hidden border border-white/10">
-                <button type="button" id="logoModeUrl" onclick="switchLogoMode('url')" class="flex-1 px-3 py-1.5 text-xs font-medium bg-blue-500/30 text-blue-300 border-r border-white/10">输入地址</button>
-                <button type="button" id="logoModeUpload" onclick="switchLogoMode('upload')" class="flex-1 px-3 py-1.5 text-xs font-medium bg-white/5 text-gray-400">本地上传</button>
+                <button type="button" id="logoModeUrl" onclick="switchLogoMode('url')" class="flex-1 px-2 py-1.5 text-xs font-medium bg-blue-500/30 text-blue-300 border-r border-white/10">输入地址</button>
+                <button type="button" id="logoModeUpload" onclick="switchLogoMode('upload')" class="flex-1 px-2 py-1.5 text-xs font-medium bg-white/5 text-gray-400 border-r border-white/10">本地上传</button>
+                <button type="button" id="logoModeClipboard" onclick="switchLogoMode('clipboard')" class="flex-1 px-2 py-1.5 text-xs font-medium bg-white/5 text-gray-400">粘贴板</button>
               </div>
               <!-- URL input -->
               <div id="logoUrlArea">
@@ -286,6 +287,14 @@
                   选择图片文件
                   <input id="formLogo" type="file" accept="image/*" class="hidden" />
                 </label>
+              </div>
+              <!-- Clipboard paste -->
+              <div id="logoClipboardArea" class="hidden">
+                <div id="clipboardPasteZone" tabindex="0" class="flex flex-col items-center justify-center px-3 py-3 rounded-lg text-sm bg-white/5 border-2 border-dashed border-white/20 text-gray-400 cursor-pointer hover:border-blue-500/50 hover:text-blue-300 transition-colors focus:border-blue-500/50 focus:text-blue-300">
+                  <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                  <span class="text-xs">Ctrl+V 粘贴图片</span>
+                  <span class="text-[10px] text-gray-500 mt-0.5">或点击此区域后粘贴</span>
+                </div>
               </div>
             </div>
           </div>
@@ -715,7 +724,9 @@
         logoBase64 = '';
         document.getElementById('formLogoUrl').value = '';
         document.getElementById('formLogoValue').value = '';
+        switchLogoMode('url');
         resetLogoPreview();
+        resetClipboardZone();
       }
 
       modal.classList.remove('hidden');
@@ -733,8 +744,8 @@
       document.getElementById('formLogoUrl').value = '';
       document.getElementById('formLogoValue').value = '';
       resetLogoPreview();
+      resetClipboardZone();
     }
-
     function resetLogoPreview() {
       document.getElementById('logoPreview').innerHTML = `
         <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -747,19 +758,24 @@
     function switchLogoMode(mode) {
       const urlBtn = document.getElementById('logoModeUrl');
       const uploadBtn = document.getElementById('logoModeUpload');
+      const clipboardBtn = document.getElementById('logoModeClipboard');
       const urlArea = document.getElementById('logoUrlArea');
       const uploadArea = document.getElementById('logoUploadArea');
+      const clipboardArea = document.getElementById('logoClipboardArea');
 
-      if (mode === 'url') {
-        urlBtn.className = 'flex-1 px-3 py-1.5 text-xs font-medium bg-blue-500/30 text-blue-300 border-r border-white/10';
-        uploadBtn.className = 'flex-1 px-3 py-1.5 text-xs font-medium bg-white/5 text-gray-400';
-        urlArea.classList.remove('hidden');
-        uploadArea.classList.add('hidden');
-      } else {
-        uploadBtn.className = 'flex-1 px-3 py-1.5 text-xs font-medium bg-blue-500/30 text-blue-300 border-r border-white/10';
-        urlBtn.className = 'flex-1 px-3 py-1.5 text-xs font-medium bg-white/5 text-gray-400';
-        uploadArea.classList.remove('hidden');
-        urlArea.classList.add('hidden');
+      const activeCls = 'flex-1 px-2 py-1.5 text-xs font-medium bg-blue-500/30 text-blue-300';
+      const inactiveCls = 'flex-1 px-2 py-1.5 text-xs font-medium bg-white/5 text-gray-400';
+
+      urlBtn.className = (mode === 'url' ? activeCls : inactiveCls) + ' border-r border-white/10';
+      uploadBtn.className = (mode === 'upload' ? activeCls : inactiveCls) + ' border-r border-white/10';
+      clipboardBtn.className = mode === 'clipboard' ? activeCls : inactiveCls;
+
+      urlArea.classList.toggle('hidden', mode !== 'url');
+      uploadArea.classList.toggle('hidden', mode !== 'upload');
+      clipboardArea.classList.toggle('hidden', mode !== 'clipboard');
+
+      if (mode === 'clipboard') {
+        document.getElementById('clipboardPasteZone').focus();
       }
     }
 
@@ -785,6 +801,48 @@
       } else {
         document.getElementById('formLogoValue').value = '';
         resetLogoPreview();
+      }
+    }
+
+    // Clipboard paste handler
+    function handleClipboardPaste(e) {
+      const items = e.clipboardData && e.clipboardData.items;
+      if (!items) return;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          e.preventDefault();
+          const file = items[i].getAsFile();
+          const reader = new FileReader();
+          reader.onload = function(ev) {
+            logoBase64 = ev.target.result;
+            document.getElementById('formLogoUrl').value = '';
+            document.getElementById('formLogoValue').value = logoBase64;
+            document.getElementById('logoPreview').innerHTML = '<img src="' + logoBase64 + '" class="w-12 h-12 rounded-lg object-contain" /><div class="logo-fallback" style="display:none">?</div>';
+            // Update clipboard zone visual
+            const zone = document.getElementById('clipboardPasteZone');
+            zone.innerHTML = '<svg class="w-5 h-5 mb-1 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-xs text-green-400">图片已粘贴</span>';
+          };
+          reader.readAsDataURL(file);
+          return;
+        }
+      }
+    }
+
+    // Attach paste event to clipboard zone and global
+    document.getElementById('clipboardPasteZone').addEventListener('paste', handleClipboardPaste);
+    document.addEventListener('paste', function(e) {
+      // Only handle if clipboard mode is active and modal is open
+      const clipboardArea = document.getElementById('logoClipboardArea');
+      const modal = document.getElementById('brandModal');
+      if (!clipboardArea.classList.contains('hidden') && !modal.classList.contains('hidden')) {
+        handleClipboardPaste(e);
+      }
+    });
+
+    function resetClipboardZone() {
+      const zone = document.getElementById('clipboardPasteZone');
+      if (zone) {
+        zone.innerHTML = '<svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><span class="text-xs">Ctrl+V 粘贴图片</span><span class="text-[10px] text-gray-500 mt-0.5">或点击此区域后粘贴</span>';
       }
     }
 
