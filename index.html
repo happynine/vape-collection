@@ -263,17 +263,24 @@
         </div>
         <div>
           <label class="block text-sm text-gray-300 mb-1.5">品牌Logo</label>
-          <div class="flex items-center gap-3">
-            <div id="logoPreview" class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden">
+          <div class="flex items-center gap-3 mb-2">
+            <div id="logoPreview" class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
               <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
               </svg>
             </div>
-            <label class="px-3 py-2 rounded-lg text-sm cursor-pointer filter-btn text-gray-300">
-              选择图片
+            <div class="flex-1">
+              <input id="formLogoUrl" type="text" placeholder="输入Logo图片地址" class="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50" />
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-500">或</span>
+            <label class="px-3 py-1.5 rounded-lg text-xs cursor-pointer filter-btn text-gray-400">
+              上传本地图片
               <input id="formLogo" type="file" accept="image/*" class="hidden" />
             </label>
           </div>
+          <input type="hidden" id="formLogoValue" value="" />
         </div>
         <button type="submit" id="formSubmitBtn" class="w-full py-2.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-sm font-medium transition-colors">
           添加品牌
@@ -406,6 +413,7 @@
       });
       document.getElementById('brandForm').addEventListener('submit', onFormSubmit);
       document.getElementById('formLogo').addEventListener('change', onLogoChange);
+      document.getElementById('formLogoUrl').addEventListener('input', onLogoUrlInput);
       document.getElementById('cancelDelete').addEventListener('click', closeDeleteModal);
       document.getElementById('confirmDelete').addEventListener('click', onConfirmDelete);
       document.getElementById('deleteModal').addEventListener('click', function(e) {
@@ -670,10 +678,20 @@
         document.getElementById('formRegion').value = brand.region;
 
         if (brand.logo) {
-          logoBase64 = brand.logo;
+          logoBase64 = brand.logo.startsWith('data:') ? brand.logo : '';
+          const logoUrlInput = document.getElementById('formLogoUrl');
+          const logoValueInput = document.getElementById('formLogoValue');
+          logoValueInput.value = brand.logo;
+          if (!brand.logo.startsWith('data:')) {
+            logoUrlInput.value = brand.logo;
+          } else {
+            logoUrlInput.value = '';
+          }
           document.getElementById('logoPreview').innerHTML = `<img src="${escapeHtml(brand.logo)}" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${brand.name_en[0] || '?'}</div>`;
         } else {
           logoBase64 = '';
+          document.getElementById('formLogoUrl').value = '';
+          document.getElementById('formLogoValue').value = '';
           resetLogoPreview();
         }
       } else {
@@ -683,6 +701,8 @@
         formEditId.value = '';
         document.getElementById('brandForm').reset();
         logoBase64 = '';
+        document.getElementById('formLogoUrl').value = '';
+        document.getElementById('formLogoValue').value = '';
         resetLogoPreview();
       }
 
@@ -698,6 +718,8 @@
       document.body.style.overflow = '';
       document.getElementById('brandForm').reset();
       logoBase64 = '';
+      document.getElementById('formLogoUrl').value = '';
+      document.getElementById('formLogoValue').value = '';
       resetLogoPreview();
     }
 
@@ -715,9 +737,23 @@
       const reader = new FileReader();
       reader.onload = function(ev) {
         logoBase64 = ev.target.result;
-        document.getElementById('logoPreview').innerHTML = `<img src="${logoBase64}" class="w-12 h-12 rounded-lg object-contain" />`;
+        document.getElementById('formLogoUrl').value = '';
+        document.getElementById('formLogoValue').value = logoBase64;
+        document.getElementById('logoPreview').innerHTML = `<img src="${logoBase64}" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">?</div>`;
       };
       reader.readAsDataURL(file);
+    }
+
+    function onLogoUrlInput(e) {
+      const url = e.target.value.trim();
+      if (url) {
+        logoBase64 = '';
+        document.getElementById('formLogoValue').value = url;
+        document.getElementById('logoPreview').innerHTML = `<img src="${escapeHtml(url)}" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">?</div>`;
+      } else {
+        document.getElementById('formLogoValue').value = '';
+        resetLogoPreview();
+      }
     }
 
     // ========== Form Submit (Add or Edit) ==========
@@ -744,6 +780,9 @@
         allBrands[brandIndex].region = region;
         if (logoBase64) {
           allBrands[brandIndex].logo = logoBase64;
+        } else {
+          const logoVal = document.getElementById('formLogoValue').value;
+          if (logoVal) allBrands[brandIndex].logo = logoVal;
         }
 
         // Check if it's a user brand (stored in localStorage)
@@ -773,7 +812,7 @@
           url: url,
           region: region,
           level: 3,
-          logo: logoBase64
+          logo: logoBase64 || document.getElementById('formLogoValue').value || ''
         };
 
         const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
