@@ -1,305 +1,205 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vape品牌商官网查找系统</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            dark: { 900: '#0f0f1a', 800: '#1a1a2e', 700: '#252540' }
-          }
-        }
-      }
-    }
-  </script>
   <style>
-    @import url('https://fonts.googleapis.cn/css2?family=Inter:wght@400;500;600;700&display=swap');
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
-      min-height: 100vh;
-    }
-    .glass-card {
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-    .glass-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      border-color: rgba(255,255,255,0.15);
-    }
-    .glass-card.editing {
-      border-color: rgba(239,68,68,0.4);
-    }
-    .glass-card.editing:hover {
-      transform: none;
-      box-shadow: 0 0 20px rgba(239,68,68,0.15);
-    }
-    .filter-btn {
-      background: rgba(255,255,255,0.08);
-      transition: all 0.2s ease;
-    }
-    .filter-btn:hover {
-      background: rgba(255,255,255,0.15);
-    }
-    .filter-btn.active {
-      background: #ffffff;
-      color: #0f0f1a;
-      font-weight: 600;
-    }
-    .letter-anchor {
-      scroll-margin-top: 80px;
-    }
-    .modal-overlay {
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(4px);
-    }
-    input, select, textarea {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: #fff;
-      transition: border-color 0.2s;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: #60a5fa;
-      background: rgba(255,255,255,0.12);
-    }
-    select option {
-      background: #1a1a2e;
-      color: #fff;
-    }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
-    .fade-in { animation: fadeIn 0.3s ease-out; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .logo-fallback {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      font-weight: 700;
-      color: #888;
-      flex-shrink: 0;
-    }
-    .brand-logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      object-fit: contain;
-      background: rgba(255,255,255,0.1);
-      flex-shrink: 0;
-    }
-    .edit-badge {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #ef4444;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 10;
-      transition: transform 0.15s;
-    }
-    .edit-badge:hover {
-      transform: scale(1.2);
-    }
-    .editing .edit-badge {
-      display: flex;
-    }
-    .edit-overlay {
-      position: absolute;
-      inset: 0;
-      border-radius: 12px;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      z-index: 5;
-    }
-    .editing .edit-overlay {
-      display: flex;
-    }
+    body { background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%); min-height: 100vh; }
+    .glass { background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+    .glass-card { background: rgba(255,255,255,0.06); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08); transition: transform 0.2s, box-shadow 0.2s; }
+    .glass-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+    .logo-fallback { display:flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:8px; background:rgba(255,255,255,0.1); color:#888; font-size:18px; font-weight:700; flex-shrink:0; }
+    .letter-active { background: rgba(255,255,255,0.9) !important; color: #0f0f1a !important; }
+    .region-active { background: rgba(255,255,255,0.9) !important; color: #0f0f1a !important; }
+    .tab-active { background: rgba(59,130,246,0.3) !important; color: #93c5fd !important; border-color: rgba(59,130,246,0.5) !important; }
+    .edit-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.5); border-radius:12px; display:flex; align-items:center; justify-content:center; gap:8px; opacity:0; transition:opacity 0.2s; }
+    .glass-card:hover .edit-overlay { opacity:1; }
+    .sub-brand-chip { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); cursor:pointer; transition:background 0.2s; }
+    .sub-brand-chip:hover { background:rgba(255,255,255,0.15); }
   </style>
 </head>
-<body class="text-white">
-  <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32">
-
+<body class="text-white font-sans">
+  <div class="max-w-6xl mx-auto px-4 py-8">
     <!-- Header -->
-    <header class="pt-10 pb-6 text-center">
-      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mb-2">Vape品牌商官网查找系统</h1>
-      <p class="text-gray-400 text-sm">快速查找全球 Vape 品牌官方网站信息</p>
-    </header>
+    <h1 class="text-3xl font-bold text-center mb-2">Vape品牌商官网查找系统</h1>
+    <p class="text-center text-gray-400 text-sm mb-6">快速查找全球 Vape 品牌官方网站信息</p>
 
-    <!-- Search -->
-    <div class="max-w-xl mx-auto mb-6 relative">
-      <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-      </svg>
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="搜索品牌名称、中文名或官网地址..."
-        class="w-full pl-12 pr-4 py-3 rounded-full text-sm placeholder-gray-400"
-      />
+    <!-- Tab Navigation -->
+    <div class="flex justify-center gap-2 mb-6">
+      <button onclick="switchTab('official')" id="tabOfficial" class="tab-active px-6 py-2 rounded-full text-sm font-medium border border-white/10 transition-all">官网</button>
+      <button onclick="switchTab('shop')" id="tabShop" class="px-6 py-2 rounded-full text-sm font-medium bg-white/5 text-gray-400 border border-white/10 transition-all">商城</button>
+      <button onclick="switchTab('group')" id="tabGroup" class="px-6 py-2 rounded-full text-sm font-medium bg-white/5 text-gray-400 border border-white/10 transition-all">集团</button>
     </div>
 
-    <!-- A-Z Filter -->
-    <div class="mb-4 overflow-x-auto pb-2">
-      <div id="letterFilter" class="flex gap-1.5 justify-center flex-wrap">
-        <button class="filter-btn px-2.5 py-1 rounded-md text-xs text-gray-300 active" data-letter="">全部</button>
+    <!-- ==================== OFFICIAL TAB ==================== -->
+    <div id="panelOfficial">
+      <!-- Search -->
+      <div class="relative max-w-2xl mx-auto mb-6">
+        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input id="searchInput" type="text" placeholder="搜索品牌名称、中文名或官网地址..." class="w-full pl-12 pr-4 py-3 rounded-full bg-white/10 backdrop-blur text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+      </div>
+
+      <!-- Letter Filter -->
+      <div id="letterFilter" class="flex flex-wrap justify-center gap-1 mb-4"></div>
+
+      <!-- Region Filter -->
+      <div class="flex flex-wrap justify-center gap-2 mb-6">
+        <button onclick="filterRegion('')" class="region-btn region-active px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">全部</button>
+        <button onclick="filterRegion('全球')" class="region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">全球</button>
+        <button onclick="filterRegion('美国')" class="region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">美国</button>
+        <button onclick="filterRegion('英国')" class="region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">英国</button>
+        <button onclick="filterRegion('俄罗斯')" class="region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">俄罗斯</button>
+        <button onclick="filterRegion('加拿大')" class="region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">加拿大</button>
+      </div>
+
+      <!-- Brand Cards Grid -->
+      <div id="brandGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"></div>
+
+      <!-- Bottom Buttons -->
+      <div id="officialBottomBar" class="flex justify-center gap-3 py-4">
+        <button onclick="requireAuth('add')" class="px-6 py-2.5 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition">添加</button>
+        <button onclick="requireAuth('edit')" id="officialEditBtn" class="px-6 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm font-medium hover:bg-white/20 transition">编辑</button>
+        <button onclick="requireAuth('export')" class="px-6 py-2.5 rounded-lg bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition">导出数据</button>
+      </div>
+      <!-- Edit Mode Bar -->
+      <div id="officialEditBar" class="hidden flex justify-center gap-3 py-4 bg-red-500/20 rounded-lg mb-4">
+        <span class="text-red-300 text-sm flex items-center">编辑模式已开启</span>
+        <button onclick="exitEditMode()" class="px-6 py-2.5 rounded-lg bg-red-500 text-white text-sm font-medium">退出编辑</button>
       </div>
     </div>
 
-    <!-- Region Filter -->
-    <div class="mb-8 overflow-x-auto pb-2">
-      <div id="regionFilter" class="flex gap-2 justify-center flex-wrap">
+    <!-- ==================== SHOP TAB ==================== -->
+    <div id="panelShop" class="hidden">
+      <!-- Search -->
+      <div class="relative max-w-2xl mx-auto mb-6">
+        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input id="shopSearchInput" type="text" placeholder="搜索商城名称、地区或网址..." class="w-full pl-12 pr-4 py-3 rounded-full bg-white/10 backdrop-blur text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+      </div>
+
+      <!-- Region Filter for Shop -->
+      <div class="flex flex-wrap justify-center gap-2 mb-6">
+        <button onclick="filterShopRegion('')" class="shop-region-btn region-active px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">全部</button>
+        <button onclick="filterShopRegion('中国')" class="shop-region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">中国</button>
+        <button onclick="filterShopRegion('美国')" class="shop-region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">美国</button>
+        <button onclick="filterShopRegion('英国')" class="shop-region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">英国</button>
+        <button onclick="filterShopRegion('俄罗斯')" class="shop-region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">俄罗斯</button>
+        <button onclick="filterShopRegion('加拿大')" class="shop-region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">加拿大</button>
+        <button onclick="filterShopRegion('欧洲')" class="shop-region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">欧洲</button>
+        <button onclick="filterShopRegion('东南亚')" class="shop-region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">东南亚</button>
+        <button onclick="filterShopRegion('中东')" class="shop-region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">中东</button>
+      </div>
+
+      <!-- Shop Cards Grid -->
+      <div id="shopGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"></div>
+
+      <!-- Bottom Buttons -->
+      <div class="flex justify-center gap-3 py-4">
+        <button onclick="requireAuth('shop-add')" class="px-6 py-2.5 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition">添加</button>
+        <button onclick="requireAuth('shop-edit')" id="shopEditBtn" class="px-6 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm font-medium hover:bg-white/20 transition">编辑</button>
+        <button onclick="requireAuth('shop-export')" class="px-6 py-2.5 rounded-lg bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition">导出数据</button>
+      </div>
+      <div id="shopEditBar" class="hidden flex justify-center gap-3 py-4 bg-red-500/20 rounded-lg mb-4">
+        <span class="text-red-300 text-sm flex items-center">编辑模式已开启</span>
+        <button onclick="exitShopEditMode()" class="px-6 py-2.5 rounded-lg bg-red-500 text-white text-sm font-medium">退出编辑</button>
       </div>
     </div>
 
-    <!-- Edit Mode Banner -->
-    <div id="editBanner" class="hidden mb-4 p-3 rounded-lg bg-red-500/20 border border-red-500/40 text-sm text-red-300 flex items-center gap-2">
-      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-      </svg>
-      编辑模式：点击卡片上的按钮可编辑或删除品牌
+    <!-- ==================== GROUP TAB ==================== -->
+    <div id="panelGroup" class="hidden">
+      <!-- Search -->
+      <div class="relative max-w-2xl mx-auto mb-6">
+        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input id="groupSearchInput" type="text" placeholder="搜索集团名称或介绍..." class="w-full pl-12 pr-4 py-3 rounded-full bg-white/10 backdrop-blur text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+      </div>
+
+      <!-- Group Cards -->
+      <div id="groupGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"></div>
+
+      <!-- Bottom Buttons -->
+      <div class="flex justify-center gap-3 py-4">
+        <button onclick="requireAuth('group-add')" class="px-6 py-2.5 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition">添加</button>
+        <button onclick="requireAuth('group-edit')" id="groupEditBtn" class="px-6 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm font-medium hover:bg-white/20 transition">编辑</button>
+        <button onclick="requireAuth('group-export')" class="px-6 py-2.5 rounded-lg bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition">导出数据</button>
+      </div>
+      <div id="groupEditBar" class="hidden flex justify-center gap-3 py-4 bg-red-500/20 rounded-lg mb-4">
+        <span class="text-red-300 text-sm flex items-center">编辑模式已开启</span>
+        <button onclick="exitGroupEditMode()" class="px-6 py-2.5 rounded-lg bg-red-500 text-white text-sm font-medium">退出编辑</button>
+      </div>
     </div>
+  </div>
 
-    <!-- Brand Count -->
-    <div class="mb-4 text-sm text-gray-400" id="brandCount"></div>
-
-    <!-- Brand Cards Container -->
-    <div id="brandList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-    </div>
-
-    <!-- Empty State -->
-    <div id="emptyState" class="hidden text-center py-20 text-gray-500">
-      <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
-      <p class="text-lg">未找到匹配的品牌</p>
-      <p class="text-sm mt-1">请尝试其他搜索条件</p>
-    </div>
-
-    <!-- Bottom Action Buttons -->
-    <div class="fixed bottom-0 left-0 right-0 z-40">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 pt-4">
-        <div class="flex gap-3 justify-center">
-          <button
-            id="addBtn"
-            class="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/25 transition-all hover:scale-105 text-sm font-medium"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-            </svg>
-            添加
-          </button>
-          <button
-            id="editBtn"
-            class="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/10 shadow-lg transition-all hover:scale-105 text-sm font-medium"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-            </svg>
-            <span id="editBtnText">编辑</span>
-          </button>
-          <button
-            id="exportBtn"
-            class="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-500/25 transition-all hover:scale-105 text-sm font-medium"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-            </svg>
-            导出数据
-          </button>
+  <!-- ==================== LOGIN MODAL ==================== -->
+  <div id="loginModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div class="glass rounded-2xl p-6 w-full max-w-sm mx-4">
+      <h3 class="text-lg font-bold mb-4 text-center">身份验证</h3>
+      <div class="space-y-3">
+        <input id="loginUser" type="text" placeholder="用户名" class="w-full px-4 py-2.5 rounded-lg bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+        <input id="loginPass" type="password" placeholder="密码" class="w-full px-4 py-2.5 rounded-lg bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+        <p id="loginError" class="text-red-400 text-xs hidden">用户名或密码错误</p>
+        <div class="flex gap-3">
+          <button onclick="closeLoginModal()" class="flex-1 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm">取消</button>
+          <button onclick="onLoginSubmit()" class="flex-1 py-2.5 rounded-lg bg-blue-500 text-white text-sm">确认</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Add/Edit Brand Modal -->
-  <div id="brandModal" class="fixed inset-0 modal-overlay z-50 hidden items-center justify-center p-4">
-    <div class="glass-card rounded-2xl p-6 w-full max-w-md fade-in">
-      <div class="flex items-center justify-between mb-6">
-        <h2 id="modalTitle" class="text-xl font-semibold">添加品牌</h2>
-        <button id="closeModal" class="text-gray-400 hover:text-white transition-colors">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-      </div>
+  <!-- ==================== BRAND MODAL (Official & Shop) ==================== -->
+  <div id="brandModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div class="glass rounded-2xl p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+      <h3 id="modalTitle" class="text-lg font-bold mb-4">添加品牌</h3>
       <form id="brandForm" class="space-y-4">
-        <input type="hidden" id="formEditId" value="" />
+        <input type="hidden" id="formEditId" />
+        <input type="hidden" id="formLogoValue" />
+        <input type="hidden" id="formType" value="official" />
         <div>
-          <label class="block text-sm text-gray-300 mb-1.5">英文名 <span class="text-red-400">*</span></label>
-          <input id="formNameEn" type="text" required class="w-full px-3 py-2.5 rounded-lg text-sm" placeholder="如: RELX" />
+          <label class="block text-xs text-gray-400 mb-1">英文名 *</label>
+          <input id="formNameEn" type="text" required class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
         </div>
         <div>
-          <label class="block text-sm text-gray-300 mb-1.5">中文名</label>
-          <input id="formNameCn" type="text" class="w-full px-3 py-2.5 rounded-lg text-sm" placeholder="如: 悦刻" />
+          <label class="block text-xs text-gray-400 mb-1">中文名</label>
+          <input id="formNameCn" type="text" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
         </div>
         <div>
-          <label class="block text-sm text-gray-300 mb-1.5">官网地址 <span class="text-red-400">*</span></label>
-          <input id="formUrl" type="url" required class="w-full px-3 py-2.5 rounded-lg text-sm" placeholder="https://example.com" />
+          <label id="formUrlLabel" class="block text-xs text-gray-400 mb-1">官网地址 *</label>
+          <input id="formUrl" type="url" required class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
         </div>
         <div>
-          <label class="block text-sm text-gray-300 mb-1.5">主打地区</label>
-          <select id="formRegion" class="w-full px-3 py-2.5 rounded-lg text-sm">
-            <option value="全球">全球</option>
-            <option value="美国">美国</option>
-            <option value="英国">英国</option>
-            <option value="俄罗斯">俄罗斯</option>
-            <option value="加拿大">加拿大</option>
+          <label class="block text-xs text-gray-400 mb-1">主打地区</label>
+          <select id="formRegion" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm">
+            <option value="全球" class="bg-gray-800">全球</option>
+            <option value="美国" class="bg-gray-800">美国</option>
+            <option value="英国" class="bg-gray-800">英国</option>
+            <option value="俄罗斯" class="bg-gray-800">俄罗斯</option>
+            <option value="加拿大" class="bg-gray-800">加拿大</option>
           </select>
         </div>
+        <!-- Shop-specific: country/region detail -->
+        <div id="formCountryWrap" class="hidden">
+          <label class="block text-xs text-gray-400 mb-1">国家/地区详情</label>
+          <input id="formCountry" type="text" placeholder="如：中国深圳、美国加州" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+        </div>
+        <!-- Logo -->
         <div>
-          <label class="block text-sm text-gray-300 mb-1.5">品牌Logo</label>
-          <div class="flex items-center gap-3 mb-3">
-            <div id="logoPreview" class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
-              <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
-            </div>
+          <label class="block text-xs text-gray-400 mb-1">品牌Logo</label>
+          <div class="flex items-center gap-3 mb-2">
+            <div id="logoPreview" class="logo-fallback">?</div>
             <div class="flex-1">
-              <!-- Toggle buttons -->
-              <div class="flex mb-2 rounded-lg overflow-hidden border border-white/10">
-                <button type="button" id="logoModeUrl" onclick="switchLogoMode('url')" class="flex-1 px-2 py-1.5 text-xs font-medium bg-blue-500/30 text-blue-300 border-r border-white/10">输入地址</button>
-                <button type="button" id="logoModeUpload" onclick="switchLogoMode('upload')" class="flex-1 px-2 py-1.5 text-xs font-medium bg-white/5 text-gray-400 border-r border-white/10">本地上传</button>
-                <button type="button" id="logoModeClipboard" onclick="switchLogoMode('clipboard')" class="flex-1 px-2 py-1.5 text-xs font-medium bg-white/5 text-gray-400">粘贴板</button>
+              <div class="flex rounded-lg overflow-hidden border border-white/10 mb-2">
+                <button type="button" onclick="switchLogoMode('url')" id="logoModeUrl" class="flex-1 px-2 py-1.5 text-xs font-medium bg-blue-500/30 text-blue-300 border-r border-white/10">输入地址</button>
+                <button type="button" onclick="switchLogoMode('upload')" id="logoModeUpload" class="flex-1 px-2 py-1.5 text-xs font-medium bg-white/5 text-gray-400 border-r border-white/10">本地上传</button>
+                <button type="button" onclick="switchLogoMode('clipboard')" id="logoModeClipboard" class="flex-1 px-2 py-1.5 text-xs font-medium bg-white/5 text-gray-400">粘贴板</button>
               </div>
-              <!-- URL input -->
               <div id="logoUrlArea">
-                <input id="formLogoUrl" type="text" placeholder="https://example.com/logo.png" class="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50" />
+                <input id="formLogoUrl" type="text" placeholder="输入Logo图片地址" oninput="onLogoUrlInput(event)" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
               </div>
-              <!-- File upload -->
               <div id="logoUploadArea" class="hidden">
-                <label class="flex items-center justify-center px-3 py-2 rounded-lg text-sm bg-white/5 border border-dashed border-white/20 text-gray-400 cursor-pointer hover:border-blue-500/50 hover:text-blue-300 transition-colors">
-                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                  选择图片文件
-                  <input id="formLogo" type="file" accept="image/*" class="hidden" />
-                </label>
+                <input type="file" accept="image/*" onchange="onLogoChange(event)" class="w-full text-sm text-gray-400" />
               </div>
-              <!-- Clipboard paste -->
               <div id="logoClipboardArea" class="hidden">
-                <div id="clipboardPasteZone" tabindex="0" class="flex flex-col items-center justify-center px-3 py-3 rounded-lg text-sm bg-white/5 border-2 border-dashed border-white/20 text-gray-400 cursor-pointer hover:border-blue-500/50 hover:text-blue-300 transition-colors focus:border-blue-500/50 focus:text-blue-300">
+                <div id="clipboardPasteZone" tabindex="0" class="w-full px-3 py-3 rounded-lg bg-white/5 border border-dashed border-white/20 text-center cursor-pointer flex flex-col items-center">
                   <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                   <span class="text-xs">Ctrl+V 粘贴图片</span>
                   <span class="text-[10px] text-gray-500 mt-0.5">或点击此区域后粘贴</span>
@@ -307,584 +207,440 @@
               </div>
             </div>
           </div>
-          <input type="hidden" id="formLogoValue" value="" />
         </div>
-        <button type="submit" id="formSubmitBtn" class="w-full py-2.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-sm font-medium transition-colors">
-          添加品牌
-        </button>
+        <div class="flex gap-3">
+          <button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm">取消</button>
+          <button type="submit" class="flex-1 py-2.5 rounded-lg bg-blue-500 text-white text-sm">保存</button>
+        </div>
       </form>
     </div>
   </div>
 
-  <!-- Login Modal -->
-  <div id="loginModal" class="fixed inset-0 modal-overlay z-[60] hidden items-center justify-center p-4">
-    <div class="glass-card rounded-2xl p-6 w-full max-w-sm fade-in">
-      <div class="flex items-center justify-center mb-6">
-        <div class="w-14 h-14 rounded-full bg-blue-500/20 flex items-center justify-center">
-          <svg class="w-7 h-7 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-          </svg>
-        </div>
-      </div>
-      <h2 class="text-xl font-semibold text-center mb-2">身份验证</h2>
-      <p class="text-sm text-gray-400 text-center mb-6">请输入管理员账号和密码</p>
-      <form id="loginForm" class="space-y-4">
+  <!-- ==================== GROUP MODAL ==================== -->
+  <div id="groupModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div class="glass rounded-2xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+      <h3 id="groupModalTitle" class="text-lg font-bold mb-4">添加集团</h3>
+      <form id="groupForm" class="space-y-4">
+        <input type="hidden" id="groupEditId" />
         <div>
-          <label class="block text-sm text-gray-300 mb-1.5">用户名</label>
-          <input id="loginUsername" type="text" required autocomplete="off"
-            class="w-full px-3 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-400 placeholder-gray-500"
-            placeholder="请输入用户名" />
+          <label class="block text-xs text-gray-400 mb-1">集团名称 *</label>
+          <input id="groupName" type="text" required class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
         </div>
         <div>
-          <label class="block text-sm text-gray-300 mb-1.5">密码</label>
-          <input id="loginPassword" type="password" required autocomplete="off"
-            class="w-full px-3 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-400 placeholder-gray-500"
-            placeholder="请输入密码" />
+          <label class="block text-xs text-gray-400 mb-1">集团介绍</label>
+          <textarea id="groupDesc" rows="3" placeholder="简要介绍集团背景" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm resize-none"></textarea>
         </div>
-        <p id="loginError" class="text-red-400 text-xs text-center hidden">用户名或密码错误</p>
-        <button type="submit" class="w-full py-2.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-sm font-medium transition-colors">
-          确认登录
-        </button>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">集团网址</label>
+          <input id="groupUrl" type="url" placeholder="https://..." class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">集团Logo</label>
+          <input id="groupLogo" type="text" placeholder="Logo图片地址" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">旗下子品牌（从已有品牌中关联）</label>
+          <div class="relative">
+            <input id="groupSubSearch" type="text" placeholder="搜索品牌名关联..." oninput="searchSubBrands()" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+            <div id="subBrandResults" class="hidden absolute top-full left-0 right-0 mt-1 glass rounded-lg max-h-40 overflow-y-auto z-10"></div>
+          </div>
+          <div id="selectedSubBrands" class="flex flex-wrap gap-2 mt-2"></div>
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">手动添加子品牌</label>
+          <div class="flex gap-2">
+            <input id="manualSubName" type="text" placeholder="子品牌名" class="flex-1 px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+            <input id="manualSubUrl" type="text" placeholder="网址" class="flex-1 px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+            <button type="button" onclick="addManualSubBrand()" class="px-3 py-2 rounded-lg bg-blue-500/30 text-blue-300 text-sm">添加</button>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <button type="button" onclick="closeGroupModal()" class="flex-1 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm">取消</button>
+          <button type="submit" class="flex-1 py-2.5 rounded-lg bg-blue-500 text-white text-sm">保存</button>
+        </div>
       </form>
-      <button id="loginCancel" class="w-full mt-3 py-2.5 rounded-lg bg-white/10 hover:bg-white/15 text-sm text-gray-300 transition-colors">
-        取消
-      </button>
     </div>
   </div>
 
-  <!-- Delete Confirm Modal -->
-  <div id="deleteModal" class="fixed inset-0 modal-overlay z-50 hidden items-center justify-center p-4">
-    <div class="glass-card rounded-2xl p-6 w-full max-w-sm fade-in text-center">
-      <div class="w-14 h-14 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
-        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-        </svg>
-      </div>
-      <h3 class="text-lg font-semibold mb-2">确认删除</h3>
-      <p class="text-sm text-gray-400 mb-6" id="deleteBrandName">确定要删除此品牌吗？</p>
+  <!-- ==================== DELETE MODAL ==================== -->
+  <div id="deleteModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div class="glass rounded-2xl p-6 w-full max-w-sm mx-4">
+      <h3 class="text-lg font-bold mb-4 text-center">确认删除</h3>
+      <p id="deleteBrandName" class="text-sm text-gray-300 mb-6 text-center"></p>
       <div class="flex gap-3">
-        <button id="cancelDelete" class="flex-1 py-2.5 rounded-lg bg-white/10 hover:bg-white/15 text-sm transition-colors">取消</button>
-        <button id="confirmDelete" class="flex-1 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-sm font-medium transition-colors">删除</button>
+        <button onclick="closeDeleteModal()" class="flex-1 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm">取消</button>
+        <button onclick="onConfirmDelete()" class="flex-1 py-2.5 rounded-lg bg-red-500 text-white text-sm">删除</button>
       </div>
     </div>
   </div>
 
   <!-- Toast -->
-  <div id="toast" class="fixed top-6 right-6 z-50 hidden">
-    <div class="glass-card rounded-lg px-4 py-3 text-sm flex items-center gap-2 fade-in">
-      <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-      </svg>
-      <span id="toastMsg"></span>
-    </div>
-  </div>
+  <div id="toast" class="hidden fixed top-6 left-1/2 -translate-x-1/2 glass px-6 py-3 rounded-full text-sm z-50"></div>
 
   <script src="brands.js"></script>
   <script>
     // ========== State ==========
     let allBrands = [];
-    let filteredBrands = [];
-    let currentLetter = '';
-    let currentRegion = '';
-    let searchQuery = '';
-    let debounceTimer = null;
-    let logoBase64 = '';
-    let isEditMode = false;
-    let deleteTargetId = null;
+    let currentTab = 'official';
+    let selectedLetter = '';
+    let selectedRegion = '';
+    let editMode = false;
+    let shopEditMode = false;
+    let groupEditMode = false;
     let isAuthenticated = false;
-    let pendingAction = null; // 'add' or 'edit'
+    let pendingAction = null;
+    let deleteTargetId = null;
+    let deleteTargetType = '';
+    let logoBase64 = '';
+    let searchTimeout = null;
 
-    const REGIONS = ['全球', '美国', '英国', '俄罗斯', '加拿大'];
-    const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    // Shop data
+    let shopBrands = [];
+    let selectedShopRegion = '';
+    let shopSearchTimeout = null;
+
+    // Group data
+    let groupData = [];
+    let groupSearchTimeout = null;
+    let currentSubBrands = []; // temp for group modal
+
+    // ========== Tab Switch ==========
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('panelOfficial').classList.toggle('hidden', tab !== 'official');
+      document.getElementById('panelShop').classList.toggle('hidden', tab !== 'shop');
+      document.getElementById('panelGroup').classList.toggle('hidden', tab !== 'group');
+      document.getElementById('tabOfficial').className = (tab === 'official' ? 'tab-active ' : '') + 'px-6 py-2 rounded-full text-sm font-medium border border-white/10 transition-all' + (tab !== 'official' ? ' bg-white/5 text-gray-400' : '');
+      document.getElementById('tabShop').className = (tab === 'shop' ? 'tab-active ' : '') + 'px-6 py-2 rounded-full text-sm font-medium border border-white/10 transition-all' + (tab !== 'shop' ? ' bg-white/5 text-gray-400' : '');
+      document.getElementById('tabGroup').className = (tab === 'group' ? 'tab-active ' : '') + 'px-6 py-2 rounded-full text-sm font-medium border border-white/10 transition-all' + (tab !== 'group' ? ' bg-white/5 text-gray-400' : '');
+    }
 
     // ========== Init ==========
     function init() {
-      allBrands = [...BRANDS_DATA];
-
-      // Load user-added brands from localStorage
-      const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
-      allBrands = [...allBrands, ...userBrands];
-
-      // Load user-deleted ids from localStorage
+      // Load official brands
+      allBrands = BRANDS_DATA.map(b => ({ ...b }));
       const deletedIds = JSON.parse(localStorage.getItem('deletedBrands') || '[]');
       allBrands = allBrands.filter(b => !deletedIds.includes(b.id));
-
-      // Load brand overrides (edits to built-in brands) from localStorage
+      const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
+      allBrands = allBrands.concat(userBrands);
       const overrides = JSON.parse(localStorage.getItem('brandOverrides') || '{}');
-      allBrands = allBrands.map(b => {
-        if (overrides[b.id]) {
-          return { ...b, ...overrides[b.id] };
+      for (let i = 0; i < allBrands.length; i++) {
+        if (overrides[allBrands[i].id]) {
+          Object.assign(allBrands[i], overrides[allBrands[i].id]);
         }
-        return b;
-      });
-
-      // Sort by name_en
+      }
       allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
-
       buildLetterFilter();
-      buildRegionFilter();
       renderBrands();
 
-      // Events
-      document.getElementById('searchInput').addEventListener('input', onSearchInput);
-      document.getElementById('addBtn').addEventListener('click', () => {
-        if (!isAuthenticated) {
-          pendingAction = 'add';
-          openLoginModal();
-        } else {
-          openModal();
-        }
+      // Search debounce
+      document.getElementById('searchInput').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(renderBrands, 1000);
       });
-      document.getElementById('editBtn').addEventListener('click', () => {
-        if (!isAuthenticated) {
-          pendingAction = 'edit';
-          openLoginModal();
-        } else {
-          toggleEditMode();
-        }
+
+      // Load shop brands
+      shopBrands = JSON.parse(localStorage.getItem('shopBrands') || '[]');
+      renderShopBrands();
+      document.getElementById('shopSearchInput').addEventListener('input', function() {
+        clearTimeout(shopSearchTimeout);
+        shopSearchTimeout = setTimeout(renderShopBrands, 1000);
       });
-      document.getElementById('closeModal').addEventListener('click', closeModal);
-      document.getElementById('brandModal').addEventListener('click', function(e) {
-        if (e.target === this) closeModal();
+
+      // Load group data
+      groupData = JSON.parse(localStorage.getItem('groupData') || '[]');
+      renderGroups();
+      document.getElementById('groupSearchInput').addEventListener('input', function() {
+        clearTimeout(groupSearchTimeout);
+        groupSearchTimeout = setTimeout(renderGroups, 500);
       });
+
+      // Form handlers
       document.getElementById('brandForm').addEventListener('submit', onFormSubmit);
-      document.getElementById('formLogo').addEventListener('change', onLogoChange);
-      document.getElementById('formLogoUrl').addEventListener('input', onLogoUrlInput);
-      document.getElementById('cancelDelete').addEventListener('click', closeDeleteModal);
-      document.getElementById('confirmDelete').addEventListener('click', onConfirmDelete);
-      document.getElementById('deleteModal').addEventListener('click', function(e) {
-        if (e.target === this) closeDeleteModal();
-      });
+      document.getElementById('groupForm').addEventListener('submit', onGroupFormSubmit);
 
-      // Login modal events
-      document.getElementById('loginForm').addEventListener('submit', onLoginSubmit);
-      document.getElementById('loginCancel').addEventListener('click', closeLoginModal);
-      document.getElementById('loginModal').addEventListener('click', function(e) {
-        if (e.target === this) closeLoginModal();
+      // Clipboard paste
+      document.getElementById('clipboardPasteZone').addEventListener('paste', handleClipboardPaste);
+      document.addEventListener('paste', function(e) {
+        const clipboardArea = document.getElementById('logoClipboardArea');
+        const modal = document.getElementById('brandModal');
+        if (!clipboardArea.classList.contains('hidden') && !modal.classList.contains('hidden')) {
+          handleClipboardPaste(e);
+        }
       });
-
-      // Export button
-      document.getElementById('exportBtn').addEventListener('click', exportData);
     }
 
-    // ========== Export Data ==========
-    function exportData() {
-      if (!isAuthenticated) {
-        pendingAction = 'export';
-        openLoginModal();
+    // ========== OFFICIAL: Letter Filter ==========
+    function buildLetterFilter() {
+      const letters = new Set();
+      allBrands.forEach(b => { if (b.name_en) letters.add(b.name_en[0].toUpperCase()); });
+      const sorted = [...letters].sort();
+      const container = document.getElementById('letterFilter');
+      let html = '<button onclick="filterLetter(\'\')" class="letter-btn px-2.5 py-1 rounded text-xs bg-white/8 text-gray-300 hover:bg-white/20 transition ' + (!selectedLetter ? 'letter-active' : '') + '">全部</button>';
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(l => {
+        const exists = sorted.includes(l);
+        html += `<button onclick="filterLetter('${l}')" class="letter-btn px-2.5 py-1 rounded text-xs transition ${exists ? 'bg-white/8 text-gray-300 hover:bg-white/20' : 'bg-white/3 text-gray-600 cursor-not-allowed'} ${selectedLetter === l ? 'letter-active' : ''}" ${!exists ? 'disabled' : ''}>${l}</button>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function filterLetter(l) {
+      selectedLetter = l;
+      buildLetterFilter();
+      renderBrands();
+    }
+
+    function filterRegion(r) {
+      selectedRegion = r;
+      document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('region-active'));
+      event.target.classList.add('region-active');
+      renderBrands();
+    }
+
+    // ========== OFFICIAL: Render ==========
+    function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+    function renderBrands() {
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+      let filtered = allBrands;
+      if (query) filtered = filtered.filter(b => b.name_en.toLowerCase().includes(query) || (b.name_cn && b.name_cn.toLowerCase().includes(query)) || b.url.toLowerCase().includes(query));
+      if (selectedLetter) filtered = filtered.filter(b => b.name_en[0].toUpperCase() === selectedLetter);
+      if (selectedRegion) filtered = filtered.filter(b => b.region === selectedRegion);
+
+      const grid = document.getElementById('brandGrid');
+      if (!filtered.length) { grid.innerHTML = '<p class="text-gray-500 text-center col-span-full py-12">没有找到匹配的品牌</p>'; return; }
+
+      // Group by letter
+      const groups = {};
+      filtered.forEach(b => { const l = b.name_en[0].toUpperCase(); if (!groups[l]) groups[l] = []; groups[l].push(b); });
+
+      let html = '';
+      Object.keys(groups).sort().forEach(letter => {
+        html += `<div class="col-span-full"><h2 class="text-xl font-bold text-white/80 mb-3 mt-2 border-b border-white/10 pb-2">${letter}</h2></div>`;
+        groups[letter].forEach(b => {
+          const logoHtml = b.logo
+            ? `<img src="${escapeHtml(b.logo)}" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${escapeHtml(b.name_en[0])}</div>`
+            : `<div class="logo-fallback">${escapeHtml(b.name_en[0])}</div>`;
+          const editOverlay = editMode ? `<div class="edit-overlay"><button onclick="openEditModal(${b.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="openDeleteModal(${b.id},'${escapeHtml(b.name_en)}','official')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
+          html += `<div class="glass-card rounded-xl p-4 relative cursor-pointer" onclick="${editMode ? '' : `window.open('${escapeHtml(b.url)}','_blank')`}">
+            ${editOverlay}
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0">${logoHtml}</div>
+              <div class="flex-1 min-w-0">
+                <div class="text-sm font-semibold text-white truncate">${escapeHtml(b.name_en)}</div>
+                <div class="text-xs text-gray-400 truncate">${escapeHtml(b.name_cn || '')}</div>
+                <div class="text-xs text-gray-500 mt-1">主打地区：${escapeHtml(b.region)}</div>
+              </div>
+            </div>
+            <a href="${escapeHtml(b.url)}" target="_blank" class="block mt-2 text-xs text-blue-400 truncate hover:underline" onclick="event.stopPropagation()">${escapeHtml(b.url)}</a>
+          </div>`;
+        });
+      });
+      grid.innerHTML = html;
+    }
+
+    // ========== SHOP: Region Filter ==========
+    function filterShopRegion(r) {
+      selectedShopRegion = r;
+      document.querySelectorAll('.shop-region-btn').forEach(b => b.classList.remove('region-active'));
+      event.target.classList.add('region-active');
+      renderShopBrands();
+    }
+
+    // ========== SHOP: Render ==========
+    function renderShopBrands() {
+      const query = document.getElementById('shopSearchInput').value.trim().toLowerCase();
+      let filtered = shopBrands;
+      if (query) filtered = filtered.filter(b => b.name_en.toLowerCase().includes(query) || (b.name_cn && b.name_cn.toLowerCase().includes(query)) || b.url.toLowerCase().includes(query) || (b.country && b.country.toLowerCase().includes(query)));
+      if (selectedShopRegion) filtered = filtered.filter(b => b.region === selectedShopRegion);
+
+      const grid = document.getElementById('shopGrid');
+      if (!filtered.length) { grid.innerHTML = '<p class="text-gray-500 text-center col-span-full py-12">暂无商城数据，点击"添加"添加商城</p>'; return; }
+
+      let html = '';
+      filtered.forEach(b => {
+        const logoHtml = b.logo
+          ? `<img src="${escapeHtml(b.logo)}" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${escapeHtml(b.name_en[0])}</div>`
+          : `<div class="logo-fallback">${escapeHtml(b.name_en[0])}</div>`;
+        const editOverlay = shopEditMode ? `<div class="edit-overlay"><button onclick="openShopEditModal(${b.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="openDeleteModal(${b.id},'${escapeHtml(b.name_en)}','shop')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
+        html += `<div class="glass-card rounded-xl p-4 relative cursor-pointer" onclick="${shopEditMode ? '' : `window.open('${escapeHtml(b.url)}','_blank')`}">
+          ${editOverlay}
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0">${logoHtml}</div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-semibold text-white truncate">${escapeHtml(b.name_en)}</div>
+              <div class="text-xs text-gray-400 truncate">${escapeHtml(b.name_cn || '')}</div>
+              <div class="text-xs text-gray-500 mt-1">${b.country ? escapeHtml(b.country) + ' · ' : ''}${escapeHtml(b.region)}</div>
+            </div>
+          </div>
+          <a href="${escapeHtml(b.url)}" target="_blank" class="block mt-2 text-xs text-blue-400 truncate hover:underline" onclick="event.stopPropagation()">${escapeHtml(b.url)}</a>
+        </div>`;
+      });
+      grid.innerHTML = html;
+    }
+
+    // ========== GROUP: Render ==========
+    function renderGroups() {
+      const query = document.getElementById('groupSearchInput').value.trim().toLowerCase();
+      let filtered = groupData;
+      if (query) filtered = filtered.filter(g => g.name.toLowerCase().includes(query) || (g.desc && g.desc.toLowerCase().includes(query)));
+
+      const grid = document.getElementById('groupGrid');
+      if (!filtered.length) { grid.innerHTML = '<p class="text-gray-500 text-center col-span-full py-12">暂无集团数据，点击"添加"添加集团</p>'; return; }
+
+      let html = '';
+      filtered.forEach(g => {
+        const logoHtml = g.logo
+          ? `<img src="${escapeHtml(g.logo)}" class="w-14 h-14 rounded-xl object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none;width:56px;height:56px;font-size:22px">${escapeHtml(g.name[0])}</div>`
+          : `<div class="logo-fallback" style="width:56px;height:56px;font-size:22px">${escapeHtml(g.name[0])}</div>`;
+        const editOverlay = groupEditMode ? `<div class="absolute top-3 right-3 flex gap-2"><button onclick="openGroupEditModal(${g.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="openDeleteModal(${g.id},'${escapeHtml(g.name)}','group')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
+        // Sub brands
+        let subHtml = '';
+        if (g.sub_brands && g.sub_brands.length) {
+          subHtml = '<div class="flex flex-wrap gap-2 mt-3">';
+          g.sub_brands.forEach(sb => {
+            const sbLogo = sb.logo
+              ? `<img src="${escapeHtml(sb.logo)}" class="w-5 h-5 rounded object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><span style="display:none;font-size:10px">${escapeHtml(sb.name[0])}</span>`
+              : `<span class="text-xs font-bold text-gray-400">${escapeHtml(sb.name[0])}</span>`;
+            subHtml += `<a href="${escapeHtml(sb.url || '#')}" target="_blank" class="sub-brand-chip" onclick="event.stopPropagation()">${sbLogo}<span class="text-xs text-gray-300">${escapeHtml(sb.name)}</span></a>`;
+          });
+          subHtml += '</div>';
+        }
+
+        html += `<div class="glass-card rounded-xl p-5 relative">
+          ${editOverlay}
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">${logoHtml}</div>
+            <div class="flex-1 min-w-0">
+              <div class="text-lg font-bold text-white">${escapeHtml(g.name)}</div>
+              ${g.desc ? `<p class="text-xs text-gray-400 mt-1 leading-relaxed">${escapeHtml(g.desc)}</p>` : ''}
+              ${g.url ? `<a href="${escapeHtml(g.url)}" target="_blank" class="text-xs text-blue-400 hover:underline mt-1 inline-block">${escapeHtml(g.url)}</a>` : ''}
+              ${subHtml}
+            </div>
+          </div>
+        </div>`;
+      });
+      grid.innerHTML = html;
+    }
+
+    // ========== Auth ==========
+    function requireAuth(action) {
+      if (isAuthenticated) {
+        executeAction(action);
         return;
       }
-      doExport();
-    }
-
-    function doExport() {
-      try {
-        const exportObj = allBrands.map(b => ({
-          id: b.id,
-          name_en: b.name_en,
-          name_cn: b.name_cn,
-          url: b.url,
-          region: b.region,
-          level: b.level,
-          logo: b.logo || ''
-        }));
-        const json = JSON.stringify(exportObj, null, 2);
-        
-        // Method 1: Using navigator.clipboard + prompt as fallback
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-          // IE/Edge legacy
-          const blob = new Blob([json], { type: 'application/json' });
-          window.navigator.msSaveOrOpenBlob(blob, 'brands_data.json');
-        } else {
-          // Modern browsers - create blob URL and use window.open
-          const blob = new Blob([json], { type: 'application/octet-stream' });
-          const url = URL.createObjectURL(blob);
-          
-          // Try opening in new window as download
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'brands_data.json';
-          link.style.display = 'none';
-          document.body.appendChild(link);
-          
-          // Use setTimeout to ensure DOM is ready
-          setTimeout(function() {
-            link.click();
-            setTimeout(function() {
-              document.body.removeChild(link);
-              URL.revokeObjectURL(url);
-            }, 1000);
-          }, 100);
-        }
-        
-        showToast('数据已导出，请将文件发给开发者更新到 brands.js');
-      } catch (e) {
-        // Fallback: open JSON in new window for manual save
-        const json = JSON.stringify(allBrands.map(b => ({
-          id: b.id, name_en: b.name_en, name_cn: b.name_cn,
-          url: b.url, region: b.region, level: b.level, logo: b.logo || ''
-        })), null, 2);
-        
-        const w = window.open('', '_blank');
-        if (w) {
-          w.document.write('<pre>' + json + '</pre>');
-          w.document.title = 'brands_data.json - 右键另存为保存';
-          showToast('数据已在新窗口打开，请右键另存为保存');
-        } else {
-          // Final fallback: copy to clipboard
-          navigator.clipboard.writeText(json).then(function() {
-            showToast('数据已复制到剪贴板，请粘贴保存');
-          }).catch(function() {
-            showToast('导出失败，请手动复制');
-          });
-        }
-      }
-    }
-
-    // ========== Edit Mode ==========
-    function toggleEditMode() {
-      isEditMode = !isEditMode;
-      const btn = document.getElementById('editBtn');
-      const text = document.getElementById('editBtnText');
-      const banner = document.getElementById('editBanner');
-
-      if (isEditMode) {
-        btn.classList.remove('bg-white/10', 'hover:bg-white/15', 'border-white/10');
-        btn.classList.add('bg-red-500/20', 'hover:bg-red-500/30', 'border-red-500/40');
-        text.textContent = '退出编辑';
-        banner.classList.remove('hidden');
-      } else {
-        btn.classList.add('bg-white/10', 'hover:bg-white/15', 'border-white/10');
-        btn.classList.remove('bg-red-500/20', 'hover:bg-red-500/30', 'border-red-500/40');
-        text.textContent = '编辑';
-        banner.classList.add('hidden');
-      }
-      renderBrands();
-    }
-
-    // ========== Login ==========
-    function openLoginModal() {
-      const modal = document.getElementById('loginModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      document.getElementById('loginUsername').value = '';
-      document.getElementById('loginPassword').value = '';
+      pendingAction = action;
+      document.getElementById('loginModal').classList.remove('hidden');
+      document.getElementById('loginModal').classList.add('flex');
+      document.getElementById('loginUser').value = '';
+      document.getElementById('loginPass').value = '';
       document.getElementById('loginError').classList.add('hidden');
-      document.getElementById('loginUsername').focus();
+      document.getElementById('loginUser').focus();
+    }
+
+    function openLoginModal() {
+      document.getElementById('loginModal').classList.remove('hidden');
+      document.getElementById('loginModal').classList.add('flex');
     }
 
     function closeLoginModal() {
-      const modal = document.getElementById('loginModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      pendingAction = null;
+      document.getElementById('loginModal').classList.add('hidden');
+      document.getElementById('loginModal').classList.remove('flex');
     }
 
-    function onLoginSubmit(e) {
-      e.preventDefault();
-      const username = document.getElementById('loginUsername').value.trim();
-      const password = document.getElementById('loginPassword').value;
-
-      if (username === 'admin' && password === 'funan') {
+    function onLoginSubmit() {
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value.trim();
+      if (user === 'admin' && pass === 'funan') {
         isAuthenticated = true;
         const action = pendingAction;
         closeLoginModal();
-        showToast('登录成功');
-
-        // Execute pending action
-        if (action === 'add') {
-          openModal();
-        } else if (action === 'edit') {
-          toggleEditMode();
-        } else if (action === 'export') {
-          doExport();
-        }
+        pendingAction = null;
+        if (action) executeAction(action);
       } else {
         document.getElementById('loginError').classList.remove('hidden');
       }
     }
 
-    // ========== Filters ==========
-    function buildLetterFilter() {
-      const container = document.getElementById('letterFilter');
-      LETTERS.forEach(letter => {
-        const count = allBrands.filter(b => getFirstLetter(b.name_en) === letter).length;
-        if (count > 0) {
-          const btn = document.createElement('button');
-          btn.className = 'filter-btn px-2.5 py-1 rounded-md text-xs text-gray-300';
-          btn.dataset.letter = letter;
-          btn.textContent = letter;
-          btn.addEventListener('click', () => setLetter(letter));
-          container.appendChild(btn);
-        }
-      });
-      container.querySelector('[data-letter=""]').addEventListener('click', () => setLetter(''));
+    function executeAction(action) {
+      switch(action) {
+        case 'add': openAddModal(); break;
+        case 'edit': toggleEditMode(); break;
+        case 'export': doExport(); break;
+        case 'shop-add': openShopAddModal(); break;
+        case 'shop-edit': toggleShopEditMode(); break;
+        case 'shop-export': doShopExport(); break;
+        case 'group-add': openGroupAddModal(); break;
+        case 'group-edit': toggleGroupEditMode(); break;
+        case 'group-export': doGroupExport(); break;
+      }
     }
 
-    function buildRegionFilter() {
-      const container = document.getElementById('regionFilter');
-      REGIONS.forEach(region => {
-        const btn = document.createElement('button');
-        btn.className = 'filter-btn px-3 py-1.5 rounded-md text-xs text-gray-300';
-        btn.dataset.region = region;
-        btn.textContent = region;
-        btn.addEventListener('click', () => setRegion(region));
-        container.appendChild(btn);
-      });
+    // ========== Edit Mode (Official) ==========
+    function toggleEditMode() {
+      editMode = !editMode;
+      document.getElementById('officialBottomBar').classList.toggle('hidden', editMode);
+      document.getElementById('officialEditBar').classList.toggle('hidden', !editMode);
+      renderBrands();
     }
-
-    function getFirstLetter(name) {
-      if (!name) return '#';
-      const ch = name[0].toUpperCase();
-      if (ch >= 'A' && ch <= 'Z') return ch;
-      return '#';
-    }
-
-    function setLetter(letter) {
-      currentLetter = letter;
-      document.querySelectorAll('#letterFilter .filter-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.letter === letter);
-      });
+    function exitEditMode() {
+      editMode = false;
+      document.getElementById('officialBottomBar').classList.remove('hidden');
+      document.getElementById('officialEditBar').classList.add('hidden');
       renderBrands();
     }
 
-    function setRegion(region) {
-      currentRegion = currentRegion === region ? '' : region;
-      document.querySelectorAll('#regionFilter .filter-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.region === currentRegion);
-      });
-      renderBrands();
+    // ========== Edit Mode (Shop) ==========
+    function toggleShopEditMode() {
+      shopEditMode = !shopEditMode;
+      document.getElementById('shopEditBtn').closest('.flex').classList.toggle('hidden', shopEditMode);
+      document.getElementById('shopEditBar').classList.toggle('hidden', !shopEditMode);
+      renderShopBrands();
+    }
+    function exitShopEditMode() {
+      shopEditMode = false;
+      document.getElementById('shopEditBtn').closest('.flex').classList.remove('hidden');
+      document.getElementById('shopEditBar').classList.add('hidden');
+      renderShopBrands();
     }
 
-    // ========== Search ==========
-    function onSearchInput(e) {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        searchQuery = e.target.value.trim().toLowerCase();
-        renderBrands();
-      }, 1000);
+    // ========== Edit Mode (Group) ==========
+    function toggleGroupEditMode() {
+      groupEditMode = !groupEditMode;
+      document.getElementById('groupEditBtn').closest('.flex').classList.toggle('hidden', groupEditMode);
+      document.getElementById('groupEditBar').classList.toggle('hidden', !groupEditMode);
+      renderGroups();
+    }
+    function exitGroupEditMode() {
+      groupEditMode = false;
+      document.getElementById('groupEditBtn').closest('.flex').classList.remove('hidden');
+      document.getElementById('groupEditBar').classList.add('hidden');
+      renderGroups();
     }
 
-    // ========== Render ==========
-    function renderBrands() {
-      let brands = [...allBrands];
-
-      if (currentLetter) {
-        brands = brands.filter(b => getFirstLetter(b.name_en) === currentLetter);
-      }
-      if (currentRegion) {
-        brands = brands.filter(b => b.region === currentRegion);
-      }
-      if (searchQuery) {
-        brands = brands.filter(b =>
-          b.name_en.toLowerCase().includes(searchQuery) ||
-          b.name_cn.toLowerCase().includes(searchQuery) ||
-          b.url.toLowerCase().includes(searchQuery)
-        );
-      }
-
-      filteredBrands = brands;
-      document.getElementById('brandCount').textContent = `共 ${brands.length} 个品牌`;
-
-      const container = document.getElementById('brandList');
-      const emptyState = document.getElementById('emptyState');
-
-      if (brands.length === 0) {
-        container.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-
-      // Group by letter
-      const grouped = {};
-      brands.forEach(b => {
-        const letter = getFirstLetter(b.name_en);
-        if (!grouped[letter]) grouped[letter] = [];
-        grouped[letter].push(b);
-      });
-
-      let html = '';
-      const sortedLetters = Object.keys(grouped).sort();
-
-      sortedLetters.forEach(letter => {
-        html += `<div class="col-span-full"><h2 class="text-lg font-semibold text-white mt-6 mb-3 letter-anchor" id="letter-${letter}">${letter}</h2></div>`;
-        grouped[letter].forEach(brand => {
-          html += renderCard(brand);
-        });
-      });
-
-      container.innerHTML = html;
-    }
-
-    function renderCard(brand) {
-      const logoHtml = brand.logo
-        ? `<img src="${escapeHtml(brand.logo)}" alt="${escapeHtml(brand.name_en)}" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${brand.name_en[0] || '?'}</div>`
-        : `<div class="logo-fallback">${brand.name_en[0] || '?'}</div>`;
-
-      const nameCnHtml = brand.name_cn
-        ? `<span class="text-xs text-gray-400">${escapeHtml(brand.name_cn)}</span>`
-        : '';
-
-      const editClass = isEditMode ? ' editing' : '';
-      const clickHandler = isEditMode ? '' : `onclick="window.open('${escapeHtml(brand.url)}', '_blank')"`;
-
-      return `
-        <div class="glass-card${editClass} rounded-xl p-4 transition-all duration-200 relative" ${clickHandler} data-brand-id="${brand.id}">
-          <div class="flex items-start gap-3">
-            ${logoHtml}
-            <div class="flex-1 min-w-0">
-              <div class="flex flex-col">
-                <span class="text-sm font-semibold text-white truncate">${escapeHtml(brand.name_en)}</span>
-                ${nameCnHtml}
-              </div>
-              <div class="text-xs text-gray-500 mt-1">主打地区：${escapeHtml(brand.region)}</div>
-            </div>
-          </div>
-          <div class="mt-3 flex items-center gap-1.5 text-blue-400 text-xs hover:text-blue-300 transition-colors">
-            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-            </svg>
-            <span class="truncate">${escapeHtml(brand.url)}</span>
-          </div>
-          ${isEditMode ? `
-          <div class="edit-overlay">
-            <button onclick="event.stopPropagation();openModal(${brand.id})" class="px-3 py-1.5 rounded-lg bg-blue-500 hover:bg-blue-600 text-xs font-medium transition-colors flex items-center gap-1">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-              编辑
-            </button>
-            <button onclick="event.stopPropagation();openDeleteModal(${brand.id},'${escapeHtml(brand.name_en)}')" class="px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 text-xs font-medium transition-colors flex items-center gap-1">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-              删除
-            </button>
-          </div>
-          ` : ''}
-        </div>
-      `;
-    }
-
-    function escapeHtml(text) {
-      if (!text) return '';
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    // ========== Modal ==========
-    function openModal(editId) {
-      const modal = document.getElementById('brandModal');
-      const title = document.getElementById('modalTitle');
-      const submitBtn = document.getElementById('formSubmitBtn');
-      const formEditId = document.getElementById('formEditId');
-
-      if (editId) {
-        // Edit mode
-        const brand = allBrands.find(b => b.id === editId);
-        if (!brand) return;
-
-        title.textContent = '编辑品牌';
-        submitBtn.textContent = '保存修改';
-        formEditId.value = editId;
-
-        document.getElementById('formNameEn').value = brand.name_en;
-        document.getElementById('formNameCn').value = brand.name_cn;
-        document.getElementById('formUrl').value = brand.url;
-        document.getElementById('formRegion').value = brand.region;
-
-        if (brand.logo) {
-          if (brand.logo.startsWith('data:')) {
-            logoBase64 = brand.logo;
-            document.getElementById('formLogoUrl').value = '';
-            document.getElementById('formLogoValue').value = brand.logo;
-            switchLogoMode('upload');
-          } else {
-            logoBase64 = '';
-            document.getElementById('formLogoUrl').value = brand.logo;
-            document.getElementById('formLogoValue').value = brand.logo;
-            switchLogoMode('url');
-          }
-          document.getElementById('logoPreview').innerHTML = '<img src="' + escapeHtml(brand.logo) + '" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" /><div class="logo-fallback" style="display:none">' + escapeHtml(brand.name_en[0] || '?') + '</div>';
-        } else {
-          logoBase64 = '';
-          document.getElementById('formLogoUrl').value = '';
-          document.getElementById('formLogoValue').value = '';
-          switchLogoMode('url');
-          resetLogoPreview();
-        }
-      } else {
-        // Add mode
-        title.textContent = '添加品牌';
-        submitBtn.textContent = '添加品牌';
-        formEditId.value = '';
-        document.getElementById('brandForm').reset();
-        logoBase64 = '';
-        document.getElementById('formLogoUrl').value = '';
-        document.getElementById('formLogoValue').value = '';
-        switchLogoMode('url');
-        resetLogoPreview();
-        resetClipboardZone();
-      }
-
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-      const modal = document.getElementById('brandModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      document.body.style.overflow = '';
-      document.getElementById('brandForm').reset();
-      logoBase64 = '';
-      document.getElementById('formLogoUrl').value = '';
-      document.getElementById('formLogoValue').value = '';
-      resetLogoPreview();
-      resetClipboardZone();
-    }
-    function resetLogoPreview() {
-      document.getElementById('logoPreview').innerHTML = `
-        <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-        </svg>
-      `;
-    }
-
-    // ========== Logo Mode Toggle ==========
+    // ========== Logo helpers ==========
     function switchLogoMode(mode) {
-      const urlBtn = document.getElementById('logoModeUrl');
-      const uploadBtn = document.getElementById('logoModeUpload');
-      const clipboardBtn = document.getElementById('logoModeClipboard');
-      const urlArea = document.getElementById('logoUrlArea');
-      const uploadArea = document.getElementById('logoUploadArea');
-      const clipboardArea = document.getElementById('logoClipboardArea');
-
+      const urlBtn = document.getElementById('logoModeUrl'), uploadBtn = document.getElementById('logoModeUpload'), clipboardBtn = document.getElementById('logoModeClipboard');
+      const urlArea = document.getElementById('logoUrlArea'), uploadArea = document.getElementById('logoUploadArea'), clipboardArea = document.getElementById('logoClipboardArea');
       const activeCls = 'flex-1 px-2 py-1.5 text-xs font-medium bg-blue-500/30 text-blue-300';
       const inactiveCls = 'flex-1 px-2 py-1.5 text-xs font-medium bg-white/5 text-gray-400';
-
       urlBtn.className = (mode === 'url' ? activeCls : inactiveCls) + ' border-r border-white/10';
       uploadBtn.className = (mode === 'upload' ? activeCls : inactiveCls) + ' border-r border-white/10';
       clipboardBtn.className = mode === 'clipboard' ? activeCls : inactiveCls;
-
       urlArea.classList.toggle('hidden', mode !== 'url');
       uploadArea.classList.toggle('hidden', mode !== 'upload');
       clipboardArea.classList.toggle('hidden', mode !== 'clipboard');
-
-      if (mode === 'clipboard') {
-        document.getElementById('clipboardPasteZone').focus();
-      }
+      if (mode === 'clipboard') document.getElementById('clipboardPasteZone').focus();
     }
 
     function onLogoChange(e) {
-      const file = e.target.files[0];
-      if (!file) return;
+      const file = e.target.files[0]; if (!file) return;
       const reader = new FileReader();
       reader.onload = function(ev) {
         logoBase64 = ev.target.result;
         document.getElementById('formLogoUrl').value = '';
         document.getElementById('formLogoValue').value = logoBase64;
-        document.getElementById('logoPreview').innerHTML = '<img src="' + logoBase64 + '" class="w-12 h-12 rounded-lg object-contain" /><div class="logo-fallback" style="display:none">?</div>';
+        document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + logoBase64 + '" class="w-12 h-12 rounded-lg object-contain" /></div>';
       };
       reader.readAsDataURL(file);
     }
@@ -894,17 +650,15 @@
       if (url) {
         logoBase64 = '';
         document.getElementById('formLogoValue').value = url;
-        document.getElementById('logoPreview').innerHTML = '<img src="' + escapeHtml(url) + '" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" /><div class="logo-fallback" style="display:none">?</div>';
+        document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(url) + '" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display=\'none\'" /></div>';
       } else {
         document.getElementById('formLogoValue').value = '';
-        resetLogoPreview();
+        document.getElementById('logoPreview').outerHTML = '<div id="logoPreview" class="logo-fallback">?</div>';
       }
     }
 
-    // Clipboard paste handler
     function handleClipboardPaste(e) {
-      const items = e.clipboardData && e.clipboardData.items;
-      if (!items) return;
+      const items = e.clipboardData && e.clipboardData.items; if (!items) return;
       for (let i = 0; i < items.length; i++) {
         if (items[i].type.indexOf('image') !== -1) {
           e.preventDefault();
@@ -914,153 +668,365 @@
             logoBase64 = ev.target.result;
             document.getElementById('formLogoUrl').value = '';
             document.getElementById('formLogoValue').value = logoBase64;
-            document.getElementById('logoPreview').innerHTML = '<img src="' + logoBase64 + '" class="w-12 h-12 rounded-lg object-contain" /><div class="logo-fallback" style="display:none">?</div>';
-            // Update clipboard zone visual
+            document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + logoBase64 + '" class="w-12 h-12 rounded-lg object-contain" /></div>';
             const zone = document.getElementById('clipboardPasteZone');
             zone.innerHTML = '<svg class="w-5 h-5 mb-1 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-xs text-green-400">图片已粘贴</span>';
           };
-          reader.readAsDataURL(file);
-          return;
+          reader.readAsDataURL(file); return;
         }
       }
     }
 
-    // Attach paste event to clipboard zone and global
-    document.getElementById('clipboardPasteZone').addEventListener('paste', handleClipboardPaste);
-    document.addEventListener('paste', function(e) {
-      // Only handle if clipboard mode is active and modal is open
-      const clipboardArea = document.getElementById('logoClipboardArea');
-      const modal = document.getElementById('brandModal');
-      if (!clipboardArea.classList.contains('hidden') && !modal.classList.contains('hidden')) {
-        handleClipboardPaste(e);
-      }
-    });
-
-    function resetClipboardZone() {
-      const zone = document.getElementById('clipboardPasteZone');
-      if (zone) {
-        zone.innerHTML = '<svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><span class="text-xs">Ctrl+V 粘贴图片</span><span class="text-[10px] text-gray-500 mt-0.5">或点击此区域后粘贴</span>';
-      }
+    function resetLogoPreview() {
+      const p = document.getElementById('logoPreview');
+      if (p) p.outerHTML = '<div id="logoPreview" class="logo-fallback">?</div>';
     }
 
-    // ========== Form Submit (Add or Edit) ==========
+    // ========== OFFICIAL: Add/Edit Modal ==========
+    function openAddModal() {
+      document.getElementById('modalTitle').textContent = '添加品牌';
+      document.getElementById('formEditId').value = '';
+      document.getElementById('formNameEn').value = '';
+      document.getElementById('formNameCn').value = '';
+      document.getElementById('formUrl').value = '';
+      document.getElementById('formRegion').value = '全球';
+      document.getElementById('formType').value = 'official';
+      document.getElementById('formUrlLabel').textContent = '官网地址 *';
+      document.getElementById('formCountryWrap').classList.add('hidden');
+      document.getElementById('formLogoValue').value = '';
+      document.getElementById('formLogoUrl').value = '';
+      logoBase64 = '';
+      resetLogoPreview();
+      switchLogoMode('url');
+      const zone = document.getElementById('clipboardPasteZone');
+      zone.innerHTML = '<svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><span class="text-xs">Ctrl+V 粘贴图片</span><span class="text-[10px] text-gray-500 mt-0.5">或点击此区域后粘贴</span>';
+      document.getElementById('brandModal').classList.remove('hidden');
+      document.getElementById('brandModal').classList.add('flex');
+    }
+
+    function openEditModal(id) {
+      const brand = allBrands.find(b => b.id === id); if (!brand) return;
+      document.getElementById('modalTitle').textContent = '编辑品牌';
+      document.getElementById('formEditId').value = id;
+      document.getElementById('formNameEn').value = brand.name_en;
+      document.getElementById('formNameCn').value = brand.name_cn || '';
+      document.getElementById('formUrl').value = brand.url;
+      document.getElementById('formRegion').value = brand.region;
+      document.getElementById('formType').value = 'official';
+      document.getElementById('formUrlLabel').textContent = '官网地址 *';
+      document.getElementById('formCountryWrap').classList.add('hidden');
+      logoBase64 = '';
+      if (brand.logo) {
+        document.getElementById('formLogoValue').value = brand.logo;
+        if (brand.logo.startsWith('http')) {
+          document.getElementById('formLogoUrl').value = brand.logo;
+          switchLogoMode('url');
+          document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(brand.logo) + '" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display=\'none\'" /></div>';
+        } else {
+          switchLogoMode('upload');
+          document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + brand.logo + '" class="w-12 h-12 rounded-lg object-contain" /></div>';
+        }
+      } else {
+        document.getElementById('formLogoValue').value = '';
+        document.getElementById('formLogoUrl').value = '';
+        resetLogoPreview();
+        switchLogoMode('url');
+      }
+      document.getElementById('brandModal').classList.remove('hidden');
+      document.getElementById('brandModal').classList.add('flex');
+    }
+
+    function closeModal() {
+      document.getElementById('brandModal').classList.add('hidden');
+      document.getElementById('brandModal').classList.remove('flex');
+    }
+
     function onFormSubmit(e) {
       e.preventDefault();
-
       const editId = document.getElementById('formEditId').value;
       const nameEn = document.getElementById('formNameEn').value.trim();
       const nameCn = document.getElementById('formNameCn').value.trim();
       const url = document.getElementById('formUrl').value.trim();
       const region = document.getElementById('formRegion').value;
+      const type = document.getElementById('formType').value;
+      const country = document.getElementById('formCountry') ? document.getElementById('formCountry').value.trim() : '';
+      const logoVal = logoBase64 || document.getElementById('formLogoValue').value || '';
 
       if (!nameEn || !url) return;
 
+      if (type === 'shop') {
+        saveShopBrand(editId, nameEn, nameCn, url, region, country, logoVal);
+        return;
+      }
+
+      // Official brand
       if (editId) {
-        // Edit existing brand
         const numId = Number(editId);
-        const brandIndex = allBrands.findIndex(b => b.id === numId);
-        if (brandIndex === -1) return;
-
-        allBrands[brandIndex].name_en = nameEn;
-        allBrands[brandIndex].name_cn = nameCn;
-        allBrands[brandIndex].url = url;
-        allBrands[brandIndex].region = region;
-        if (logoBase64) {
-          allBrands[brandIndex].logo = logoBase64;
-        } else {
-          const logoVal = document.getElementById('formLogoValue').value;
-          if (logoVal) allBrands[brandIndex].logo = logoVal;
-        }
-
-        // Check if it's a user brand (stored in localStorage)
+        const idx = allBrands.findIndex(b => b.id === numId); if (idx === -1) return;
+        allBrands[idx].name_en = nameEn; allBrands[idx].name_cn = nameCn; allBrands[idx].url = url; allBrands[idx].region = region;
+        if (logoVal) allBrands[idx].logo = logoVal;
         const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
-        const ubIndex = userBrands.findIndex(b => b.id === numId);
-        if (ubIndex !== -1) {
-          userBrands[ubIndex] = { ...allBrands[brandIndex] };
-          localStorage.setItem('userBrands', JSON.stringify(userBrands));
-        } else {
-          // It's a built-in brand - save override to localStorage
-          const overrides = JSON.parse(localStorage.getItem('brandOverrides') || '{}');
-          overrides[numId] = { ...allBrands[brandIndex] };
-          localStorage.setItem('brandOverrides', JSON.stringify(overrides));
-        }
-
-        // Re-sort
+        const ubIdx = userBrands.findIndex(b => b.id === numId);
+        if (ubIdx !== -1) { userBrands[ubIdx] = { ...allBrands[idx] }; localStorage.setItem('userBrands', JSON.stringify(userBrands)); }
+        else { const overrides = JSON.parse(localStorage.getItem('brandOverrides') || '{}'); overrides[numId] = { ...allBrands[idx] }; localStorage.setItem('brandOverrides', JSON.stringify(overrides)); }
         allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
-        closeModal();
-        renderBrands();
-        showToast('品牌修改成功！');
+        closeModal(); renderBrands(); showToast('品牌修改成功！');
       } else {
-        // Add new brand
-        const newBrand = {
-          id: Date.now(),
-          name_en: nameEn,
-          name_cn: nameCn,
-          url: url,
-          region: region,
-          level: 3,
-          logo: logoBase64 || document.getElementById('formLogoValue').value || ''
-        };
-
+        const newBrand = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, level: 3, logo: logoVal };
         const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
-        userBrands.push(newBrand);
-        localStorage.setItem('userBrands', JSON.stringify(userBrands));
-
-        allBrands.push(newBrand);
-        allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
-
-        closeModal();
-        buildLetterFilter();
-        renderBrands();
-        showToast('品牌添加成功！');
+        userBrands.push(newBrand); localStorage.setItem('userBrands', JSON.stringify(userBrands));
+        allBrands.push(newBrand); allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
+        closeModal(); buildLetterFilter(); renderBrands(); showToast('品牌添加成功！');
       }
     }
 
+    // ========== SHOP: Add/Edit ==========
+    function openShopAddModal() {
+      document.getElementById('modalTitle').textContent = '添加商城';
+      document.getElementById('formEditId').value = '';
+      document.getElementById('formNameEn').value = '';
+      document.getElementById('formNameCn').value = '';
+      document.getElementById('formUrl').value = '';
+      document.getElementById('formRegion').value = '全球';
+      document.getElementById('formType').value = 'shop';
+      document.getElementById('formUrlLabel').textContent = '商城地址 *';
+      document.getElementById('formCountryWrap').classList.remove('hidden');
+      document.getElementById('formCountry').value = '';
+      document.getElementById('formLogoValue').value = '';
+      document.getElementById('formLogoUrl').value = '';
+      logoBase64 = '';
+      resetLogoPreview();
+      switchLogoMode('url');
+      document.getElementById('brandModal').classList.remove('hidden');
+      document.getElementById('brandModal').classList.add('flex');
+    }
+
+    function openShopEditModal(id) {
+      const brand = shopBrands.find(b => b.id === id); if (!brand) return;
+      document.getElementById('modalTitle').textContent = '编辑商城';
+      document.getElementById('formEditId').value = id;
+      document.getElementById('formNameEn').value = brand.name_en;
+      document.getElementById('formNameCn').value = brand.name_cn || '';
+      document.getElementById('formUrl').value = brand.url;
+      document.getElementById('formRegion').value = brand.region;
+      document.getElementById('formType').value = 'shop';
+      document.getElementById('formUrlLabel').textContent = '商城地址 *';
+      document.getElementById('formCountryWrap').classList.remove('hidden');
+      document.getElementById('formCountry').value = brand.country || '';
+      logoBase64 = '';
+      if (brand.logo) {
+        document.getElementById('formLogoValue').value = brand.logo;
+        if (brand.logo.startsWith('http')) { document.getElementById('formLogoUrl').value = brand.logo; switchLogoMode('url'); document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(brand.logo) + '" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display=\'none\'" /></div>'; }
+        else { switchLogoMode('upload'); document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + brand.logo + '" class="w-12 h-12 rounded-lg object-contain" /></div>'; }
+      } else { resetLogoPreview(); switchLogoMode('url'); }
+      document.getElementById('brandModal').classList.remove('hidden');
+      document.getElementById('brandModal').classList.add('flex');
+    }
+
+    function saveShopBrand(editId, nameEn, nameCn, url, region, country, logo) {
+      if (editId) {
+        const numId = Number(editId);
+        const idx = shopBrands.findIndex(b => b.id === numId); if (idx === -1) return;
+        shopBrands[idx] = { ...shopBrands[idx], name_en: nameEn, name_cn: nameCn, url, region, country, logo };
+        closeModal(); renderShopBrands(); showToast('商城修改成功！');
+      } else {
+        shopBrands.push({ id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, country, logo });
+        closeModal(); renderShopBrands(); showToast('商城添加成功！');
+      }
+      localStorage.setItem('shopBrands', JSON.stringify(shopBrands));
+    }
+
+    // ========== GROUP: Add/Edit ==========
+    function openGroupAddModal() {
+      document.getElementById('groupModalTitle').textContent = '添加集团';
+      document.getElementById('groupEditId').value = '';
+      document.getElementById('groupName').value = '';
+      document.getElementById('groupDesc').value = '';
+      document.getElementById('groupUrl').value = '';
+      document.getElementById('groupLogo').value = '';
+      currentSubBrands = [];
+      renderSelectedSubBrands();
+      document.getElementById('groupModal').classList.remove('hidden');
+      document.getElementById('groupModal').classList.add('flex');
+    }
+
+    function openGroupEditModal(id) {
+      const group = groupData.find(g => g.id === id); if (!group) return;
+      document.getElementById('groupModalTitle').textContent = '编辑集团';
+      document.getElementById('groupEditId').value = id;
+      document.getElementById('groupName').value = group.name;
+      document.getElementById('groupDesc').value = group.desc || '';
+      document.getElementById('groupUrl').value = group.url || '';
+      document.getElementById('groupLogo').value = group.logo || '';
+      currentSubBrands = (group.sub_brands || []).map(sb => ({...sb}));
+      renderSelectedSubBrands();
+      document.getElementById('groupModal').classList.remove('hidden');
+      document.getElementById('groupModal').classList.add('flex');
+    }
+
+    function closeGroupModal() {
+      document.getElementById('groupModal').classList.add('hidden');
+      document.getElementById('groupModal').classList.remove('flex');
+    }
+
+    function searchSubBrands() {
+      const query = document.getElementById('groupSubSearch').value.trim().toLowerCase();
+      const container = document.getElementById('subBrandResults');
+      if (!query) { container.classList.add('hidden'); return; }
+      const results = allBrands.filter(b => b.name_en.toLowerCase().includes(query) || (b.name_cn && b.name_cn.toLowerCase().includes(query))).slice(0, 10);
+      if (!results.length) { container.classList.add('hidden'); return; }
+      let html = '';
+      results.forEach(b => {
+        const already = currentSubBrands.some(sb => sb.name === b.name_en);
+        html += `<div class="px-3 py-2 hover:bg-white/10 cursor-pointer flex items-center gap-2 ${already ? 'opacity-50' : ''}" onclick="addSubBrand(${b.id})">`;
+        if (b.logo) html += `<img src="${escapeHtml(b.logo)}" class="w-5 h-5 rounded object-contain" onerror="this.style.display='none'" />`;
+        html += `<span class="text-sm text-white">${escapeHtml(b.name_en)}</span>${b.name_cn ? `<span class="text-xs text-gray-400">${escapeHtml(b.name_cn)}</span>` : ''}${already ? '<span class="text-xs text-green-400">已添加</span>' : ''}</div>`;
+      });
+      container.innerHTML = html;
+      container.classList.remove('hidden');
+    }
+
+    function addSubBrand(brandId) {
+      const brand = allBrands.find(b => b.id === brandId); if (!brand) return;
+      if (currentSubBrands.some(sb => sb.name === brand.name_en)) return;
+      currentSubBrands.push({ name: brand.name_en, url: brand.url, logo: brand.logo || '' });
+      document.getElementById('groupSubSearch').value = '';
+      document.getElementById('subBrandResults').classList.add('hidden');
+      renderSelectedSubBrands();
+    }
+
+    function addManualSubBrand() {
+      const name = document.getElementById('manualSubName').value.trim();
+      const url = document.getElementById('manualSubUrl').value.trim();
+      if (!name) return;
+      currentSubBrands.push({ name, url: url || '', logo: '' });
+      document.getElementById('manualSubName').value = '';
+      document.getElementById('manualSubUrl').value = '';
+      renderSelectedSubBrands();
+    }
+
+    function removeSubBrand(index) {
+      currentSubBrands.splice(index, 1);
+      renderSelectedSubBrands();
+    }
+
+    function renderSelectedSubBrands() {
+      const container = document.getElementById('selectedSubBrands');
+      if (!currentSubBrands.length) { container.innerHTML = '<span class="text-xs text-gray-500">暂无关联子品牌</span>'; return; }
+      let html = '';
+      currentSubBrands.forEach((sb, i) => {
+        html += `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-blue-500/20 text-blue-300 text-xs">${escapeHtml(sb.name)}<button type="button" onclick="removeSubBrand(${i})" class="ml-1 text-red-400 hover:text-red-300">&times;</button></span>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function onGroupFormSubmit(e) {
+      e.preventDefault();
+      const editId = document.getElementById('groupEditId').value;
+      const name = document.getElementById('groupName').value.trim();
+      const desc = document.getElementById('groupDesc').value.trim();
+      const url = document.getElementById('groupUrl').value.trim();
+      const logo = document.getElementById('groupLogo').value.trim();
+
+      if (!name) return;
+
+      if (editId) {
+        const numId = Number(editId);
+        const idx = groupData.findIndex(g => g.id === numId); if (idx === -1) return;
+        groupData[idx] = { ...groupData[idx], name, desc, url, logo, sub_brands: [...currentSubBrands] };
+        closeGroupModal(); renderGroups(); showToast('集团修改成功！');
+      } else {
+        groupData.push({ id: Date.now(), name, desc, url, logo, sub_brands: [...currentSubBrands] });
+        closeGroupModal(); renderGroups(); showToast('集团添加成功！');
+      }
+      localStorage.setItem('groupData', JSON.stringify(groupData));
+    }
+
     // ========== Delete ==========
-    function openDeleteModal(id, name) {
+    function openDeleteModal(id, name, type) {
       deleteTargetId = id;
+      deleteTargetType = type;
       document.getElementById('deleteBrandName').textContent = `确定要删除「${name}」吗？此操作不可撤销。`;
-      const modal = document.getElementById('deleteModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
+      document.getElementById('deleteModal').classList.remove('hidden');
+      document.getElementById('deleteModal').classList.add('flex');
     }
 
     function closeDeleteModal() {
-      const modal = document.getElementById('deleteModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      deleteTargetId = null;
+      document.getElementById('deleteModal').classList.add('hidden');
+      document.getElementById('deleteModal').classList.remove('flex');
+      deleteTargetId = null; deleteTargetType = '';
     }
 
     function onConfirmDelete() {
       if (!deleteTargetId) return;
-
-      // Remove from allBrands
-      allBrands = allBrands.filter(b => b.id !== deleteTargetId);
-
-      // Check if it's a user brand
-      const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
-      const ubIndex = userBrands.findIndex(b => b.id === deleteTargetId);
-      if (ubIndex !== -1) {
-        userBrands.splice(ubIndex, 1);
-        localStorage.setItem('userBrands', JSON.stringify(userBrands));
-      } else {
-        // Built-in brand - add to deleted list
-        const deletedIds = JSON.parse(localStorage.getItem('deletedBrands') || '[]');
-        deletedIds.push(deleteTargetId);
-        localStorage.setItem('deletedBrands', JSON.stringify(deletedIds));
+      if (deleteTargetType === 'official') {
+        allBrands = allBrands.filter(b => b.id !== deleteTargetId);
+        const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
+        const ubIdx = userBrands.findIndex(b => b.id === deleteTargetId);
+        if (ubIdx !== -1) { userBrands.splice(ubIdx, 1); localStorage.setItem('userBrands', JSON.stringify(userBrands)); }
+        else { const deletedIds = JSON.parse(localStorage.getItem('deletedBrands') || '[]'); deletedIds.push(deleteTargetId); localStorage.setItem('deletedBrands', JSON.stringify(deletedIds)); }
+        closeDeleteModal(); buildLetterFilter(); renderBrands(); showToast('品牌已删除');
+      } else if (deleteTargetType === 'shop') {
+        shopBrands = shopBrands.filter(b => b.id !== deleteTargetId);
+        localStorage.setItem('shopBrands', JSON.stringify(shopBrands));
+        closeDeleteModal(); renderShopBrands(); showToast('商城已删除');
+      } else if (deleteTargetType === 'group') {
+        groupData = groupData.filter(g => g.id !== deleteTargetId);
+        localStorage.setItem('groupData', JSON.stringify(groupData));
+        closeDeleteModal(); renderGroups(); showToast('集团已删除');
       }
+    }
 
-      closeDeleteModal();
-      buildLetterFilter();
-      renderBrands();
-      showToast('品牌已删除');
+    // ========== Export ==========
+    function doExport() {
+      try {
+        const dataStr = JSON.stringify(allBrands, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'brands_data.json';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
+        showToast('官网数据导出成功！');
+      } catch(err) { showToast('导出失败：' + err.message); }
+    }
+
+    function doShopExport() {
+      try {
+        const dataStr = JSON.stringify(shopBrands, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'shop_data.json';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
+        showToast('商城数据导出成功！');
+      } catch(err) { showToast('导出失败：' + err.message); }
+    }
+
+    function doGroupExport() {
+      try {
+        const dataStr = JSON.stringify(groupData, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'group_data.json';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
+        showToast('集团数据导出成功！');
+      } catch(err) { showToast('导出失败：' + err.message); }
     }
 
     // ========== Toast ==========
     function showToast(msg) {
       const toast = document.getElementById('toast');
-      document.getElementById('toastMsg').textContent = msg;
+      toast.textContent = msg;
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('hidden'), 2500);
     }
