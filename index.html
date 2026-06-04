@@ -170,10 +170,14 @@
           <label class="block text-xs text-gray-400 mb-1">主打地区</label>
           <select id="formRegion" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm">
             <option value="全球" class="bg-gray-800">全球</option>
+            <option value="中国" class="bg-gray-800">中国</option>
             <option value="美国" class="bg-gray-800">美国</option>
             <option value="英国" class="bg-gray-800">英国</option>
             <option value="俄罗斯" class="bg-gray-800">俄罗斯</option>
             <option value="加拿大" class="bg-gray-800">加拿大</option>
+            <option value="欧洲" class="bg-gray-800">欧洲</option>
+            <option value="东南亚" class="bg-gray-800">东南亚</option>
+            <option value="中东" class="bg-gray-800">中东</option>
           </select>
         </div>
         <!-- Shop-specific: country/region detail -->
@@ -340,7 +344,23 @@
       });
 
       // Load shop brands
-      shopBrands = JSON.parse(localStorage.getItem('shopBrands') || '[]');
+      const DEFAULT_SHOPS = [
+        { id: 9001, name_en: 'Electric Tobacconist', name_cn: '', url: 'https://www.electrictobacconist.co.uk/', region: '英国', country: '英国', logo: '' },
+        { id: 9002, name_en: 'Totally Wicked UK', name_cn: '', url: 'https://www.totallywicked-e-liquid.co.uk/', region: '英国', country: '英国', logo: '' },
+        { id: 9003, name_en: 'E-Cigarette Direct', name_cn: '', url: 'https://www.ecigarettedirect.co.uk/', region: '英国', country: '英国', logo: '' },
+        { id: 9004, name_en: 'Engångs vape', name_cn: '', url: 'https://vapea.se', region: '欧洲', country: '斯德哥尔摩-瑞典', logo: '' },
+        { id: 9005, name_en: 'pyne pod-Vaping360', name_cn: '', url: 'https://vapesourcing.com', region: '美国', country: '美国', logo: '' },
+        { id: 9006, name_en: 'ProVape', name_cn: '', url: 'https://provape.com/', region: '美国', country: '美国', logo: '' },
+        { id: 9007, name_en: 'Red Star', name_cn: '', url: 'https://www.redstarvapor.com', region: '美国', country: '美国', logo: '' },
+        { id: 9008, name_en: 'Vaping', name_cn: '', url: 'https://vaping.com', region: '美国', country: '美国', logo: '' }
+      ];
+      const savedShops = JSON.parse(localStorage.getItem('shopBrands') || '[]');
+      if (savedShops.length > 0) {
+        shopBrands = savedShops;
+      } else {
+        shopBrands = DEFAULT_SHOPS;
+        localStorage.setItem('shopBrands', JSON.stringify(shopBrands));
+      }
       renderShopBrands();
       document.getElementById('shopSearchInput').addEventListener('input', function() {
         clearTimeout(shopSearchTimeout);
