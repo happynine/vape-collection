@@ -55,19 +55,7 @@
       </div>
 
       <!-- Brand Cards Grid -->
-      <div id="brandGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"></div>
-
-      <!-- Bottom Buttons -->
-      <div id="officialBottomBar" class="flex justify-center gap-3 py-4">
-        <button onclick="requireAuth('add')" class="px-6 py-2.5 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition">添加</button>
-        <button onclick="requireAuth('edit')" id="officialEditBtn" class="px-6 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm font-medium hover:bg-white/20 transition">编辑</button>
-        <button onclick="requireAuth('export')" class="px-6 py-2.5 rounded-lg bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition">导出数据</button>
-      </div>
-      <!-- Edit Mode Bar -->
-      <div id="officialEditBar" class="hidden flex justify-center gap-3 py-4 bg-red-500/20 rounded-lg mb-4">
-        <span class="text-red-300 text-sm flex items-center">编辑模式已开启</span>
-        <button onclick="exitEditMode()" class="px-6 py-2.5 rounded-lg bg-red-500 text-white text-sm font-medium">退出编辑</button>
-      </div>
+      <div id="brandGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-24"></div>
     </div>
 
     <!-- ==================== SHOP TAB ==================== -->
@@ -92,18 +80,7 @@
       </div>
 
       <!-- Shop Cards Grid -->
-      <div id="shopGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"></div>
-
-      <!-- Bottom Buttons -->
-      <div class="flex justify-center gap-3 py-4">
-        <button onclick="requireAuth('shop-add')" class="px-6 py-2.5 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition">添加</button>
-        <button onclick="requireAuth('shop-edit')" id="shopEditBtn" class="px-6 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm font-medium hover:bg-white/20 transition">编辑</button>
-        <button onclick="requireAuth('shop-export')" class="px-6 py-2.5 rounded-lg bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition">导出数据</button>
-      </div>
-      <div id="shopEditBar" class="hidden flex justify-center gap-3 py-4 bg-red-500/20 rounded-lg mb-4">
-        <span class="text-red-300 text-sm flex items-center">编辑模式已开启</span>
-        <button onclick="exitShopEditMode()" class="px-6 py-2.5 rounded-lg bg-red-500 text-white text-sm font-medium">退出编辑</button>
-      </div>
+      <div id="shopGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-24"></div>
     </div>
 
     <!-- ==================== GROUP TAB ==================== -->
@@ -115,19 +92,20 @@
       </div>
 
       <!-- Group Cards -->
-      <div id="groupGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"></div>
-
-      <!-- Bottom Buttons -->
-      <div class="flex justify-center gap-3 py-4">
-        <button onclick="requireAuth('group-add')" class="px-6 py-2.5 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition">添加</button>
-        <button onclick="requireAuth('group-edit')" id="groupEditBtn" class="px-6 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm font-medium hover:bg-white/20 transition">编辑</button>
-        <button onclick="requireAuth('group-export')" class="px-6 py-2.5 rounded-lg bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition">导出数据</button>
-      </div>
-      <div id="groupEditBar" class="hidden flex justify-center gap-3 py-4 bg-red-500/20 rounded-lg mb-4">
-        <span class="text-red-300 text-sm flex items-center">编辑模式已开启</span>
-        <button onclick="exitGroupEditMode()" class="px-6 py-2.5 rounded-lg bg-red-500 text-white text-sm font-medium">退出编辑</button>
-      </div>
+      <div id="groupGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-24"></div>
     </div>
+  </div>
+
+  <!-- ==================== FIXED BOTTOM BAR ==================== -->
+  <div id="fixedBottomBar" class="fixed bottom-0 left-0 right-0 z-40 glass py-3 px-4 flex justify-start gap-3">
+    <button id="btnAdd" onclick="handleAdd()" class="px-6 py-2.5 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition">添加</button>
+    <button id="btnEdit" onclick="handleEdit()" class="px-6 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm font-medium hover:bg-white/20 transition">编辑</button>
+    <button id="btnExport" onclick="handleExport()" class="px-6 py-2.5 rounded-lg bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition">导出数据</button>
+  </div>
+  <!-- Edit Mode Bar (Fixed) -->
+  <div id="fixedEditBar" class="hidden fixed bottom-0 left-0 right-0 z-40 py-3 px-4 flex justify-start gap-3 bg-red-500/20">
+    <span class="text-red-300 text-sm flex items-center">编辑模式已开启</span>
+    <button onclick="exitCurrentEditMode()" class="px-6 py-2.5 rounded-lg bg-red-500 text-white text-sm font-medium">退出编辑</button>
   </div>
 
   <!-- ==================== LOGIN MODAL ==================== -->
@@ -317,6 +295,37 @@
       document.getElementById('tabOfficial').className = (tab === 'official' ? 'tab-active ' : '') + 'px-6 py-2 rounded-full text-sm font-medium border border-white/10 transition-all' + (tab !== 'official' ? ' bg-white/5 text-gray-400' : '');
       document.getElementById('tabShop').className = (tab === 'shop' ? 'tab-active ' : '') + 'px-6 py-2 rounded-full text-sm font-medium border border-white/10 transition-all' + (tab !== 'shop' ? ' bg-white/5 text-gray-400' : '');
       document.getElementById('tabGroup').className = (tab === 'group' ? 'tab-active ' : '') + 'px-6 py-2 rounded-full text-sm font-medium border border-white/10 transition-all' + (tab !== 'group' ? ' bg-white/5 text-gray-400' : '');
+      // Reset edit mode when switching tabs
+      if (editMode) exitEditMode();
+      if (shopEditMode) exitShopEditMode();
+      if (groupEditMode) exitGroupEditMode();
+    }
+
+    // ========== Fixed Bottom Bar Handlers ==========
+    function handleAdd() {
+      if (currentTab === 'official') requireAuth('add');
+      else if (currentTab === 'shop') requireAuth('shop-add');
+      else if (currentTab === 'group') requireAuth('group-add');
+    }
+    function handleEdit() {
+      if (currentTab === 'official') requireAuth('edit');
+      else if (currentTab === 'shop') requireAuth('shop-edit');
+      else if (currentTab === 'group') requireAuth('group-edit');
+    }
+    function handleExport() {
+      if (currentTab === 'official') requireAuth('export');
+      else if (currentTab === 'shop') requireAuth('shop-export');
+      else if (currentTab === 'group') requireAuth('group-export');
+    }
+    function exitCurrentEditMode() {
+      if (currentTab === 'official') exitEditMode();
+      else if (currentTab === 'shop') exitShopEditMode();
+      else if (currentTab === 'group') exitGroupEditMode();
+    }
+    function updateFixedBar() {
+      const isEditing = editMode || shopEditMode || groupEditMode;
+      document.getElementById('fixedBottomBar').classList.toggle('hidden', isEditing);
+      document.getElementById('fixedEditBar').classList.toggle('hidden', !isEditing);
     }
 
     // ========== Init ==========
@@ -599,42 +608,36 @@
     // ========== Edit Mode (Official) ==========
     function toggleEditMode() {
       editMode = !editMode;
-      document.getElementById('officialBottomBar').classList.toggle('hidden', editMode);
-      document.getElementById('officialEditBar').classList.toggle('hidden', !editMode);
+      updateFixedBar();
       renderBrands();
     }
     function exitEditMode() {
       editMode = false;
-      document.getElementById('officialBottomBar').classList.remove('hidden');
-      document.getElementById('officialEditBar').classList.add('hidden');
+      updateFixedBar();
       renderBrands();
     }
 
     // ========== Edit Mode (Shop) ==========
     function toggleShopEditMode() {
       shopEditMode = !shopEditMode;
-      document.getElementById('shopEditBtn').closest('.flex').classList.toggle('hidden', shopEditMode);
-      document.getElementById('shopEditBar').classList.toggle('hidden', !shopEditMode);
+      updateFixedBar();
       renderShopBrands();
     }
     function exitShopEditMode() {
       shopEditMode = false;
-      document.getElementById('shopEditBtn').closest('.flex').classList.remove('hidden');
-      document.getElementById('shopEditBar').classList.add('hidden');
+      updateFixedBar();
       renderShopBrands();
     }
 
     // ========== Edit Mode (Group) ==========
     function toggleGroupEditMode() {
       groupEditMode = !groupEditMode;
-      document.getElementById('groupEditBtn').closest('.flex').classList.toggle('hidden', groupEditMode);
-      document.getElementById('groupEditBar').classList.toggle('hidden', !groupEditMode);
+      updateFixedBar();
       renderGroups();
     }
     function exitGroupEditMode() {
       groupEditMode = false;
-      document.getElementById('groupEditBtn').closest('.flex').classList.remove('hidden');
-      document.getElementById('groupEditBar').classList.add('hidden');
+      updateFixedBar();
       renderGroups();
     }
 
