@@ -98,6 +98,7 @@
 
   <!-- ==================== FIXED BOTTOM BAR ==================== -->
   <div id="fixedBottomBar" class="fixed bottom-4 left-4 z-40 flex flex-col gap-2">
+    <div id="statsBar" class="text-xs text-red-400 font-medium px-1 mb-1"></div>
     <button id="btnAdd" onclick="handleAdd()" class="px-5 py-2 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition shadow-lg">添加</button>
     <button id="btnEdit" onclick="handleEdit()" class="px-5 py-2 rounded-lg bg-white/10 text-gray-300 text-sm font-medium hover:bg-white/20 transition backdrop-blur shadow-lg">编辑</button>
     <button id="btnExport" onclick="handleExport()" class="px-5 py-2 rounded-lg bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition shadow-lg">导出数据</button>
@@ -315,6 +316,7 @@
       } else {
         handleScroll();
       }
+      updateStatsBar();
     }
 
     // ========== Fixed Bottom Bar Handlers ==========
@@ -342,6 +344,33 @@
       const isEditing = editMode || shopEditMode || groupEditMode;
       document.getElementById('fixedBottomBar').classList.toggle('hidden', isEditing);
       document.getElementById('fixedEditBar').classList.toggle('hidden', !isEditing);
+    }
+    function updateStatsBar() {
+      const el = document.getElementById('statsBar');
+      if (!el) return;
+      if (currentTab === 'official') {
+        const brands = getAllBrands();
+        const regions = {};
+        brands.forEach(b => { if (b.region) regions[b.region] = (regions[b.region]||0)+1; });
+        let html = `总计: ${brands.length}`;
+        const sorted = Object.entries(regions).sort((a,b)=>b[1]-a[1]);
+        sorted.forEach(([r,c]) => { html += ` | ${r}: ${c}`; });
+        el.textContent = html;
+      } else if (currentTab === 'shop') {
+        const shops = getAllShops();
+        const regions = {};
+        shops.forEach(s => { const r = s.region || s.country || '未分类'; regions[r] = (regions[r]||0)+1; });
+        let html = `总计: ${shops.length}`;
+        const sorted = Object.entries(regions).sort((a,b)=>b[1]-a[1]);
+        sorted.forEach(([r,c]) => { html += ` | ${r}: ${c}`; });
+        el.textContent = html;
+      } else if (currentTab === 'group') {
+        const groups = getAllGroups();
+        let html = `总计: ${groups.length}`;
+        const totalSubs = groups.reduce((s,g) => s + (g.sub_brands||[]).length, 0);
+        html += ` | 子品牌: ${totalSubs}`;
+        el.textContent = html;
+      }
     }
 
     // ========== Right Side A-Z Filter ==========
@@ -543,6 +572,7 @@
         });
       });
       grid.innerHTML = html;
+      updateStatsBar();
     }
 
     // ========== SHOP: Region Filter ==========
@@ -583,6 +613,7 @@
         </div>`;
       });
       grid.innerHTML = html;
+      updateStatsBar();
     }
 
     // ========== GROUP: Render ==========
@@ -627,6 +658,7 @@
         </div>`;
       });
       grid.innerHTML = html;
+      updateStatsBar();
     }
 
     // ========== Auth ==========
