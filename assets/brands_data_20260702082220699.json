@@ -1,4 +1,4 @@
-const BRANDS_DATA = [
+[
   {
     "id": 1,
     "name_en": "AAOK",
@@ -3230,4 +3230,4 @@ const BRANDS_DATA = [
     "level": 2,
     "logo": "https://logo.clearbit.com/zumovape.com"
   }
-];
+]
