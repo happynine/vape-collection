@@ -576,7 +576,16 @@
       ];
       const savedShops = JSON.parse(localStorage.getItem('shopBrands') || '[]');
       if (savedShops.length > 0) {
-        shopBrands = savedShops;
+        // Merge: keep saved shops + add new DEFAULT_SHOPS that are not in savedShops
+        const savedUrls = new Set(savedShops.map(s => s.url.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '').toLowerCase()));
+        const savedNames = new Set(savedShops.map(s => (s.name_en||'').toLowerCase().replace(/\s+/g,'')));
+        const newDefaults = DEFAULT_SHOPS.filter(d => {
+          const du = (d.url||'').replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '').toLowerCase();
+          const dn = (d.name_en||'').toLowerCase().replace(/\s+/g,'');
+          return !savedUrls.has(du) && !savedNames.has(dn);
+        });
+        shopBrands = savedShops.concat(newDefaults);
+        localStorage.setItem('shopBrands', JSON.stringify(shopBrands));
       } else {
         shopBrands = DEFAULT_SHOPS;
         localStorage.setItem('shopBrands', JSON.stringify(shopBrands));
