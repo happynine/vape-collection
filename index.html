@@ -320,14 +320,16 @@
       if (shopEditMode) exitShopEditMode();
       if (groupEditMode) exitGroupEditMode();
       // Hide right side A-Z when not on official or shop tab
+      const rightAZ = document.getElementById('rightSideAZ');
+      const shopAZ = document.getElementById('shopRightAZ');
       if (tab !== 'official' && tab !== 'shop') {
-        document.getElementById('rightSideAZ').classList.add('hidden');
-        document.getElementById('shopRightAZ').classList.add('hidden');
+        if (rightAZ) rightAZ.classList.add('hidden');
+        if (shopAZ) shopAZ.classList.add('hidden');
       } else if (tab === 'official') {
-        document.getElementById('shopRightAZ').classList.add('hidden');
+        if (shopAZ) shopAZ.classList.add('hidden');
         handleScroll();
       } else if (tab === 'shop') {
-        document.getElementById('rightSideAZ').classList.add('hidden');
+        if (rightAZ) rightAZ.classList.add('hidden');
         handleScroll();
       }
       updateStatsBar();
@@ -430,15 +432,19 @@
       // Show right side A-Z on official or shop tab when scrolled
       const rightAZ = document.getElementById('rightSideAZ');
       const shopAZ = document.getElementById('shopRightAZ');
-      if (currentTab === 'official' && scrollY > showThreshold) {
-        rightAZ.classList.remove('hidden');
-      } else {
-        rightAZ.classList.add('hidden');
+      if (rightAZ) {
+        if (currentTab === 'official' && scrollY > showThreshold) {
+          rightAZ.classList.remove('hidden');
+        } else {
+          rightAZ.classList.add('hidden');
+        }
       }
-      if (currentTab === 'shop' && scrollY > showThreshold) {
-        shopAZ.classList.remove('hidden');
-      } else {
-        shopAZ.classList.add('hidden');
+      if (shopAZ) {
+        if (currentTab === 'shop' && scrollY > showThreshold) {
+          shopAZ.classList.remove('hidden');
+        } else {
+          shopAZ.classList.add('hidden');
+        }
       }
 
       // Show back to top button when scrolled more than one page
@@ -660,6 +666,11 @@
       renderBrands();
     }
 
+    function filterShopLetter(l) {
+      selectedShopLetter = l;
+      renderShopBrands();
+    }
+
     function filterRegion(r) {
       selectedRegion = r;
       document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('region-active'));
@@ -733,6 +744,19 @@
       if (query) filtered = filtered.filter(b => b.name_en.toLowerCase().includes(query) || (b.name_cn && b.name_cn.toLowerCase().includes(query)) || b.url.toLowerCase().includes(query) || (b.country && b.country.toLowerCase().includes(query)));
       if (selectedShopRegion) filtered = filtered.filter(b => b.region === selectedShopRegion);
       if (selectedShopLetter) filtered = filtered.filter(b => b.name_en[0].toUpperCase() === selectedShopLetter);
+
+      // Generate shop letter filter bar
+      {
+        const letters = new Set();
+        shopBrands.forEach(b => { if (b.name_en) letters.add(b.name_en[0].toUpperCase()); });
+        const container = document.getElementById('shopLetterBar');
+        let lhtml = '<button onclick="filterShopLetter(\'\')" class="letter-btn px-2.5 py-1 rounded text-xs bg-white/8 text-gray-300 hover:bg-white/20 transition ' + (!selectedShopLetter ? 'letter-active' : '') + '">全部</button>';
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(l => {
+          const exists = letters.has(l);
+          lhtml += `<button onclick="filterShopLetter('${l}')" class="letter-btn px-2.5 py-1 rounded text-xs transition ${exists ? 'bg-white/8 text-gray-300 hover:bg-white/20' : 'bg-white/3 text-gray-600 cursor-not-allowed'} ${selectedShopLetter === l ? 'letter-active' : ''}" ${!exists ? 'disabled' : ''}>${l}</button>`;
+        });
+        container.innerHTML = lhtml;
+      }
 
       const grid = document.getElementById('shopGrid');
       if (!filtered.length) { grid.innerHTML = '<p class="text-gray-500 text-center col-span-full py-12">暂无商城数据，点击"添加"添加商城</p>'; return; }
