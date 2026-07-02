@@ -68,6 +68,9 @@
         <input id="shopSearchInput" type="text" placeholder="搜索商城名称、地区或网址..." class="w-full pl-12 pr-4 py-3 rounded-full bg-white/10 backdrop-blur text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
       </div>
 
+      <!-- Letter Filter for Shop -->
+      <div id="shopLetterBar" class="flex flex-wrap justify-center gap-1 mb-4"></div>
+
       <!-- Region Filter for Shop -->
       <div class="flex flex-wrap justify-center gap-2 mb-6">
         <button onclick="filterShopRegion('')" class="shop-region-btn region-active px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">全部</button>
@@ -295,6 +298,7 @@
     // Shop data
     let shopBrands = [];
     let selectedShopRegion = '';
+    let selectedShopLetter = '';
     let shopSearchTimeout = null;
 
     // Group data
@@ -315,10 +319,15 @@
       if (editMode) exitEditMode();
       if (shopEditMode) exitShopEditMode();
       if (groupEditMode) exitGroupEditMode();
-      // Hide right side A-Z when not on official tab
-      if (tab !== 'official') {
+      // Hide right side A-Z when not on official or shop tab
+      if (tab !== 'official' && tab !== 'shop') {
         document.getElementById('rightSideAZ').classList.add('hidden');
-      } else {
+        document.getElementById('shopRightAZ').classList.add('hidden');
+      } else if (tab === 'official') {
+        document.getElementById('shopRightAZ').classList.add('hidden');
+        handleScroll();
+      } else if (tab === 'shop') {
+        document.getElementById('rightSideAZ').classList.add('hidden');
         handleScroll();
       }
       updateStatsBar();
@@ -418,12 +427,18 @@
       const windowHeight = window.innerHeight;
       const showThreshold = windowHeight;
 
-      // Show right side A-Z only on official tab and when scrolled
+      // Show right side A-Z on official or shop tab when scrolled
       const rightAZ = document.getElementById('rightSideAZ');
+      const shopAZ = document.getElementById('shopRightAZ');
       if (currentTab === 'official' && scrollY > showThreshold) {
         rightAZ.classList.remove('hidden');
       } else {
         rightAZ.classList.add('hidden');
+      }
+      if (currentTab === 'shop' && scrollY > showThreshold) {
+        shopAZ.classList.remove('hidden');
+      } else {
+        shopAZ.classList.add('hidden');
       }
 
       // Show back to top button when scrolled more than one page
@@ -703,12 +718,21 @@
       renderShopBrands();
     }
 
+    function filterShopLetter(l) {
+      selectedShopLetter = selectedShopLetter === l ? '' : l;
+      document.querySelectorAll('.shop-letter-btn').forEach(b => {
+        b.classList.toggle('region-active', b.textContent === selectedShopLetter);
+      });
+      renderShopBrands();
+    }
+
     // ========== SHOP: Render ==========
     function renderShopBrands() {
       const query = document.getElementById('shopSearchInput').value.trim().toLowerCase();
       let filtered = shopBrands;
       if (query) filtered = filtered.filter(b => b.name_en.toLowerCase().includes(query) || (b.name_cn && b.name_cn.toLowerCase().includes(query)) || b.url.toLowerCase().includes(query) || (b.country && b.country.toLowerCase().includes(query)));
       if (selectedShopRegion) filtered = filtered.filter(b => b.region === selectedShopRegion);
+      if (selectedShopLetter) filtered = filtered.filter(b => b.name_en[0].toUpperCase() === selectedShopLetter);
 
       const grid = document.getElementById('shopGrid');
       if (!filtered.length) { grid.innerHTML = '<p class="text-gray-500 text-center col-span-full py-12">暂无商城数据，点击"添加"添加商城</p>'; return; }
