@@ -345,6 +345,9 @@
       document.getElementById('fixedBottomBar').classList.toggle('hidden', isEditing);
       document.getElementById('fixedEditBar').classList.toggle('hidden', !isEditing);
     }
+    function getAllBrands() { return allBrands || []; }
+    function getAllShops() { return JSON.parse(localStorage.getItem('shopBrands') || '[]'); }
+    function getAllGroups() { return JSON.parse(localStorage.getItem('groupData') || '[]'); }
     function updateStatsBar() {
       const el = document.getElementById('statsBar');
       if (!el) return;
