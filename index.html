@@ -55,7 +55,9 @@
       </div>
 
       <!-- Brand Cards Grid -->
-      <div id="brandGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"></div>
+      <div id="brandGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4"></div>
+      <!-- Stats Bar for Official -->
+      <div id="statsBarOfficial" class="text-xs text-gray-500 text-center py-3 border-t border-white/5 mb-16"></div>
     </div>
 
     <!-- ==================== SHOP TAB ==================== -->
@@ -80,7 +82,9 @@
       </div>
 
       <!-- Shop Cards Grid -->
-      <div id="shopGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"></div>
+      <div id="shopGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4"></div>
+      <!-- Stats Bar for Shop -->
+      <div id="statsBarShop" class="text-xs text-gray-500 text-center py-3 border-t border-white/5 mb-16"></div>
     </div>
 
     <!-- ==================== GROUP TAB ==================== -->
@@ -92,21 +96,22 @@
       </div>
 
       <!-- Group Cards -->
-      <div id="groupGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"></div>
+      <div id="groupGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4"></div>
+      <!-- Stats Bar for Group -->
+      <div id="statsBarGroup" class="text-xs text-gray-500 text-center py-3 border-t border-white/5 mb-16"></div>
     </div>
   </div>
 
   <!-- ==================== FIXED BOTTOM BAR ==================== -->
-  <div id="fixedBottomBar" class="fixed bottom-4 left-4 z-40 flex flex-col gap-2">
-    <div id="statsBar" class="text-xs text-red-400 font-medium px-1 mb-1"></div>
-    <button id="btnAdd" onclick="handleAdd()" class="px-5 py-2 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition shadow-lg">添加</button>
-    <button id="btnEdit" onclick="handleEdit()" class="px-5 py-2 rounded-lg bg-white/10 text-gray-300 text-sm font-medium hover:bg-white/20 transition backdrop-blur shadow-lg">编辑</button>
-    <button id="btnExport" onclick="handleExport()" class="px-5 py-2 rounded-lg bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition shadow-lg">导出数据</button>
+  <div id="fixedBottomBar" class="fixed bottom-4 left-4 z-40 flex flex-col gap-1.5">
+    <button id="btnAdd" onclick="handleAdd()" class="px-3 py-1.5 rounded-lg bg-blue-500 text-white text-xs font-medium hover:bg-blue-600 transition shadow-lg">添加</button>
+    <button id="btnEdit" onclick="handleEdit()" class="px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 text-xs font-medium hover:bg-white/20 transition backdrop-blur shadow-lg">编辑</button>
+    <button id="btnExport" onclick="handleExport()" class="px-3 py-1.5 rounded-lg bg-green-500 text-white text-xs font-medium hover:bg-green-600 transition shadow-lg">导出数据</button>
   </div>
   <!-- Edit Mode Bar (Fixed) -->
-  <div id="fixedEditBar" class="hidden fixed bottom-4 left-4 z-40 py-2 px-4 flex flex-col gap-2 bg-red-500/80 backdrop-blur rounded-lg shadow-lg">
-    <span class="text-white text-sm flex items-center">编辑模式已开启</span>
-    <button onclick="exitCurrentEditMode()" class="px-5 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition">退出编辑</button>
+  <div id="fixedEditBar" class="hidden fixed bottom-4 left-4 z-40 py-1.5 px-3 flex flex-col gap-1.5 bg-red-500/80 backdrop-blur rounded-lg shadow-lg">
+    <span class="text-white text-xs flex items-center">编辑模式已开启</span>
+    <button onclick="exitCurrentEditMode()" class="px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-medium hover:bg-red-700 transition">退出编辑</button>
   </div>
 
   <!-- Right Side A-Z Filter (Fixed) - Shows when scrolled -->
@@ -349,9 +354,9 @@
     function getAllShops() { return JSON.parse(localStorage.getItem('shopBrands') || '[]'); }
     function getAllGroups() { return JSON.parse(localStorage.getItem('groupData') || '[]'); }
     function updateStatsBar() {
-      const el = document.getElementById('statsBar');
-      if (!el) return;
       if (currentTab === 'official') {
+        const el = document.getElementById('statsBarOfficial');
+        if (!el) return;
         const brands = getAllBrands();
         const regions = {};
         brands.forEach(b => { if (b.region) regions[b.region] = (regions[b.region]||0)+1; });
@@ -360,6 +365,8 @@
         sorted.forEach(([r,c]) => { html += ` | ${r}: ${c}`; });
         el.textContent = html;
       } else if (currentTab === 'shop') {
+        const el = document.getElementById('statsBarShop');
+        if (!el) return;
         const shops = getAllShops();
         const regions = {};
         shops.forEach(s => { const r = s.region || s.country || '未分类'; regions[r] = (regions[r]||0)+1; });
@@ -368,6 +375,8 @@
         sorted.forEach(([r,c]) => { html += ` | ${r}: ${c}`; });
         el.textContent = html;
       } else if (currentTab === 'group') {
+        const el = document.getElementById('statsBarGroup');
+        if (!el) return;
         const groups = getAllGroups();
         let html = `总计: ${groups.length}`;
         const totalSubs = groups.reduce((s,g) => s + (g.sub_brands||[]).length, 0);
