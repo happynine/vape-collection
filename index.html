@@ -744,6 +744,7 @@
       if (query) filtered = filtered.filter(b => b.name_en.toLowerCase().includes(query) || (b.name_cn && b.name_cn.toLowerCase().includes(query)) || b.url.toLowerCase().includes(query) || (b.country && b.country.toLowerCase().includes(query)));
       if (selectedShopRegion) filtered = filtered.filter(b => b.region === selectedShopRegion);
       if (selectedShopLetter) filtered = filtered.filter(b => b.name_en[0].toUpperCase() === selectedShopLetter);
+      filtered.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en', { sensitivity: 'base' }));
 
       // Generate shop letter filter bar
       {
