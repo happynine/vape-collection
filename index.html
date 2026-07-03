@@ -702,7 +702,7 @@
           const logoHtml = b.logo
             ? `<img src="${escapeHtml(b.logo)}" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${escapeHtml(b.name_en[0])}</div>`
             : `<div class="logo-fallback">${escapeHtml(b.name_en[0])}</div>`;
-          const editOverlay = editMode ? `<div class="edit-overlay"><button onclick="openEditModal(${b.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="openDeleteModal(${b.id},'${escapeHtml(b.name_en)}','official')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
+          const editOverlay = editMode ? `<div class="edit-overlay"><button onclick="openEditModal(${b.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="transferToShop(${b.id})" class="px-3 py-1.5 rounded bg-green-500 text-white text-xs">转商城</button><button onclick="openDeleteModal(${b.id},'${escapeHtml(b.name_en)}','official')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
           html += `<div class="glass-card rounded-xl p-4 relative cursor-pointer" onclick="${editMode ? '' : `window.open('${escapeHtml(b.url)}','_blank')`}">
             ${editOverlay}
             <div class="flex items-start gap-3">
@@ -1241,6 +1241,47 @@
         closeGroupModal(); renderGroups(); showToast('集团添加成功！');
       }
       localStorage.setItem('groupData', JSON.stringify(groupData));
+    }
+
+    // ========== Transfer to Shop ==========
+    function transferToShop(brandId) {
+      const brand = allBrands.find(b => b.id === brandId);
+      if (!brand) { showToast('未找到该品牌'); return; }
+
+      // Create shop entry from brand data
+      const newShop = {
+        id: Date.now(),
+        name_en: brand.name_en || '',
+        name_cn: brand.name_cn || '',
+        url: brand.url || '',
+        region: brand.region || '',
+        country: '',
+        logo: brand.logo || ''
+      };
+
+      // Add to shopBrands
+      shopBrands.push(newShop);
+      localStorage.setItem('shopBrands', JSON.stringify(shopBrands));
+
+      // Remove from official brands
+      allBrands = allBrands.filter(b => b.id !== brandId);
+      const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
+      const ubIdx = userBrands.findIndex(b => b.id === brandId);
+      if (ubIdx !== -1) {
+        userBrands.splice(ubIdx, 1);
+        localStorage.setItem('userBrands', JSON.stringify(userBrands));
+      } else {
+        const deletedIds = JSON.parse(localStorage.getItem('deletedBrands') || '[]');
+        deletedIds.push(brandId);
+        localStorage.setItem('deletedBrands', JSON.stringify(deletedIds));
+      }
+
+      // Re-render both tabs
+      buildLetterFilter();
+      renderBrands();
+      renderShopBrands();
+      updateStatsBar();
+      showToast(`「${brand.name_en}」已转移到商城`);
     }
 
     // ========== Delete ==========
