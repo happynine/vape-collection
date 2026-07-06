@@ -275,6 +275,18 @@
     </div>
   </div>
 
+  <!-- ==================== TRANSFER MODAL ==================== -->
+  <div id="transferModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div class="glass rounded-2xl p-6 w-full max-w-sm mx-4">
+      <h3 class="text-lg font-bold mb-4 text-center">确认转商城</h3>
+      <p id="transferBrandName" class="text-sm text-gray-300 mb-6 text-center"></p>
+      <div class="flex gap-3">
+        <button onclick="closeTransferModal()" class="flex-1 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm">取消</button>
+        <button onclick="onConfirmTransfer()" class="flex-1 py-2.5 rounded-lg bg-green-500 text-white text-sm">确认转移</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="toast" class="hidden fixed top-6 left-1/2 -translate-x-1/2 glass px-6 py-3 rounded-full text-sm z-50"></div>
 
@@ -292,6 +304,7 @@
     let pendingAction = null;
     let deleteTargetId = null;
     let deleteTargetType = '';
+    let transferTargetId = null;
     let logoBase64 = '';
     let searchTimeout = null;
 
@@ -1247,6 +1260,22 @@
     function transferToShop(brandId) {
       const brand = allBrands.find(b => b.id === brandId);
       if (!brand) { showToast('未找到该品牌'); return; }
+      transferTargetId = brandId;
+      document.getElementById('transferBrandName').textContent = `确定将「${brand.name_en}」转移到商城吗？该品牌将从官网中删除。`;
+      document.getElementById('transferModal').classList.remove('hidden');
+      document.getElementById('transferModal').classList.add('flex');
+    }
+
+    function closeTransferModal() {
+      document.getElementById('transferModal').classList.add('hidden');
+      document.getElementById('transferModal').classList.remove('flex');
+      transferTargetId = null;
+    }
+
+    function onConfirmTransfer() {
+      if (!transferTargetId) return;
+      const brand = allBrands.find(b => b.id === transferTargetId);
+      if (!brand) { closeTransferModal(); showToast('未找到该品牌'); return; }
 
       // Create shop entry from brand data
       const newShop = {
@@ -1264,19 +1293,20 @@
       localStorage.setItem('shopBrands', JSON.stringify(shopBrands));
 
       // Remove from official brands
-      allBrands = allBrands.filter(b => b.id !== brandId);
+      allBrands = allBrands.filter(b => b.id !== transferTargetId);
       const userBrands = JSON.parse(localStorage.getItem('userBrands') || '[]');
-      const ubIdx = userBrands.findIndex(b => b.id === brandId);
+      const ubIdx = userBrands.findIndex(b => b.id === transferTargetId);
       if (ubIdx !== -1) {
         userBrands.splice(ubIdx, 1);
         localStorage.setItem('userBrands', JSON.stringify(userBrands));
       } else {
         const deletedIds = JSON.parse(localStorage.getItem('deletedBrands') || '[]');
-        deletedIds.push(brandId);
+        deletedIds.push(transferTargetId);
         localStorage.setItem('deletedBrands', JSON.stringify(deletedIds));
       }
 
       // Re-render both tabs
+      closeTransferModal();
       buildLetterFilter();
       renderBrands();
       renderShopBrands();
