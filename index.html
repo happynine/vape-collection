@@ -14,8 +14,9 @@
     .letter-active { background: rgba(255,255,255,0.9) !important; color: #0f0f1a !important; }
     .region-active { background: rgba(255,255,255,0.9) !important; color: #0f0f1a !important; }
     .tab-active { background: rgba(59,130,246,0.3) !important; color: #93c5fd !important; border-color: rgba(59,130,246,0.5) !important; }
-    .edit-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.5); border-radius:12px; display:flex; align-items:center; justify-content:center; gap:8px; opacity:0; transition:opacity 0.2s; }
+    .edit-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.5); border-radius:12px; display:flex; align-items:center; justify-content:center; gap:8px; opacity:0; transition:opacity 0.2s; z-index:5; }
     .glass-card:hover .edit-overlay { opacity:1; }
+    .card-link { position:relative; z-index:10; }
     .sub-brand-chip { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); cursor:pointer; transition:background 0.2s; }
     .sub-brand-chip:hover { background:rgba(255,255,255,0.15); }
   </style>
@@ -726,7 +727,7 @@
                 <div class="text-xs text-gray-500 mt-1">主打地区：${escapeHtml(b.region)}</div>
               </div>
             </div>
-            <a href="${escapeHtml(b.url)}" target="_blank" class="block mt-2 text-xs text-blue-400 truncate hover:underline" onclick="event.stopPropagation()">${escapeHtml(b.url)}</a>
+            <a href="${escapeHtml(b.url)}" target="_blank" class="card-link block mt-2 text-xs text-blue-400 truncate hover:underline" onclick="event.stopPropagation()">${escapeHtml(b.url)}</a>
           </div>`;
         });
       });
