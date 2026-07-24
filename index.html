@@ -792,7 +792,7 @@
               <div class="text-xs text-gray-500 mt-1">${b.country ? escapeHtml(b.country) + ' · ' : ''}${escapeHtml(b.region)}</div>
             </div>
           </div>
-          <a href="${escapeHtml(b.url)}" target="_blank" class="block mt-2 text-xs text-blue-400 truncate hover:underline" onclick="event.stopPropagation()">${escapeHtml(b.url)}</a>
+          <a href="${escapeHtml(b.url)}" target="_blank" class="card-link block mt-2 text-xs text-blue-400 truncate hover:underline" onclick="event.stopPropagation()">${escapeHtml(b.url)}</a>
         </div>`;
       });
       grid.innerHTML = html;
