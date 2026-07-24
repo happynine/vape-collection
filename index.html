@@ -187,7 +187,10 @@
         <div>
           <label class="block text-xs text-gray-400 mb-1">品牌Logo</label>
           <div class="flex items-center gap-3 mb-2">
-            <div id="logoPreview" class="logo-fallback">?</div>
+            <div class="relative">
+              <div id="logoPreview" class="logo-fallback">?</div>
+              <button type="button" onclick="clearLogo()" id="logoClearBtn" class="hidden absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center hover:bg-red-600 transition">×</button>
+            </div>
             <div class="flex-1">
               <div class="flex rounded-lg overflow-hidden border border-white/10 mb-2">
                 <button type="button" onclick="switchLogoMode('url')" id="logoModeUrl" class="flex-1 px-2 py-1.5 text-xs font-medium bg-blue-500/30 text-blue-300 border-r border-white/10">输入地址</button>
@@ -956,6 +959,7 @@
         document.getElementById('formLogoUrl').value = '';
         document.getElementById('formLogoValue').value = logoBase64;
         document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + logoBase64 + '" class="w-12 h-12 rounded-lg object-contain" /></div>';
+        document.getElementById('logoClearBtn').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
     }
@@ -966,10 +970,20 @@
         logoBase64 = '';
         document.getElementById('formLogoValue').value = url;
         document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(url) + '" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display=\'none\'" /></div>';
+        document.getElementById('logoClearBtn').classList.remove('hidden');
       } else {
         document.getElementById('formLogoValue').value = '';
         document.getElementById('logoPreview').outerHTML = '<div id="logoPreview" class="logo-fallback">?</div>';
+        document.getElementById('logoClearBtn').classList.add('hidden');
       }
+    }
+
+    function clearLogo() {
+      logoBase64 = '';
+      document.getElementById('formLogoValue').value = '';
+      document.getElementById('formLogoUrl').value = '';
+      document.getElementById('logoPreview').outerHTML = '<div id="logoPreview" class="logo-fallback">?</div>';
+      document.getElementById('logoClearBtn').classList.add('hidden');
     }
 
     function handleClipboardPaste(e) {
@@ -984,6 +998,7 @@
             document.getElementById('formLogoUrl').value = '';
             document.getElementById('formLogoValue').value = logoBase64;
             document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + logoBase64 + '" class="w-12 h-12 rounded-lg object-contain" /></div>';
+            document.getElementById('logoClearBtn').classList.remove('hidden');
             const zone = document.getElementById('clipboardPasteZone');
             zone.innerHTML = '<svg class="w-5 h-5 mb-1 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-xs text-green-400">图片已粘贴</span>';
           };
@@ -995,6 +1010,7 @@
     function resetLogoPreview() {
       const p = document.getElementById('logoPreview');
       if (p) p.outerHTML = '<div id="logoPreview" class="logo-fallback">?</div>';
+      document.getElementById('logoClearBtn').classList.add('hidden');
     }
 
     // ========== OFFICIAL: Add/Edit Modal ==========
@@ -1041,6 +1057,7 @@
           switchLogoMode('upload');
           document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + brand.logo + '" class="w-12 h-12 rounded-lg object-contain" /></div>';
         }
+        document.getElementById('logoClearBtn').classList.remove('hidden');
       } else {
         document.getElementById('formLogoValue').value = '';
         document.getElementById('formLogoUrl').value = '';
@@ -1133,6 +1150,7 @@
         document.getElementById('formLogoValue').value = brand.logo;
         if (brand.logo.startsWith('http')) { document.getElementById('formLogoUrl').value = brand.logo; switchLogoMode('url'); document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(brand.logo) + '" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display=\'none\'" /></div>'; }
         else { switchLogoMode('upload'); document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + brand.logo + '" class="w-12 h-12 rounded-lg object-contain" /></div>'; }
+        document.getElementById('logoClearBtn').classList.remove('hidden');
       } else { resetLogoPreview(); switchLogoMode('url'); }
       document.getElementById('brandModal').classList.remove('hidden');
       document.getElementById('brandModal').classList.add('flex');
