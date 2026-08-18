@@ -40,7 +40,7 @@
     <!-- Header -->
     <h1 class="text-3xl font-bold text-center mb-2">Vape品牌商官网查找系统</h1>
     <p class="text-center text-gray-400 text-sm mb-2">快速查找全球 Vape 品牌官方网站信息</p>
-    <div id="cloudStatusWrap" class="fixed bottom-6 right-6 z-50">
+    <div id="cloudStatusWrap" class="fixed bottom-6 left-6 z-50">
       <span id="cloudStatus" class="hidden items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium shadow-lg backdrop-blur-sm"></span>
     </div>
 
@@ -1090,14 +1090,17 @@
         const idx = allBrands.findIndex(b => b.id === numId); if (idx === -1) return;
         allBrands[idx].name_en = nameEn; allBrands[idx].name_cn = nameCn; allBrands[idx].url = url; allBrands[idx].region = region; allBrands[idx].rating = ratingVal;
         if (logoVal) allBrands[idx].logo = logoVal;
-        if (window.VapeDB) VapeDB.upsertBrand({ ...allBrands[idx] });
+        const brand = { ...allBrands[idx] };
         allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
-        closeModal(); renderBrands(); showToast('品牌修改成功！');
+        closeModal(); renderBrands();
+        showToast('正在保存…');
+        if (window.VapeDB) VapeDB.upsertBrand(brand).then(() => showToast('品牌修改成功，已同步云端！'));
       } else {
         const newBrand = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, rating: ratingVal, level: 3, logo: logoVal };
-        if (window.VapeDB) VapeDB.upsertBrand({ ...newBrand });
         allBrands.push(newBrand); allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
-        closeModal(); buildLetterFilter(); renderBrands(); showToast('品牌添加成功！');
+        closeModal(); buildLetterFilter(); renderBrands();
+        showToast('正在保存…');
+        if (window.VapeDB) VapeDB.upsertBrand({ ...newBrand }).then(() => showToast('品牌添加成功，已同步云端！'));
       }
     }
 
@@ -1152,13 +1155,16 @@
         const numId = Number(editId);
         const idx = shopBrands.findIndex(b => b.id === numId); if (idx === -1) return;
         shopBrands[idx] = { ...shopBrands[idx], name_en: nameEn, name_cn: nameCn, url, region, country, logo, rating };
-        if (window.VapeDB) VapeDB.upsertShop({ ...shopBrands[idx] });
-        closeModal(); renderShopBrands(); showToast('商城修改成功！');
+        const shop = { ...shopBrands[idx] };
+        closeModal(); renderShopBrands();
+        showToast('正在保存…');
+        if (window.VapeDB) VapeDB.upsertShop(shop).then(() => showToast('商城修改成功，已同步云端！'));
       } else {
         const newShop = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, country, logo, rating };
         shopBrands.push(newShop);
-        if (window.VapeDB) VapeDB.upsertShop({ ...newShop });
-        closeModal(); renderShopBrands(); showToast('商城添加成功！');
+        closeModal(); renderShopBrands();
+        showToast('正在保存…');
+        if (window.VapeDB) VapeDB.upsertShop({ ...newShop }).then(() => showToast('商城添加成功，已同步云端！'));
       }
     }
 
@@ -1260,13 +1266,16 @@
         const numId = Number(editId);
         const idx = groupData.findIndex(g => g.id === numId); if (idx === -1) return;
         groupData[idx] = { ...groupData[idx], name, desc, url, logo, sub_brands: [...currentSubBrands] };
-        if (window.VapeDB) VapeDB.upsertGroup({ ...groupData[idx] });
-        closeGroupModal(); renderGroups(); showToast('集团修改成功！');
+        const group = { ...groupData[idx] };
+        closeGroupModal(); renderGroups();
+        showToast('正在保存…');
+        if (window.VapeDB) VapeDB.upsertGroup(group).then(() => showToast('集团修改成功，已同步云端！'));
       } else {
         const newGroup = { id: Date.now(), name, desc, url, logo, sub_brands: [...currentSubBrands] };
         groupData.push(newGroup);
-        if (window.VapeDB) VapeDB.upsertGroup({ ...newGroup });
-        closeGroupModal(); renderGroups(); showToast('集团添加成功！');
+        closeGroupModal(); renderGroups();
+        showToast('正在保存…');
+        if (window.VapeDB) VapeDB.upsertGroup({ ...newGroup }).then(() => showToast('集团添加成功，已同步云端！'));
       }
     }
 
@@ -1305,11 +1314,11 @@
 
       // Add to shopBrands
       shopBrands.push(newShop);
-      if (window.VapeDB) VapeDB.upsertShop({ ...newShop });
-
-      // Remove from official brands
-      allBrands = allBrands.filter(b => b.id !== transferTargetId);
-      if (window.VapeDB) VapeDB.deleteBrand(transferTargetId);
+      showToast('正在转移…');
+      Promise.all([
+        window.VapeDB ? VapeDB.upsertShop({ ...newShop }) : Promise.resolve(),
+        window.VapeDB ? VapeDB.deleteBrand(transferTargetId) : Promise.resolve()
+      ]).then(() => showToast(`「${brand.name_en}」已转移到商城并同步云端`));
 
       // Re-render both tabs
       closeTransferModal();
@@ -1339,16 +1348,19 @@
       if (!deleteTargetId) return;
       if (deleteTargetType === 'official') {
         allBrands = allBrands.filter(b => b.id !== deleteTargetId);
-        if (window.VapeDB) VapeDB.deleteBrand(deleteTargetId);
-        closeDeleteModal(); buildLetterFilter(); renderBrands(); showToast('品牌已删除');
+        closeDeleteModal(); buildLetterFilter(); renderBrands();
+        showToast('正在删除…');
+        if (window.VapeDB) VapeDB.deleteBrand(deleteTargetId).then(() => showToast('品牌已删除，已同步云端'));
       } else if (deleteTargetType === 'shop') {
         shopBrands = shopBrands.filter(b => b.id !== deleteTargetId);
-        if (window.VapeDB) VapeDB.deleteShop(deleteTargetId);
-        closeDeleteModal(); renderShopBrands(); showToast('商城已删除');
+        closeDeleteModal(); renderShopBrands();
+        showToast('正在删除…');
+        if (window.VapeDB) VapeDB.deleteShop(deleteTargetId).then(() => showToast('商城已删除，已同步云端'));
       } else if (deleteTargetType === 'group') {
         groupData = groupData.filter(g => g.id !== deleteTargetId);
-        if (window.VapeDB) VapeDB.deleteGroup(deleteTargetId);
-        closeDeleteModal(); renderGroups(); showToast('集团已删除');
+        closeDeleteModal(); renderGroups();
+        showToast('正在删除…');
+        if (window.VapeDB) VapeDB.deleteGroup(deleteTargetId).then(() => showToast('集团已删除，已同步云端'));
       }
     }
 
