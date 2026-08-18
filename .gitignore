@@ -158,3 +158,6 @@ Desktop.ini
 .coze-logs
 .preview
 .codegraph
+
+# 云端配置（含 GitHub Token，不可提交）
+config.js
