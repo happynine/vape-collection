@@ -47,10 +47,25 @@
   }
 
   // ---------- 读取：优先 raw.githubusercontent，失败用缓存 ----------
+  // 加 _t 时间戳绕过 raw.githubusercontent.com 的 5 分钟 CDN 缓存
   async function fetchJSON(name) {
-    const res = await fetch(`${RAW_BASE}/${name}.json`, { cache: 'no-store' });
+    const url = `${RAW_BASE}/${name}.json?_t=${Date.now()}`;
+    const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error(`GET ${name} HTTP ${res.status}`);
     return res.json();
+  }
+
+  // 单个文件独立加载：云端成功 → 更新缓存；失败 → 用本地缓存
+  // 这样某个文件加载失败不会拖累其他文件
+  async function loadOne(name, lsKey) {
+    try {
+      const data = await fetchJSON(name);
+      writeCache(lsKey, data);
+      return { data, ok: true };
+    } catch (e) {
+      console.warn(`[VapeDB] ${name} 云端加载失败，使用本地缓存:`, e.message);
+      return { data: readCache(lsKey), ok: false };
+    }
   }
 
   async function loadAll() {
@@ -62,33 +77,21 @@
         cloud: false
       };
     }
-    try {
-      const [brands, shops, groups] = await Promise.all([
-        fetchJSON('brands'),
-        fetchJSON('shops'),
-        fetchJSON('groups')
-      ]);
-      writeCache(LS_BRANDS, brands);
-      writeCache(LS_SHOPS,  shops);
-      writeCache(LS_GROUPS, groups);
-      // 顺便获取各文件的最新 SHA（用于后续 PUT）
-      await Promise.all([
-        fetchFileSHA('brands'),
-        fetchFileSHA('shops'),
-        fetchFileSHA('groups')
-      ]).catch(() => {});
-      cloudOk = true;
-      return { brands, shops, groups, cloud: true };
-    } catch (e) {
-      console.warn('[VapeDB] 云端加载失败，使用本地缓存:', e.message);
-      cloudOk = false;
-      return {
-        brands: readCache(LS_BRANDS),
-        shops:  readCache(LS_SHOPS),
-        groups: readCache(LS_GROUPS),
-        cloud: false
-      };
-    }
+    // 三个文件独立加载，互不影响；各自失败时回退本地缓存
+    const [b, s, g] = await Promise.all([
+      loadOne('brands', LS_BRANDS),
+      loadOne('shops',   LS_SHOPS),
+      loadOne('groups',  LS_GROUPS)
+    ]);
+    // 只有三个文件全部云端成功，才算 cloudOk
+    cloudOk = b.ok && s.ok && g.ok;
+    // 顺便获取各文件的最新 SHA（用于后续 PUT），失败不影响读取
+    Promise.all([
+      fetchFileSHA('brands'),
+      fetchFileSHA('shops'),
+      fetchFileSHA('groups')
+    ]).catch(() => {});
+    return { brands: b.data, shops: s.data, groups: g.data, cloud: cloudOk };
   }
 
   // 获取文件的最新 SHA（PUT 更新时必须带）
