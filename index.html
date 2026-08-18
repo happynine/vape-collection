@@ -22,6 +22,17 @@
     .card-link { position:relative; z-index:10; }
     .sub-brand-chip { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); cursor:pointer; transition:background 0.2s; }
     .sub-brand-chip:hover { background:rgba(255,255,255,0.15); }
+    /* 评分星级 */
+    .rate-stars { display:inline-flex; gap:2px; }
+    .rate-star { cursor:default; transition:transform 0.1s; line-height:1; }
+    .rate-star.interactive { cursor:pointer; }
+    .rate-star.interactive:hover { transform:scale(1.2); }
+    .rate-star svg { display:block; }
+    .rating-filter { display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:24px; flex-wrap:wrap; }
+    .rating-filter-label { color:#ef4444; font-size:13px; font-weight:500; margin-right:4px; }
+    .rating-filter-btn { padding:2px 10px; border-radius:6px; font-size:12px; color:#9ca3af; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); cursor:pointer; transition:all 0.15s; }
+    .rating-filter-btn:hover { background:rgba(255,255,255,0.12); color:#d1d5db; }
+    .rating-filter-btn.active { background:rgba(239,68,68,0.25); color:#fca5a5; border-color:rgba(239,68,68,0.4); }
   </style>
 </head>
 <body class="text-white font-sans">
@@ -61,6 +72,17 @@
         <button onclick="filterRegion('加拿大')" class="region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">加拿大</button>
       </div>
 
+      <!-- Rating Filter (Official) -->
+      <div class="rating-filter">
+        <span class="rating-filter-label">评分：</span>
+        <button onclick="filterRating(0)" data-rating="0" class="rating-filter-btn active">全部</button>
+        <button onclick="filterRating(5)" data-rating="5" class="rating-filter-btn">五星</button>
+        <button onclick="filterRating(4)" data-rating="4" class="rating-filter-btn">四星</button>
+        <button onclick="filterRating(3)" data-rating="3" class="rating-filter-btn">三星</button>
+        <button onclick="filterRating(2)" data-rating="2" class="rating-filter-btn">二星</button>
+        <button onclick="filterRating(1)" data-rating="1" class="rating-filter-btn">一星</button>
+      </div>
+
       <!-- Brand Cards Grid -->
       <div id="brandGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4"></div>
       <!-- Stats Bar for Official -->
@@ -89,6 +111,17 @@
         <button onclick="filterShopRegion('欧洲')" class="shop-region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">欧洲</button>
         <button onclick="filterShopRegion('东南亚')" class="shop-region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">东南亚</button>
         <button onclick="filterShopRegion('中东')" class="shop-region-btn px-3 py-1 rounded-full text-xs bg-white/10 text-gray-300 transition-all">中东</button>
+      </div>
+
+      <!-- Rating Filter (Shop) -->
+      <div class="rating-filter">
+        <span class="rating-filter-label">评分：</span>
+        <button onclick="filterShopRating(0)" data-shop-rating="0" class="rating-filter-btn active">全部</button>
+        <button onclick="filterShopRating(5)" data-shop-rating="5" class="rating-filter-btn">五星</button>
+        <button onclick="filterShopRating(4)" data-shop-rating="4" class="rating-filter-btn">四星</button>
+        <button onclick="filterShopRating(3)" data-shop-rating="3" class="rating-filter-btn">三星</button>
+        <button onclick="filterShopRating(2)" data-shop-rating="2" class="rating-filter-btn">二星</button>
+        <button onclick="filterShopRating(1)" data-shop-rating="1" class="rating-filter-btn">一星</button>
       </div>
 
       <!-- Shop Cards Grid -->
@@ -219,6 +252,12 @@
             </div>
           </div>
         </div>
+        <!-- Rating -->
+        <div>
+          <label class="block text-xs text-gray-400 mb-2">评分</label>
+          <div id="formRatingStars" class="rate-stars"></div>
+          <input type="hidden" id="formRatingValue" value="0" />
+        </div>
         <div class="flex gap-3">
           <button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm">取消</button>
           <button type="submit" class="flex-1 py-2.5 rounded-lg bg-blue-500 text-white text-sm">保存</button>
@@ -324,6 +363,9 @@
     let selectedShopRegion = '';
     let selectedShopLetter = '';
     let shopSearchTimeout = null;
+    let selectedRating = 0;       // 官网评分筛选：0=全部，1-5
+    let selectedShopRating = 0;   // 商城评分筛选
+    let formRating = 0;           // 弹窗中当前选择的评分
 
     // Group data
     let groupData = [];
@@ -596,8 +638,45 @@
       renderBrands();
     }
 
+    function filterRating(r) {
+      selectedRating = r;
+      document.querySelectorAll('[data-rating]').forEach(b => b.classList.toggle('active', Number(b.dataset.rating) === r));
+      renderBrands();
+    }
+
     // ========== OFFICIAL: Render ==========
     function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+    // ========== Rating Helpers ==========
+    function starSvg(filled) {
+      return `<svg width="16" height="16" viewBox="0 0 24 24" fill="${filled ? '#f59e0b' : 'none'}" stroke="${filled ? '#f59e0b' : '#6b7280'}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+    }
+    function renderStars(rating) {
+      const r = Math.max(0, Math.min(5, Math.round(rating || 0)));
+      let html = '<span class="rate-stars">';
+      for (let i = 1; i <= 5; i++) html += `<span class="rate-star">${starSvg(i <= r)}</span>`;
+      html += '</span>';
+      return html;
+    }
+    function renderFormStars(rating) {
+      formRating = rating;
+      document.getElementById('formRatingValue').value = rating;
+      const container = document.getElementById('formRatingStars');
+      container.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        const span = document.createElement('span');
+        span.className = 'rate-star interactive';
+        span.dataset.value = i;
+        span.innerHTML = starSvg(i <= rating);
+        span.addEventListener('click', () => renderFormStars(i));
+        span.addEventListener('mouseenter', () => previewFormStars(i));
+        span.addEventListener('mouseleave', () => previewFormStars(formRating));
+        container.appendChild(span);
+      }
+    }
+    function previewFormStars(r) {
+      document.querySelectorAll('#formRatingStars .rate-star').forEach((s, idx) => { s.innerHTML = starSvg(idx < r); });
+    }
 
     function renderBrands() {
       const query = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -605,6 +684,7 @@
       if (query) filtered = filtered.filter(b => b.name_en.toLowerCase().includes(query) || (b.name_cn && b.name_cn.toLowerCase().includes(query)) || b.url.toLowerCase().includes(query));
       if (selectedLetter) filtered = filtered.filter(b => b.name_en[0].toUpperCase() === selectedLetter);
       if (selectedRegion) filtered = filtered.filter(b => b.region === selectedRegion);
+      if (selectedRating) filtered = filtered.filter(b => Math.round(b.rating || 0) === selectedRating);
 
       const grid = document.getElementById('brandGrid');
       if (!filtered.length) { grid.innerHTML = '<p class="text-gray-500 text-center col-span-full py-12">没有找到匹配的品牌</p>'; return; }
@@ -629,6 +709,7 @@
                 <div class="text-sm font-semibold text-white truncate">${escapeHtml(b.name_en)}</div>
                 <div class="text-xs text-gray-400 truncate">${escapeHtml(b.name_cn || '')}</div>
                 <div class="text-xs text-gray-500 mt-1">主打地区：${escapeHtml(b.region)}</div>
+                <div class="mt-1.5">${renderStars(b.rating)}</div>
               </div>
             </div>
             <a href="${escapeHtml(b.url)}" target="_blank" class="card-link block mt-2 text-xs text-blue-400 truncate hover:underline" onclick="event.stopPropagation()">${escapeHtml(b.url)}</a>
@@ -647,6 +728,12 @@
       renderShopBrands();
     }
 
+    function filterShopRating(r) {
+      selectedShopRating = r;
+      document.querySelectorAll('[data-shop-rating]').forEach(b => b.classList.toggle('active', Number(b.dataset.shopRating) === r));
+      renderShopBrands();
+    }
+
     function filterShopLetter(l) {
       selectedShopLetter = selectedShopLetter === l ? '' : l;
       document.querySelectorAll('.shop-letter-btn').forEach(b => {
@@ -662,6 +749,7 @@
       if (query) filtered = filtered.filter(b => b.name_en.toLowerCase().includes(query) || (b.name_cn && b.name_cn.toLowerCase().includes(query)) || b.url.toLowerCase().includes(query) || (b.country && b.country.toLowerCase().includes(query)));
       if (selectedShopRegion) filtered = filtered.filter(b => b.region === selectedShopRegion);
       if (selectedShopLetter) filtered = filtered.filter(b => b.name_en[0].toUpperCase() === selectedShopLetter);
+      if (selectedShopRating) filtered = filtered.filter(b => Math.round(b.rating || 0) === selectedShopRating);
       filtered.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en', { sensitivity: 'base' }));
 
       // Generate shop letter filter bar
@@ -694,6 +782,7 @@
               <div class="text-sm font-semibold text-white truncate">${escapeHtml(b.name_en)}</div>
               <div class="text-xs text-gray-400 truncate">${escapeHtml(b.name_cn || '')}</div>
               <div class="text-xs text-gray-500 mt-1">${b.country ? escapeHtml(b.country) + ' · ' : ''}${escapeHtml(b.region)}</div>
+              <div class="mt-1.5">${renderStars(b.rating)}</div>
             </div>
           </div>
           <a href="${escapeHtml(b.url)}" target="_blank" class="card-link block mt-2 text-xs text-blue-400 truncate hover:underline" onclick="event.stopPropagation()">${escapeHtml(b.url)}</a>
@@ -930,6 +1019,7 @@
       logoBase64 = '';
       resetLogoPreview();
       switchLogoMode('url');
+      renderFormStars(0);
       const zone = document.getElementById('clipboardPasteZone');
       zone.innerHTML = '<svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><span class="text-xs">Ctrl+V 粘贴图片</span><span class="text-[10px] text-gray-500 mt-0.5">或点击此区域后粘贴</span>';
       document.getElementById('brandModal').classList.remove('hidden');
@@ -965,6 +1055,7 @@
         resetLogoPreview();
         switchLogoMode('url');
       }
+      renderFormStars(brand.rating || 0);
       document.getElementById('brandModal').classList.remove('hidden');
       document.getElementById('brandModal').classList.add('flex');
     }
@@ -984,11 +1075,12 @@
       const type = document.getElementById('formType').value;
       const country = document.getElementById('formCountry') ? document.getElementById('formCountry').value.trim() : '';
       const logoVal = logoBase64 || document.getElementById('formLogoValue').value || '';
+      const ratingVal = Number(document.getElementById('formRatingValue').value) || 0;
 
       if (!nameEn || !url) return;
 
       if (type === 'shop') {
-        saveShopBrand(editId, nameEn, nameCn, url, region, country, logoVal);
+        saveShopBrand(editId, nameEn, nameCn, url, region, country, logoVal, ratingVal);
         return;
       }
 
@@ -996,13 +1088,13 @@
       if (editId) {
         const numId = Number(editId);
         const idx = allBrands.findIndex(b => b.id === numId); if (idx === -1) return;
-        allBrands[idx].name_en = nameEn; allBrands[idx].name_cn = nameCn; allBrands[idx].url = url; allBrands[idx].region = region;
+        allBrands[idx].name_en = nameEn; allBrands[idx].name_cn = nameCn; allBrands[idx].url = url; allBrands[idx].region = region; allBrands[idx].rating = ratingVal;
         if (logoVal) allBrands[idx].logo = logoVal;
         if (window.VapeDB) VapeDB.upsertBrand({ ...allBrands[idx] });
         allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
         closeModal(); renderBrands(); showToast('品牌修改成功！');
       } else {
-        const newBrand = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, level: 3, logo: logoVal };
+        const newBrand = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, rating: ratingVal, level: 3, logo: logoVal };
         if (window.VapeDB) VapeDB.upsertBrand({ ...newBrand });
         allBrands.push(newBrand); allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
         closeModal(); buildLetterFilter(); renderBrands(); showToast('品牌添加成功！');
@@ -1026,6 +1118,7 @@
       logoBase64 = '';
       resetLogoPreview();
       switchLogoMode('url');
+      renderFormStars(0);
       document.getElementById('brandModal').classList.remove('hidden');
       document.getElementById('brandModal').classList.add('flex');
     }
@@ -1049,19 +1142,20 @@
         else { switchLogoMode('upload'); document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + brand.logo + '" class="w-12 h-12 rounded-lg object-contain" /></div>'; }
         document.getElementById('logoClearBtn').classList.remove('hidden');
       } else { resetLogoPreview(); switchLogoMode('url'); }
+      renderFormStars(brand.rating || 0);
       document.getElementById('brandModal').classList.remove('hidden');
       document.getElementById('brandModal').classList.add('flex');
     }
 
-    function saveShopBrand(editId, nameEn, nameCn, url, region, country, logo) {
+    function saveShopBrand(editId, nameEn, nameCn, url, region, country, logo, rating) {
       if (editId) {
         const numId = Number(editId);
         const idx = shopBrands.findIndex(b => b.id === numId); if (idx === -1) return;
-        shopBrands[idx] = { ...shopBrands[idx], name_en: nameEn, name_cn: nameCn, url, region, country, logo };
+        shopBrands[idx] = { ...shopBrands[idx], name_en: nameEn, name_cn: nameCn, url, region, country, logo, rating };
         if (window.VapeDB) VapeDB.upsertShop({ ...shopBrands[idx] });
         closeModal(); renderShopBrands(); showToast('商城修改成功！');
       } else {
-        const newShop = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, country, logo };
+        const newShop = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, country, logo, rating };
         shopBrands.push(newShop);
         if (window.VapeDB) VapeDB.upsertShop({ ...newShop });
         closeModal(); renderShopBrands(); showToast('商城添加成功！');
@@ -1205,7 +1299,8 @@
         url: brand.url || '',
         region: brand.region || '',
         country: '',
-        logo: brand.logo || ''
+        logo: brand.logo || '',
+        rating: brand.rating || 0
       };
 
       // Add to shopBrands
