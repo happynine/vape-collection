@@ -12,11 +12,15 @@
 // ============================================================
 (function () {
   const cfg = (window.VAPE_CONFIG || {});
-  const OWNER  = cfg.GITHUB_OWNER  || '';
-  const REPO   = cfg.GITHUB_REPO   || '';
+  // 默认仓库配置：即使没有 config.js 也能从公开 CDN 读取数据
+  const OWNER  = cfg.GITHUB_OWNER  || 'happynine';
+  const REPO   = cfg.GITHUB_REPO   || 'vape-collection';
   const BRANCH = cfg.GITHUB_BRANCH || 'main';
   const TOKEN  = cfg.GITHUB_TOKEN  || '';
-  const CLOUD_ENABLED = !!(OWNER && REPO && TOKEN && !TOKEN.includes('YOUR_TOKEN'));
+  // 读取只需 OWNER+REPO（公开 CDN）；写入才需要 TOKEN
+  const CLOUD_READ  = !!(OWNER && REPO);
+  const CLOUD_WRITE = !!(TOKEN && !TOKEN.includes('YOUR_TOKEN'));
+  const CLOUD_ENABLED = CLOUD_READ;
 
   const RAW_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data`;
   const API_BASE = `https://api.github.com/repos/${OWNER}/${REPO}/contents/data`;
@@ -115,7 +119,11 @@
 
   function syncWrap(localWrite, cloudWrite) {
     try { localWrite(); } catch (e) { console.warn('本地缓存写入失败', e); }
-    if (!CLOUD_ENABLED) return Promise.resolve();
+    if (!CLOUD_WRITE) {
+      // 未配置 token：只存本地，不尝试云端写入
+      if (window.showToast) window.showToast('未配置写入 Token，更改仅保存在本地');
+      return Promise.resolve();
+    }
     trackPending();
     return cloudWrite()
       .then(() => { cloudOk = true; })
@@ -245,7 +253,7 @@
   function updateStatusUI() {
     const el = document.getElementById('cloudStatus');
     if (!el) return;
-    if (!CLOUD_ENABLED) {
+    if (!CLOUD_READ) {
       el.style.display = 'none';
       return;
     }
@@ -254,6 +262,12 @@
       el.style.background = 'rgba(234,179,8,0.2)';
       el.style.color = '#fde047';
       el.textContent = '☁ 同步中…';
+    } else if (!CLOUD_WRITE) {
+      // 只读模式：能从云端加载数据，但本地写入不能同步
+      el.style.background = 'rgba(59,130,246,0.2)';
+      el.style.color = '#93c5fd';
+      el.textContent = '☁ 云端数据（只读）';
+      el.title = '未配置写入 Token，可查看云端数据但更改不会同步到其他设备';
     } else if (cloudOk) {
       el.style.background = 'rgba(34,197,94,0.2)';
       el.style.color = '#86efac';

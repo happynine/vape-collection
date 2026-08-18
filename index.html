@@ -497,7 +497,7 @@
         cloudData = await VapeDB.loadAll();
       }
 
-      const useCloud = cloudData && (cloudData.brands.length > 0 || cloudData.cloud);
+      const useCloud = cloudData && (cloudData.brands.length > 0 || cloudData.shops.length > 0 || cloudData.groups.length > 0 || cloudData.cloud);
 
       if (useCloud) {
         // ---------- 云端模式 ----------
