@@ -31,11 +31,12 @@
   const RAW_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data`;
   const API_BASE = `https://api.github.com/repos/${OWNER}/${REPO}/contents/data`;
   // 多 CDN 源（国内网络 raw.githubusercontent.com 经常不稳定）
+  // 所有源都加时间戳防缓存，避免 CDN 返回旧数据导致"删除后复活"
   const CDN_SOURCES = [
     (f) => `${RAW_BASE}/${f}.json?_t=${Date.now()}`,
-    (f) => `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json`,
-    (f) => `https://fastly.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json`,
-    (f) => `https://ghproxy.net/https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/${f}.json`,
+    (f) => `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json?_t=${Date.now()}`,
+    (f) => `https://fastly.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json?_t=${Date.now()}`,
+    (f) => `https://ghproxy.net/https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/${f}.json?_t=${Date.now()}`,
   ];
 
   const LS_BRANDS = 'cloud_brands_cache';
@@ -150,42 +151,46 @@
     ]);
     // 只有三个文件全部云端成功，才算 cloudOk
     cloudOk = b.ok && s.ok && g.ok;
-    // 顺便获取各文件的最新 SHA（用于后续 PUT），失败不影响读取
-    Promise.all([
-      fetchFileSHA('brands'),
-      fetchFileSHA('shops'),
-      fetchFileSHA('groups')
-    ]).catch(() => {});
     return { brands: b.data, shops: s.data, groups: g.data, cloud: cloudOk };
   }
 
-  // 获取文件的最新 SHA（PUT 更新时必须带）
-  async function fetchFileSHA(name) {
-    const res = await fetch(`${API_BASE}/${name}.json?ref=${BRANCH}`, {
+  // 获取文件的最新 SHA + 内容（写入前调用，确保基于最新数据修改）
+  // 使用 GitHub API 直读，不受 CDN 缓存影响
+  async function fetchLatestFile(name) {
+    const res = await fetch(`${API_BASE}/${name}.json?ref=${BRANCH}&_t=${Date.now()}`, {
       headers: {
         'Authorization': `Bearer ${TOKEN}`,
         'Accept': 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28'
+        'X-GitHub-Api-Version': '2022-11-28',
+        'Cache-Control': 'no-cache'
       }
     });
-    if (res.ok) {
-      const data = await res.json();
-      fileSHA[name] = data.sha;
-    }
+    if (!res.ok) throw new Error(`fetchLatestFile ${name} HTTP ${res.status}`);
+    const meta = await res.json();
+    fileSHA[name] = meta.sha;
+    // 解码内容
+    const content = decodeURIComponent(escape(atob(meta.content.replace(/\n/g, ''))));
+    return JSON.parse(content);
   }
 
-  // ---------- 写入：本地乐观更新 + 异步 PUT 到 GitHub ----------
+  // ---------- 写入：本地乐观更新 + 写入前拉取最新数据合并 ----------
   function trackPending()   { pendingWrites++; updateStatusUI(); }
   function untrackPending() { pendingWrites = Math.max(0, pendingWrites - 1); updateStatusUI(); }
 
-  function syncWrap(dataset, localWrite, cloudWrite) {
+  /**
+   * 安全写入：写入前从 GitHub API 拉取最新数据，在最新数据上应用变更，再写回。
+   * 这样即使其他标签页/设备/CDN缓存有旧数据，也不会覆盖最新的云端状态。
+   *
+   * @param {string} dataset - 'brands' | 'shops' | 'groups'
+   * @param {function} localWrite - 同步函数，更新 memData 和 localStorage
+   * @param {function} prepareCloudData - 同步函数，接收最新云端数组，返回要写入的数组
+   */
+  function syncWrap(dataset, localWrite, prepareCloudData) {
     try { localWrite(); } catch (e) { console.warn('本地缓存写入失败', e); }
     if (!CLOUD_WRITE) {
       if (window.showToast) window.showToast('未配置写入 Token，更改仅保存在本地');
       return Promise.resolve();
     }
-    // 关键防护：如果该数据集未从云端成功加载，禁止写回云端
-    // 防止离线缓存/旧数据覆盖云端完整数据
     if (!cloudLoaded[dataset]) {
       console.warn(`[VapeDB] ${dataset} 未从云端加载，跳过云端写入以保护数据`);
       if (window.showToast) window.showToast('当前为离线缓存模式，更改仅保存在本地（不会覆盖云端）');
@@ -193,7 +198,13 @@
       return Promise.resolve();
     }
     trackPending();
-    return cloudWrite()
+    // 写入前从 GitHub API 拉取最新数据（绕过 CDN 缓存）
+    return fetchLatestFile(dataset)
+      .then(latestData => {
+        // 在最新数据上应用变更
+        const dataToWrite = prepareCloudData(latestData);
+        return putFile(dataset, dataToWrite);
+      })
       .then(() => { cloudOk = true; updateStatusUI(); })
       .catch(e => {
         cloudOk = false;
@@ -206,10 +217,6 @@
 
   // 把整个数组写回 GitHub（PUT /contents/data/xxx.json）
   async function putFile(name, data) {
-    // 确保有最新 SHA（首次或可能失效时刷新）
-    if (!fileSHA[name]) {
-      await fetchFileSHA(name);
-    }
     const content = utf8ToBase64(JSON.stringify(data, null, 2));
     const body = {
       message: `db: update ${name}`,
@@ -230,36 +237,47 @@
     });
     if (!res.ok) {
       const text = await res.text();
+      // 如果是 SHA 冲突（409/422），清除缓存的 SHA 以便下次重试
+      if (res.status === 409 || res.status === 422) fileSHA[name] = '';
       throw new Error(`PUT ${name} HTTP ${res.status}: ${text}`);
     }
     const result = await res.json();
-    fileSHA[name] = result.content.sha; // 更新 SHA 供下次使用
+    fileSHA[name] = result.content.sha;
+    // 写入成功后同步更新内存和 localStorage，确保与云端一致
+    memData[name] = data;
+    const lsKey = name === 'brands' ? LS_BRANDS : name === 'shops' ? LS_SHOPS : LS_GROUPS;
+    writeCache(lsKey, data);
   }
 
   // ---------- 品牌 CRUD ----------
+  // 通用 upsert：在目标数组上应用单条更新
+  function applyUpsert(list, item, idKey) {
+    const arr = Array.isArray(list) ? list.slice() : [];
+    const idx = arr.findIndex(x => x[idKey] === item[idKey]);
+    if (idx >= 0) arr[idx] = item; else arr.push(item);
+    return arr;
+  }
+  function applyDelete(list, id, idKey) {
+    return (Array.isArray(list) ? list : []).filter(x => x[idKey] !== id);
+  }
+
   function upsertBrand(brand) {
     return syncWrap('brands',
       () => {
-        const list = memData.brands;
-        const idx = list.findIndex(b => b.id === brand.id);
-        if (idx >= 0) list[idx] = brand; else list.push(brand);
-        writeCache(LS_BRANDS, list);
+        memData.brands = applyUpsert(memData.brands, brand, 'id');
+        writeCache(LS_BRANDS, memData.brands);
       },
-      async () => {
-        await putFile('brands', memData.brands);
-      }
+      (latest) => applyUpsert(latest, brand, 'id')
     );
   }
 
   function deleteBrand(id) {
     return syncWrap('brands',
       () => {
-        memData.brands = memData.brands.filter(b => b.id !== id);
+        memData.brands = applyDelete(memData.brands, id, 'id');
         writeCache(LS_BRANDS, memData.brands);
       },
-      async () => {
-        await putFile('brands', memData.brands);
-      }
+      (latest) => applyDelete(latest, id, 'id')
     );
   }
 
@@ -267,26 +285,20 @@
   function upsertShop(shop) {
     return syncWrap('shops',
       () => {
-        const list = memData.shops;
-        const idx = list.findIndex(s => s.id === shop.id);
-        if (idx >= 0) list[idx] = shop; else list.push(shop);
-        writeCache(LS_SHOPS, list);
+        memData.shops = applyUpsert(memData.shops, shop, 'id');
+        writeCache(LS_SHOPS, memData.shops);
       },
-      async () => {
-        await putFile('shops', memData.shops);
-      }
+      (latest) => applyUpsert(latest, shop, 'id')
     );
   }
 
   function deleteShop(id) {
     return syncWrap('shops',
       () => {
-        memData.shops = memData.shops.filter(s => s.id !== id);
+        memData.shops = applyDelete(memData.shops, id, 'id');
         writeCache(LS_SHOPS, memData.shops);
       },
-      async () => {
-        await putFile('shops', memData.shops);
-      }
+      (latest) => applyDelete(latest, id, 'id')
     );
   }
 
@@ -294,26 +306,20 @@
   function upsertGroup(group) {
     return syncWrap('groups',
       () => {
-        const list = memData.groups;
-        const idx = list.findIndex(g => g.id === group.id);
-        if (idx >= 0) list[idx] = group; else list.push(group);
-        writeCache(LS_GROUPS, list);
+        memData.groups = applyUpsert(memData.groups, group, 'id');
+        writeCache(LS_GROUPS, memData.groups);
       },
-      async () => {
-        await putFile('groups', memData.groups);
-      }
+      (latest) => applyUpsert(latest, group, 'id')
     );
   }
 
   function deleteGroup(id) {
     return syncWrap('groups',
       () => {
-        memData.groups = memData.groups.filter(g => g.id !== id);
+        memData.groups = applyDelete(memData.groups, id, 'id');
         writeCache(LS_GROUPS, memData.groups);
       },
-      async () => {
-        await putFile('groups', memData.groups);
-      }
+      (latest) => applyDelete(latest, id, 'id')
     );
   }
 
