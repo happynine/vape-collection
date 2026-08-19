@@ -698,7 +698,7 @@
         html += `<div class="col-span-full"><h2 class="text-xl font-bold text-white/80 mb-3 mt-2 border-b border-white/10 pb-2">${letter}</h2></div>`;
         groups[letter].forEach(b => {
           const logoHtml = b.logo
-            ? `<img src="${escapeHtml(b.logo)}" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${escapeHtml(b.name_en[0])}</div>`
+            ? `<img src="${escapeHtml(b.logo)}" class="w-12 h-12 rounded-lg object-contain bg-white p-0.5" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${escapeHtml(b.name_en[0])}</div>`
             : `<div class="logo-fallback">${escapeHtml(b.name_en[0])}</div>`;
           const editOverlay = editMode ? `<div class="edit-overlay"><button onclick="openEditModal(${b.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="transferToShop(${b.id})" class="px-3 py-1.5 rounded bg-green-500 text-white text-xs">转商城</button><button onclick="openDeleteModal(${b.id},'${escapeHtml(b.name_en)}','official')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
           html += `<div class="glass-card rounded-xl p-4 relative cursor-pointer" onclick="${editMode ? '' : `window.open('${escapeHtml(b.url)}','_blank')`}">
@@ -771,7 +771,7 @@
       let html = '';
       filtered.forEach(b => {
         const logoHtml = b.logo
-          ? `<img src="${escapeHtml(b.logo)}" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${escapeHtml(b.name_en[0])}</div>`
+          ? `<img src="${escapeHtml(b.logo)}" class="w-12 h-12 rounded-lg object-contain bg-white p-0.5" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${escapeHtml(b.name_en[0])}</div>`
           : `<div class="logo-fallback">${escapeHtml(b.name_en[0])}</div>`;
         const editOverlay = shopEditMode ? `<div class="edit-overlay"><button onclick="openShopEditModal(${b.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="openDeleteModal(${b.id},'${escapeHtml(b.name_en)}','shop')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
         html += `<div class="glass-card rounded-xl p-4 relative cursor-pointer" onclick="${shopEditMode ? '' : `window.open('${escapeHtml(b.url)}','_blank')`}">
@@ -804,7 +804,7 @@
       let html = '';
       filtered.forEach(g => {
         const logoHtml = g.logo
-          ? `<img src="${escapeHtml(g.logo)}" class="w-14 h-14 rounded-xl object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none;width:56px;height:56px;font-size:22px">${escapeHtml(g.name[0])}</div>`
+          ? `<img src="${escapeHtml(g.logo)}" class="w-14 h-14 rounded-xl object-contain bg-white p-0.5" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none;width:56px;height:56px;font-size:22px">${escapeHtml(g.name[0])}</div>`
           : `<div class="logo-fallback" style="width:56px;height:56px;font-size:22px">${escapeHtml(g.name[0])}</div>`;
         const editOverlay = groupEditMode ? `<div class="absolute top-3 right-3 flex gap-2"><button onclick="openGroupEditModal(${g.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="openDeleteModal(${g.id},'${escapeHtml(g.name)}','group')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
         // Sub brands
@@ -813,7 +813,7 @@
           subHtml = '<div class="flex flex-wrap gap-2 mt-3">';
           g.sub_brands.forEach(sb => {
             const sbLogo = sb.logo
-              ? `<img src="${escapeHtml(sb.logo)}" class="w-5 h-5 rounded object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><span style="display:none;font-size:10px">${escapeHtml(sb.name[0])}</span>`
+              ? `<img src="${escapeHtml(sb.logo)}" class="w-5 h-5 rounded object-contain bg-white" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><span style="display:none;font-size:10px">${escapeHtml(sb.name[0])}</span>`
               : `<span class="text-xs font-bold text-gray-400">${escapeHtml(sb.name[0])}</span>`;
             subHtml += `<a href="${escapeHtml(sb.url || '#')}" target="_blank" class="sub-brand-chip" onclick="event.stopPropagation()">${sbLogo}<span class="text-xs text-gray-300">${escapeHtml(sb.name)}</span></a>`;
           });
@@ -948,7 +948,7 @@
         logoBase64 = ev.target.result;
         document.getElementById('formLogoUrl').value = '';
         document.getElementById('formLogoValue').value = logoBase64;
-        document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + logoBase64 + '" class="w-12 h-12 rounded-lg object-contain" /></div>';
+        document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + logoBase64 + '" class="w-12 h-12 rounded-lg object-contain bg-white p-0.5" /></div>';
         document.getElementById('logoClearBtn').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
@@ -959,7 +959,7 @@
       if (url) {
         logoBase64 = '';
         document.getElementById('formLogoValue').value = url;
-        document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(url) + '" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display=\'none\'" /></div>';
+        document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(url) + '" class="w-12 h-12 rounded-lg object-contain bg-white p-0.5" onerror="this.style.display=\'none\'" /></div>';
         document.getElementById('logoClearBtn').classList.remove('hidden');
       } else {
         document.getElementById('formLogoValue').value = '';
@@ -987,7 +987,7 @@
             logoBase64 = ev.target.result;
             document.getElementById('formLogoUrl').value = '';
             document.getElementById('formLogoValue').value = logoBase64;
-            document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + logoBase64 + '" class="w-12 h-12 rounded-lg object-contain" /></div>';
+            document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + logoBase64 + '" class="w-12 h-12 rounded-lg object-contain bg-white p-0.5" /></div>';
             document.getElementById('logoClearBtn').classList.remove('hidden');
             const zone = document.getElementById('clipboardPasteZone');
             zone.innerHTML = '<svg class="w-5 h-5 mb-1 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-xs text-green-400">图片已粘贴</span>';
@@ -1043,10 +1043,10 @@
         if (brand.logo.startsWith('http')) {
           document.getElementById('formLogoUrl').value = brand.logo;
           switchLogoMode('url');
-          document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(brand.logo) + '" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display=\'none\'" /></div>';
+          document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(brand.logo) + '" class="w-12 h-12 rounded-lg object-contain bg-white p-0.5" onerror="this.style.display=\'none\'" /></div>';
         } else {
           switchLogoMode('upload');
-          document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + brand.logo + '" class="w-12 h-12 rounded-lg object-contain" /></div>';
+          document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + brand.logo + '" class="w-12 h-12 rounded-lg object-contain bg-white p-0.5" /></div>';
         }
         document.getElementById('logoClearBtn').classList.remove('hidden');
       } else {
@@ -1141,8 +1141,8 @@
       logoBase64 = '';
       if (brand.logo) {
         document.getElementById('formLogoValue').value = brand.logo;
-        if (brand.logo.startsWith('http')) { document.getElementById('formLogoUrl').value = brand.logo; switchLogoMode('url'); document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(brand.logo) + '" class="w-12 h-12 rounded-lg object-contain" onerror="this.style.display=\'none\'" /></div>'; }
-        else { switchLogoMode('upload'); document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + brand.logo + '" class="w-12 h-12 rounded-lg object-contain" /></div>'; }
+        if (brand.logo.startsWith('http')) { document.getElementById('formLogoUrl').value = brand.logo; switchLogoMode('url'); document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(brand.logo) + '" class="w-12 h-12 rounded-lg object-contain bg-white p-0.5" onerror="this.style.display=\'none\'" /></div>'; }
+        else { switchLogoMode('upload'); document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + brand.logo + '" class="w-12 h-12 rounded-lg object-contain bg-white p-0.5" /></div>'; }
         document.getElementById('logoClearBtn').classList.remove('hidden');
       } else { resetLogoPreview(); switchLogoMode('url'); }
       renderFormStars(brand.rating || 0);
@@ -1211,7 +1211,7 @@
       results.forEach(b => {
         const already = currentSubBrands.some(sb => sb.name === b.name_en);
         html += `<div class="px-3 py-2 hover:bg-white/10 cursor-pointer flex items-center gap-2 ${already ? 'opacity-50' : ''}" onclick="addSubBrand(${b.id})">`;
-        if (b.logo) html += `<img src="${escapeHtml(b.logo)}" class="w-5 h-5 rounded object-contain" onerror="this.style.display='none'" />`;
+        if (b.logo) html += `<img src="${escapeHtml(b.logo)}" class="w-5 h-5 rounded object-contain bg-white" onerror="this.style.display='none'" />`;
         html += `<span class="text-sm text-white">${escapeHtml(b.name_en)}</span>${b.name_cn ? `<span class="text-xs text-gray-400">${escapeHtml(b.name_cn)}</span>` : ''}${already ? '<span class="text-xs text-green-400">已添加</span>' : ''}</div>`;
       });
       container.innerHTML = html;
