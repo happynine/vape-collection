@@ -30,6 +30,13 @@
 
   const RAW_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data`;
   const API_BASE = `https://api.github.com/repos/${OWNER}/${REPO}/contents/data`;
+  // 多 CDN 源（国内网络 raw.githubusercontent.com 经常不稳定）
+  const CDN_SOURCES = [
+    (f) => `${RAW_BASE}/${f}.json?_t=${Date.now()}`,
+    (f) => `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json`,
+    (f) => `https://fastly.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json`,
+    (f) => `https://ghproxy.net/https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/${f}.json`,
+  ];
 
   const LS_BRANDS = 'cloud_brands_cache';
   const LS_SHOPS  = 'cloud_shops_cache';
@@ -56,13 +63,24 @@
     try { localStorage.setItem(key, JSON.stringify(data)); } catch {}
   }
 
-  // ---------- 读取：优先 raw.githubusercontent，失败用缓存 ----------
-  // 加 _t 时间戳绕过 raw.githubusercontent.com 的 5 分钟 CDN 缓存
+  // ---------- 读取：多 CDN 源依次尝试，全失败用缓存 ----------
   async function fetchJSON(name) {
-    const url = `${RAW_BASE}/${name}.json?_t=${Date.now()}`;
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`GET ${name} HTTP ${res.status}`);
-    return res.json();
+    let lastErr;
+    for (let i = 0; i < CDN_SOURCES.length; i++) {
+      const url = CDN_SOURCES[i](name);
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 15000);
+        const res = await fetch(url, { cache: 'no-store', signal: ctrl.signal });
+        clearTimeout(timer);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+      } catch (e) {
+        lastErr = e;
+        console.warn(`[VapeDB] CDN source ${i+1} failed for ${name}:`, e.message);
+      }
+    }
+    throw lastErr || new Error('All CDN sources failed');
   }
 
   // 单个文件独立加载：云端成功 → 更新缓存；失败 → 用本地缓存
