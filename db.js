@@ -41,9 +41,15 @@
   const LS_BRANDS = 'cloud_brands_cache';
   const LS_SHOPS  = 'cloud_shops_cache';
   const LS_GROUPS = 'cloud_groups_cache';
+  const LS_META   = 'cloud_meta';
 
   // 每个文件缓存自己的 SHA，用于 PUT 更新（GitHub 要求带最新 SHA 才能覆盖）
   const fileSHA = { brands: '', shops: '', groups: '' };
+
+  // 内存数据：唯一可信的写入源，防止 localStorage 被旧缓存污染
+  let memData = { brands: [], shops: [], groups: [] };
+  // 标记每个数据集是否从云端成功加载（false 时禁止写入云端）
+  let cloudLoaded = { brands: false, shops: false, groups: false };
 
   let cloudOk = false;
   let pendingWrites = 0;
@@ -61,6 +67,12 @@
   }
   function writeCache(key, data) {
     try { localStorage.setItem(key, JSON.stringify(data)); } catch {}
+  }
+  function readMeta() {
+    try { return JSON.parse(localStorage.getItem(LS_META) || '{}'); } catch { return {}; }
+  }
+  function writeMeta(meta) {
+    try { localStorage.setItem(LS_META, JSON.stringify(meta)); } catch {}
   }
 
   // ---------- 读取：多 CDN 源依次尝试，全失败用缓存 ----------
@@ -83,25 +95,50 @@
     throw lastErr || new Error('All CDN sources failed');
   }
 
-  // 单个文件独立加载：云端成功 → 更新缓存；失败 → 用本地缓存
-  // 这样某个文件加载失败不会拖累其他文件
+  // 数据完整性校验：防止旧缓存（数据量远少于云端）覆盖云端
+  // 返回 true 表示云端数据可信，应覆盖本地缓存
+  function isCloudDataValid(cloudData, cacheData) {
+    if (!Array.isArray(cloudData) || cloudData.length === 0) return false;
+    if (!Array.isArray(cacheData) || cacheData.length === 0) return true;
+    // 如果云端记录数 >= 缓存的 50%，认为云端数据有效
+    // （旧缓存通常只有几条或几十条，而正常数据有数百条）
+    return cloudData.length >= cacheData.length * 0.5;
+  }
+
+  // 单个文件独立加载：云端成功 → 更新内存和缓存；失败 → 用本地缓存（标记为不可写）
   async function loadOne(name, lsKey) {
     try {
       const data = await fetchJSON(name);
-      writeCache(lsKey, data);
+      if (!isCloudDataValid(data, readCache(lsKey))) {
+        console.warn(`[VapeDB] ${name} 云端数据异常（${data.length} 条 vs 缓存更多），跳过覆盖缓存`);
+        // 云端数据不可信，用缓存但标记为未加载（禁止写回云端）
+        return { data: readCache(lsKey), ok: false };
+      }
+      memData[name] = data;        // 更新内存（写入的唯一数据源）
+      cloudLoaded[name] = true;    // 标记云端加载成功
+      writeCache(lsKey, data);     // 更新 localStorage 缓存
+      // 更新元数据
+      const meta = readMeta();
+      meta[name] = { count: data.length, ts: Date.now() };
+      writeMeta(meta);
       return { data, ok: true };
     } catch (e) {
       console.warn(`[VapeDB] ${name} 云端加载失败，使用本地缓存:`, e.message);
-      return { data: readCache(lsKey), ok: false };
+      memData[name] = readCache(lsKey);
+      cloudLoaded[name] = false;  // 关键：云端加载失败，禁止写回
+      return { data: memData[name], ok: false };
     }
   }
 
   async function loadAll() {
     if (!CLOUD_ENABLED) {
+      memData.brands = readCache(LS_BRANDS);
+      memData.shops  = readCache(LS_SHOPS);
+      memData.groups = readCache(LS_GROUPS);
       return {
-        brands: readCache(LS_BRANDS),
-        shops:  readCache(LS_SHOPS),
-        groups: readCache(LS_GROUPS),
+        brands: memData.brands,
+        shops:  memData.shops,
+        groups: memData.groups,
         cloud: false
       };
     }
@@ -141,11 +178,18 @@
   function trackPending()   { pendingWrites++; updateStatusUI(); }
   function untrackPending() { pendingWrites = Math.max(0, pendingWrites - 1); updateStatusUI(); }
 
-  function syncWrap(localWrite, cloudWrite) {
+  function syncWrap(dataset, localWrite, cloudWrite) {
     try { localWrite(); } catch (e) { console.warn('本地缓存写入失败', e); }
     if (!CLOUD_WRITE) {
-      // 未配置 token：只存本地，不尝试云端写入
       if (window.showToast) window.showToast('未配置写入 Token，更改仅保存在本地');
+      return Promise.resolve();
+    }
+    // 关键防护：如果该数据集未从云端成功加载，禁止写回云端
+    // 防止离线缓存/旧数据覆盖云端完整数据
+    if (!cloudLoaded[dataset]) {
+      console.warn(`[VapeDB] ${dataset} 未从云端加载，跳过云端写入以保护数据`);
+      if (window.showToast) window.showToast('当前为离线缓存模式，更改仅保存在本地（不会覆盖云端）');
+      updateStatusUI();
       return Promise.resolve();
     }
     trackPending();
@@ -194,78 +238,81 @@
 
   // ---------- 品牌 CRUD ----------
   function upsertBrand(brand) {
-    return syncWrap(
+    return syncWrap('brands',
       () => {
-        const list = readCache(LS_BRANDS);
+        const list = memData.brands;
         const idx = list.findIndex(b => b.id === brand.id);
         if (idx >= 0) list[idx] = brand; else list.push(brand);
         writeCache(LS_BRANDS, list);
       },
       async () => {
-        const list = readCache(LS_BRANDS);
-        await putFile('brands', list);
+        await putFile('brands', memData.brands);
       }
     );
   }
 
   function deleteBrand(id) {
-    return syncWrap(
-      () => writeCache(LS_BRANDS, readCache(LS_BRANDS).filter(b => b.id !== id)),
+    return syncWrap('brands',
+      () => {
+        memData.brands = memData.brands.filter(b => b.id !== id);
+        writeCache(LS_BRANDS, memData.brands);
+      },
       async () => {
-        const list = readCache(LS_BRANDS);
-        await putFile('brands', list);
+        await putFile('brands', memData.brands);
       }
     );
   }
 
   // ---------- 商城 CRUD ----------
   function upsertShop(shop) {
-    return syncWrap(
+    return syncWrap('shops',
       () => {
-        const list = readCache(LS_SHOPS);
+        const list = memData.shops;
         const idx = list.findIndex(s => s.id === shop.id);
         if (idx >= 0) list[idx] = shop; else list.push(shop);
         writeCache(LS_SHOPS, list);
       },
       async () => {
-        const list = readCache(LS_SHOPS);
-        await putFile('shops', list);
+        await putFile('shops', memData.shops);
       }
     );
   }
 
   function deleteShop(id) {
-    return syncWrap(
-      () => writeCache(LS_SHOPS, readCache(LS_SHOPS).filter(s => s.id !== id)),
+    return syncWrap('shops',
+      () => {
+        memData.shops = memData.shops.filter(s => s.id !== id);
+        writeCache(LS_SHOPS, memData.shops);
+      },
       async () => {
-        const list = readCache(LS_SHOPS);
-        await putFile('shops', list);
+        await putFile('shops', memData.shops);
       }
     );
   }
 
   // ---------- 集团 CRUD ----------
   function upsertGroup(group) {
-    return syncWrap(
+    return syncWrap('groups',
       () => {
-        const list = readCache(LS_GROUPS);
+        const list = memData.groups;
         const idx = list.findIndex(g => g.id === group.id);
         if (idx >= 0) list[idx] = group; else list.push(group);
         writeCache(LS_GROUPS, list);
       },
       async () => {
-        const list = readCache(LS_GROUPS);
-        await putFile('groups', list);
+        await putFile('groups', memData.groups);
       }
     );
   }
 
   function deleteGroup(id) {
-    return syncWrap(
-      () => writeCache(LS_GROUPS, readCache(LS_GROUPS).filter(g => g.id !== id)),
+    return syncWrap('groups',
+      () => {
+        memData.groups = memData.groups.filter(g => g.id !== id);
+        writeCache(LS_GROUPS, memData.groups);
+      },
       async () => {
-        const list = readCache(LS_GROUPS);
-        await putFile('groups', list);
+        await putFile('groups', memData.groups);
       }
     );
   }
@@ -288,7 +335,6 @@
       el.style.color = '#fde047';
       el.textContent = '☁ 同步中…';
     } else if (!CLOUD_WRITE) {
-      // 只读模式：能从云端加载数据，但本地写入不能同步
       el.style.background = 'rgba(59,130,246,0.2)';
       el.style.color = '#93c5fd';
       el.textContent = '☁ 云端数据（只读）';
@@ -297,10 +343,17 @@
       el.style.background = 'rgba(34,197,94,0.2)';
       el.style.color = '#86efac';
       el.textContent = '☁ 已同步';
+    } else if (cloudLoaded.brands || cloudLoaded.shops || cloudLoaded.groups) {
+      // 部分加载成功
+      el.style.background = 'rgba(234,179,8,0.2)';
+      el.style.color = '#fde047';
+      el.textContent = '☁ 部分离线';
+      el.title = '部分数据从本地缓存加载，编辑不会覆盖云端';
     } else {
       el.style.background = 'rgba(239,68,68,0.2)';
       el.style.color = '#fca5a5';
       el.textContent = '☁ 离线（本地缓存）';
+      el.title = '无法连接云端，编辑仅保存在本地，不会覆盖云端数据';
     }
   }
 
