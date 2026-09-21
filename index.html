@@ -647,6 +647,35 @@
     // ========== OFFICIAL: Render ==========
     function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
+    // logo 统一解析：logos/ 路径 / http 外链 / data URI / 空
+    function logoSrc(logo) {
+      if (window.VapeDB && VapeDB.resolveLogo) return VapeDB.resolveLogo(logo);
+      const v = logo || '';
+      if (v.startsWith('logos/')) {
+        // db.js 未就绪时的兜底（正常不会发生）
+        return v;
+      }
+      return v;
+    }
+    // 生成 logo HTML；无图用首字母占位。size 控制尺寸类
+    function logoHtmlFor(logo, initial, sizeCls) {
+      const cls = sizeCls || 'w-12 h-12 rounded-lg';
+      const src = logoSrc(logo);
+      if (src) {
+        return `<img src="${escapeHtml(src)}" class="${cls} object-contain bg-white" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback ${cls}" style="display:none">${escapeHtml(initial || '?')}</div>`;
+      }
+      return `<div class="logo-fallback ${cls}">${escapeHtml(initial || '?')}</div>`;
+    }
+    // 根据保存接口返回的真实结果提示（不再无脑报"已同步云端"）
+    function toastSaveResult(res, okText, noun) {
+      if (!res || res.mode === 'cloud') { showToast(okText); return; }
+      if (res.ok && res.mode === 'local') {
+        showToast(`${noun}已保存在本地（当前离线，刷新后可能丢失）`);
+      } else {
+        showToast(`${noun}云端保存失败，已暂存本地`);
+      }
+    }
+
     // ========== Rating Helpers ==========
     function starSvg(filled) {
       return `<svg width="16" height="16" viewBox="0 0 24 24" fill="${filled ? '#f59e0b' : 'none'}" stroke="${filled ? '#f59e0b' : '#6b7280'}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
@@ -770,9 +799,7 @@
 
       let html = '';
       filtered.forEach(b => {
-        const logoHtml = b.logo
-          ? `<img src="${escapeHtml(b.logo)}" class="w-12 h-12 rounded-lg object-contain bg-white" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${escapeHtml(b.name_en[0])}</div>`
-          : `<div class="logo-fallback">${escapeHtml(b.name_en[0])}</div>`;
+        const logoHtml = logoHtmlFor(b.logo, b.name_en[0]);
         const editOverlay = shopEditMode ? `<div class="edit-overlay"><button onclick="openShopEditModal(${b.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="openDeleteModal(${b.id},'${escapeHtml(b.name_en)}','shop')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
         html += `<div class="glass-card rounded-xl p-4 relative cursor-pointer" onclick="${shopEditMode ? '' : `window.open('${escapeHtml(b.url)}','_blank')`}">
           ${editOverlay}
@@ -803,9 +830,7 @@
 
       let html = '';
       filtered.forEach(g => {
-        const logoHtml = g.logo
-          ? `<img src="${escapeHtml(g.logo)}" class="w-14 h-14 rounded-xl object-contain bg-white" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none;width:56px;height:56px;font-size:22px">${escapeHtml(g.name[0])}</div>`
-          : `<div class="logo-fallback" style="width:56px;height:56px;font-size:22px">${escapeHtml(g.name[0])}</div>`;
+        const logoHtml = logoHtmlFor(g.logo, g.name[0], 'w-14 h-14 rounded-xl');
         const editOverlay = groupEditMode ? `<div class="absolute top-3 right-3 flex gap-2"><button onclick="openGroupEditModal(${g.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="openDeleteModal(${g.id},'${escapeHtml(g.name)}','group')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
         // Sub brands
         let subHtml = '';
@@ -813,7 +838,7 @@
           subHtml = '<div class="flex flex-wrap gap-2 mt-3">';
           g.sub_brands.forEach(sb => {
             const sbLogo = sb.logo
-              ? `<img src="${escapeHtml(sb.logo)}" class="w-5 h-5 rounded object-contain bg-white" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><span style="display:none;font-size:10px">${escapeHtml(sb.name[0])}</span>`
+              ? `<img src="${escapeHtml(logoSrc(sb.logo))}" class="w-5 h-5 rounded object-contain bg-white" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" /><span style="display:none;font-size:10px">${escapeHtml(sb.name[0])}</span>`
               : `<span class="text-xs font-bold text-gray-400">${escapeHtml(sb.name[0])}</span>`;
             subHtml += `<a href="${escapeHtml(sb.url || '#')}" target="_blank" class="sub-brand-chip" onclick="event.stopPropagation()">${sbLogo}<span class="text-xs text-gray-300">${escapeHtml(sb.name)}</span></a>`;
           });
@@ -1040,13 +1065,13 @@
       logoBase64 = '';
       if (brand.logo) {
         document.getElementById('formLogoValue').value = brand.logo;
-        if (brand.logo.startsWith('http')) {
-          document.getElementById('formLogoUrl').value = brand.logo;
+        if (brand.logo.startsWith('http') || brand.logo.startsWith('logos/')) {
+          document.getElementById('formLogoUrl').value = brand.logo.startsWith('http') ? brand.logo : logoSrc(brand.logo);
           switchLogoMode('url');
-          document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(brand.logo) + '" class="w-12 h-12 rounded-lg object-contain bg-white" onerror="this.style.display=\'none\'" /></div>';
+          document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(logoSrc(brand.logo)) + '" class="w-12 h-12 rounded-lg object-contain bg-white" onerror="this.style.display=\'none\'" /></div>';
         } else {
           switchLogoMode('upload');
-          document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + brand.logo + '" class="w-12 h-12 rounded-lg object-contain bg-white" /></div>';
+          document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(logoSrc(brand.logo)) + '" class="w-12 h-12 rounded-lg object-contain bg-white" onerror="this.style.display=\'none\'" /></div>';
         }
         document.getElementById('logoClearBtn').classList.remove('hidden');
       } else {
@@ -1141,8 +1166,9 @@
       logoBase64 = '';
       if (brand.logo) {
         document.getElementById('formLogoValue').value = brand.logo;
-        if (brand.logo.startsWith('http')) { document.getElementById('formLogoUrl').value = brand.logo; switchLogoMode('url'); document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(brand.logo) + '" class="w-12 h-12 rounded-lg object-contain bg-white" onerror="this.style.display=\'none\'" /></div>'; }
-        else { switchLogoMode('upload'); document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + brand.logo + '" class="w-12 h-12 rounded-lg object-contain bg-white" /></div>'; }
+        if (brand.logo.startsWith('data:')) { switchLogoMode('upload'); }
+        else { document.getElementById('formLogoUrl').value = brand.logo.startsWith('http') ? brand.logo : logoSrc(brand.logo); switchLogoMode('url'); }
+          document.getElementById('logoPreview').outerHTML = '<div id="logoPreview"><img src="' + escapeHtml(logoSrc(brand.logo)) + '" class="w-12 h-12 rounded-lg object-contain bg-white" onerror="this.style.display=\'none\'" /></div>';
         document.getElementById('logoClearBtn').classList.remove('hidden');
       } else { resetLogoPreview(); switchLogoMode('url'); }
       renderFormStars(brand.rating || 0);
@@ -1158,7 +1184,7 @@
         const shop = { ...shopBrands[idx] };
         closeModal(); renderShopBrands();
         showToast('正在保存…');
-        if (window.VapeDB) VapeDB.upsertShop(shop).then(() => showToast('商城修改成功，已同步云端！'));
+        if (window.VapeDB) VapeDB.upsertShop(shop).then(r => toastSaveResult(r, '商城修改成功！', '商城'));
       } else {
         const newShop = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, country, logo, rating };
         shopBrands.push(newShop);
@@ -1315,10 +1341,14 @@
       // Add to shopBrands
       shopBrands.push(newShop);
       showToast('正在转移…');
-      Promise.all([
+      Promise.allSettled([
         window.VapeDB ? VapeDB.upsertShop({ ...newShop }) : Promise.resolve(),
         window.VapeDB ? VapeDB.deleteBrand(transferTargetId) : Promise.resolve()
-      ]).then(() => showToast(`「${brand.name_en}」已转移到商城并同步云端`));
+      ]).then(results => {
+        const failed = results.some(r => r.status === 'rejected' || (r.value && r.value.ok === false));
+        if (failed) showToast(`「${brand.name_en}」转移时云端同步异常，已暂存本地`);
+        else showToast(`「${brand.name_en}」已转移到商城`);
+      });
 
       // Re-render both tabs
       closeTransferModal();
