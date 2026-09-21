@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" font-family="Georgia, 'Times New Roman', serif">
+  <!-- Hintergrund Sand -->
+  <rect width="800" height="600" fill="#F5F1E8"/>
+
+  <!-- Blatt-Symbol -->
+  <g transform="translate(368, 130)">
+    <path d="M 32 10 C 18 14, 12 28, 14 44 C 14 48, 16 52, 20 54 C 22 46, 26 38, 32 32 C 28 40, 26 48, 26 56 C 36 56, 46 48, 50 36 C 52 26, 46 14, 32 10 Z" fill="#7A8B5C"/>
+  </g>
+
+  <!-- Wortmarke "hava" -->
+  <text x="400" y="370" font-size="140" fill="#3B4A2A" text-anchor="middle" letter-spacing="-3">hava</text>
+
+  <!-- Tagline -->
+  <text x="400" y="430" font-family="'Helvetica Neue', Arial, sans-serif" font-size="18" fill="#6B7355" text-anchor="middle" letter-spacing="8">a life without plastic</text>
+
+</svg>
