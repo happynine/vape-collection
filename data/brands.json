@@ -2,27 +2,27 @@
   {
     "id": 1,
     "name_en": "AAOK",
-    "name_cn": "\u79d1\u6f6e\u8fbe",
+    "name_cn": "科潮达",
     "url": "https://www.aaokvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_1.png"
   },
   {
     "id": 3,
     "name_en": "ABUFUN",
-    "name_cn": "\u963f\u4e0d\u51e1",
+    "name_cn": "阿不凡",
     "url": "https://www.abufantech.com/product",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_3.png"
   },
   {
     "id": 217,
     "name_en": "ABUFUN",
-    "name_cn": "\u963f\u4e0d\u51e1",
+    "name_cn": "阿不凡",
     "url": "https://www.abufantech.com/product",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_217.png"
   },
@@ -38,9 +38,9 @@
   {
     "id": 5,
     "name_en": "Across Vape",
-    "name_cn": "\u9999\u6e2f\u963f\u8a87\u601d",
+    "name_cn": "香港阿誇思",
     "url": "https://acrossvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_5.png"
   },
@@ -49,52 +49,52 @@
     "name_en": "Adalya",
     "name_cn": "",
     "url": "https://www.adalyatobacco.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_6.png"
   },
   {
     "id": 8,
     "name_en": "ADL",
-    "name_cn": "\u5353\u529b\u80fd",
+    "name_cn": "卓力能",
     "url": "https://www.aldvapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_8.png"
   },
   {
     "id": 131,
     "name_en": "Advken",
-    "name_cn": "\u827e\u8482\u5a01\u80af",
+    "name_cn": "艾蒂威肯",
     "url": "https://www.advken.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_131.png"
   },
   {
     "id": 216,
     "name_en": "Airbar",
-    "name_cn": "\u4f60\u6211\u96c6\u56e2",
+    "name_cn": "你我集团",
     "url": "https://www.airbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_216.png"
   },
   {
     "id": 133,
     "name_en": "AIRFUZE",
-    "name_cn": "\u5b98\u7f51\u6709\u95ee\u9898",
+    "name_cn": "官网有问题",
     "url": "https://airfuzevapes.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_133.png"
   },
   {
     "id": 136,
     "name_en": "AIRIS",
-    "name_cn": "\u827e\u745e\u65af",
+    "name_cn": "艾瑞斯",
     "url": "https://www.airisvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_136.png",
     "rating": 3
@@ -104,7 +104,7 @@
     "name_en": "Airmez",
     "name_cn": "",
     "url": "https://airmezvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_135.png"
   },
@@ -113,7 +113,7 @@
     "name_en": "AIRSCREAM",
     "name_cn": "",
     "url": "https://global.airscreamuk.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_13.png"
   },
@@ -122,16 +122,16 @@
     "name_en": "airtek",
     "name_cn": "",
     "url": "https://airtekvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_14.png"
   },
   {
     "id": 15,
     "name_en": "airvape",
-    "name_cn": "\u7f8e\u56fd\u516c\u53f8",
+    "name_cn": "美国公司",
     "url": "https://airvapeusa.com/",
-    "region": "\u7f8e\u56fd",
+    "region": "美国",
     "level": 3,
     "logo": "logos/brand_15.png"
   },
@@ -140,43 +140,43 @@
     "name_en": "Al Fakher",
     "name_cn": "",
     "url": "https://www.alfakher.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_16.png"
   },
   {
     "id": 17,
     "name_en": "ALIBARBAR",
-    "name_cn": "\u5927\u5229\u4e07\u7ef4",
+    "name_cn": "大利万维",
     "url": "https://alibarbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_17.png"
   },
   {
     "id": 18,
     "name_en": "Aloha Sun",
-    "name_cn": "\u8d5b\u5c14\u7f8e",
+    "name_cn": "赛尔美",
     "url": "https://alohasunvapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 1,
     "logo": "logos/brand_18.png"
   },
   {
     "id": 19,
     "name_en": "amanoo",
-    "name_cn": "\u846d\u5357",
+    "name_cn": "葭南",
     "url": "https://amanoovape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_19.png"
   },
   {
     "id": 20,
     "name_en": "ANYX",
-    "name_cn": "\u6613\u4f73\u7279\uff08\u7f51\u7ad9\u6709\u95ee\u9898\uff09",
+    "name_cn": "易佳特（网站有问题）",
     "url": "https://www.anyxglobal.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_20.png"
   },
@@ -185,7 +185,7 @@
     "name_en": "ARRO",
     "name_cn": "",
     "url": "https://tryarro.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 1,
     "logo": "logos/brand_21.png"
   },
@@ -194,7 +194,7 @@
     "name_en": "ARTERY",
     "name_cn": "",
     "url": "https://arteryvapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_22.png"
   },
@@ -203,16 +203,16 @@
     "name_en": "artrix",
     "name_cn": "",
     "url": "https://www.artrixglobal.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_23.png"
   },
   {
     "id": 24,
     "name_en": "ASDF.",
-    "name_cn": "\u827e\u8482\u5a01\u80af",
+    "name_cn": "艾蒂威肯",
     "url": "https://asdfworldwide.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_24.png"
   },
@@ -221,50 +221,50 @@
     "name_en": "Asmodus",
     "name_cn": "",
     "url": "https://www.asmodus.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_25.png"
   },
   {
     "id": 26,
     "name_en": "ASPARK",
-    "name_cn": "\u96f7\u708e",
+    "name_cn": "雷炎",
     "url": "https://www.asparkvape.com",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_26.png"
   },
   {
     "id": 27,
     "name_en": "aspire",
-    "name_cn": "\u6613\u4f73\u7279",
+    "name_cn": "易佳特",
     "url": "https://www.aspirecig.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_27.png"
   },
   {
     "id": 28,
     "name_en": "ASVAPE",
-    "name_cn": "\u50b2\u65af\u552f\u535a",
+    "name_cn": "傲斯唯博",
     "url": "https://www.asvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_28.png"
   },
   {
     "id": 36,
     "name_en": "ASVAPE",
-    "name_cn": "\u50b2\u65af\u552f\u535a",
+    "name_cn": "傲斯唯博",
     "url": "https://www.asvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_36.png"
   },
   {
     "id": 37,
     "name_en": "Atom Vapes",
-    "name_cn": "\u7f51\u7ad9\u6709\u95ee\u9898",
+    "name_cn": "网站有问题",
     "url": "https://www.atomvapes.com/",
     "region": "",
     "level": 1,
@@ -282,7 +282,7 @@
   {
     "id": 39,
     "name_en": "AUXO",
-    "name_cn": "\u6c34\u70df",
+    "name_cn": "水烟",
     "url": "https://www.auxo-official.com/",
     "region": "",
     "level": 4,
@@ -347,7 +347,7 @@
     "name_en": "Bangma",
     "name_cn": "",
     "url": "https://bangmavape.com",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_1783322317003.png"
   },
@@ -363,9 +363,9 @@
   {
     "id": 29,
     "name_en": "BBTANK",
-    "name_cn": "\u77f3\u5f00\u79d1\u6280",
+    "name_cn": "石开科技",
     "url": "http://www.babytontech.com",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_29.png"
   },
@@ -383,16 +383,16 @@
     "name_en": "BEAST ELIQUIDS",
     "name_cn": "",
     "url": "https://flavourbeast.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_30.png"
   },
   {
     "id": 31,
     "name_en": "BECO",
-    "name_cn": "\u5408\u5143",
+    "name_cn": "合元",
     "url": "https://becovape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_31.png"
   },
@@ -435,7 +435,7 @@
   {
     "id": 60,
     "name_en": "Billionaire Juice",
-    "name_cn": "\u70df\u6cb9\u5546\u57ce",
+    "name_cn": "烟油商城",
     "url": "https://billionairejuice.co.uk/",
     "region": "",
     "level": 1,
@@ -453,9 +453,9 @@
   {
     "id": 33,
     "name_en": "Black Bar",
-    "name_cn": "\u6df1\u5733\u5e02\u6602\u5947\u79d1\u6280\u6709\u9650\u516c\u53f8",
+    "name_cn": "深圳市昂奇科技有限公司",
     "url": "https://www.blackbarvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_33.png"
   },
@@ -471,16 +471,16 @@
   {
     "id": 34,
     "name_en": "Blank Bar",
-    "name_cn": "\u5b98\u7f51\u6709\u95ee\u9898",
+    "name_cn": "官网有问题",
     "url": "https://blankbars.com",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_34.png"
   },
   {
     "id": 65,
     "name_en": "BLNG",
-    "name_cn": "\u5b98\u7f51\u6709\u95ee\u9898",
+    "name_cn": "官网有问题",
     "url": "https://www.blngvape.com/",
     "region": "",
     "level": 1,
@@ -507,18 +507,18 @@
   {
     "id": 35,
     "name_en": "BLU",
-    "name_cn": "\u5e1d\u56fd\u70df\u8349",
+    "name_cn": "帝国烟草",
     "url": "https://www.blu.com/en-GB",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_35.png"
   },
   {
     "id": 69,
     "name_en": "BLVD",
-    "name_cn": "\u683c\u6797\u97f5\u8fbe@\u7f51\u5b98\u6709\u95ee\u9898",
+    "name_cn": "格林韵达@网官有问题",
     "url": "https://www.blvdvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 1,
     "logo": "logos/brand_69.png"
   },
@@ -563,7 +563,7 @@
     "name_en": "BOLT",
     "name_cn": "",
     "url": "https://boltvapes.co.za/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_74.png"
   },
@@ -599,7 +599,7 @@
     "name_en": "Bou",
     "name_cn": "",
     "url": "https://bouvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_82.png",
     "rating": 3
@@ -607,9 +607,9 @@
   {
     "id": 83,
     "name_en": "Boulder",
-    "name_cn": "\u94c2\u5fb7",
+    "name_cn": "铂德",
     "url": "https://bouldervape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_83.png"
   },
@@ -654,14 +654,14 @@
     "name_en": "BSK",
     "name_cn": "",
     "url": "https://www.bskvapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_88.png"
   },
   {
     "id": 89,
     "name_en": "bubblemon",
-    "name_cn": "\u6ce1\u6ce1\u840c\uff09\uff08\u6ce2\u987f",
+    "name_cn": "泡泡萌）（波顿",
     "url": "https://bubblemonvape.com/",
     "region": "",
     "level": 4,
@@ -688,7 +688,7 @@
   {
     "id": 92,
     "name_en": "Cali Pods",
-    "name_cn": "\u6c49\u6e05\u8fbe",
+    "name_cn": "汉清达",
     "url": "https://calipodsonline.com/",
     "region": "",
     "level": 3,
@@ -709,7 +709,7 @@
     "name_en": "CAMOBAR",
     "name_cn": "",
     "url": "https://www.camobar.net/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_94.png"
   },
@@ -743,9 +743,9 @@
   {
     "id": 98,
     "name_en": "CCELL",
-    "name_cn": "\u601d\u6469\u5c14",
+    "name_cn": "思摩尔",
     "url": "https://www.ccell.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_98.png"
   },
@@ -754,7 +754,7 @@
     "name_en": "Cellular Workshop",
     "name_cn": "",
     "url": "https://www.cellularworkshop.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_99.png"
   },
@@ -779,18 +779,18 @@
   {
     "id": 102,
     "name_en": "Chillax",
-    "name_cn": "\u5a01\u666e\u56db\u901a",
+    "name_cn": "威普四通",
     "url": "https://www.chillaxvapetech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_102.png"
   },
   {
     "id": 103,
     "name_en": "ChillMist",
-    "name_cn": "\u5343\u6155",
+    "name_cn": "千慕",
     "url": "https://www.chillmistvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_103.png"
   },
@@ -815,16 +815,16 @@
   {
     "id": 106,
     "name_en": "CLOUD NINE",
-    "name_cn": "\u4e5d\u53f7\u4e91\u6735",
+    "name_cn": "九号云朵",
     "url": "https://www.cloudnine-vape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_106.png"
   },
   {
     "id": 107,
     "name_en": "Cloud Nurdz",
-    "name_cn": "\u4e00\u5bb6\u70df\u6cb9\u516c\u53f8",
+    "name_cn": "一家烟油公司",
     "url": "https://cloudnurdz.com/",
     "region": "",
     "level": 1,
@@ -833,16 +833,16 @@
   {
     "id": 109,
     "name_en": "COOLPLAY",
-    "name_cn": "\u9177\u8da3",
+    "name_cn": "酷趣",
     "url": "https://wecoolplay.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_109.png"
   },
   {
     "id": 111,
     "name_en": "Craftbox",
-    "name_cn": "\u4e0d\u5b58\u5728",
+    "name_cn": "不存在",
     "url": "https://teamcraftbox.co/",
     "region": "",
     "level": 1,
@@ -860,9 +860,9 @@
   {
     "id": 113,
     "name_en": "CRAZYACE",
-    "name_cn": "\u5409\u8fe9",
+    "name_cn": "吉迩",
     "url": "https://www.crazyacevape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 1,
     "logo": "logos/brand_113.png"
   },
@@ -889,16 +889,16 @@
     "name_en": "Cthulhu MOD",
     "name_cn": "",
     "url": "https://www.cthulhumod.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_117.png"
   },
   {
     "id": 121,
     "name_en": "CZAR",
-    "name_cn": "\u51ef\u4e50\u6587",
+    "name_cn": "凯乐文",
     "url": "https://www.czarvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_121.png"
   },
@@ -925,14 +925,14 @@
     "name_en": "Dark Horse",
     "name_cn": "",
     "url": "https://www.darkhorsevapes.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_124.png"
   },
   {
     "id": 126,
     "name_en": "Death Row",
-    "name_cn": "503\u6253\u4e0d\u5f00",
+    "name_cn": "503打不开",
     "url": "https://deathrowdisposables.com/",
     "region": "",
     "level": 1,
@@ -950,9 +950,9 @@
   {
     "id": 128,
     "name_en": "Dekang",
-    "name_cn": "\u5fb7\u5eb7",
+    "name_cn": "德康",
     "url": "https://www.dekangbio.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_128.png"
   },
@@ -970,7 +970,7 @@
     "name_en": "dinnerlady",
     "name_cn": "",
     "url": "https://www.vapedinnerlady.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_132.png"
   },
@@ -979,7 +979,7 @@
     "name_en": "Dito",
     "name_cn": "",
     "url": "https://ditovape.com/en/home-eng/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_134.png"
   },
@@ -1013,9 +1013,9 @@
   {
     "id": 141,
     "name_en": "DOTMOD",
-    "name_cn": "\u5eb7\u851a",
+    "name_cn": "康蔚",
     "url": "https://dotmod.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_141.png"
   },
@@ -1024,16 +1024,16 @@
     "name_en": "doubledrip",
     "name_cn": "",
     "url": "https://www.doubledrip.co.uk/",
-    "region": "\u82f1\u56fd",
+    "region": "英国",
     "level": 3,
     "logo": "logos/brand_142.png"
   },
   {
     "id": 143,
     "name_en": "DOVPO",
-    "name_cn": "\u6052\u4e07\u5347",
+    "name_cn": "恒万升",
     "url": "https://dovpo.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_143.png"
   },
@@ -1042,7 +1042,7 @@
     "name_en": "DOZO",
     "name_cn": "",
     "url": "https://puredozo.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_144.png"
   },
@@ -1060,16 +1060,16 @@
     "name_en": "dr.vape",
     "name_cn": "",
     "url": "https://drvape.jp/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_146.png"
   },
   {
     "id": 147,
     "name_en": "DRAGBAR",
-    "name_cn": "\u5409\u8fe9",
+    "name_cn": "吉迩",
     "url": "https://www.idragbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_147.jpg"
   },
@@ -1085,9 +1085,9 @@
   {
     "id": 149,
     "name_en": "Drifter Bar",
-    "name_cn": "\u65af\u8fea",
+    "name_cn": "斯迪",
     "url": "https://driftervape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 1,
     "logo": "logos/brand_149.png"
   },
@@ -1130,7 +1130,7 @@
   {
     "id": 155,
     "name_en": "EHPRO",
-    "name_cn": "\u4e1c\u704f\u5174",
+    "name_cn": "东灏兴",
     "url": "https://www.szehpro.com/",
     "region": "",
     "level": 3,
@@ -1139,18 +1139,18 @@
   {
     "id": 156,
     "name_en": "ELEAF",
-    "name_cn": "\u4f9d\u4e3d\u8299",
+    "name_cn": "依丽芙",
     "url": "https://www.eleafworld.com/products/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_156.png"
   },
   {
     "id": 157,
     "name_en": "Elego",
-    "name_cn": "\u4ebf\u4e50\u8c37",
+    "name_cn": "亿乐谷",
     "url": "https://www.elegomall.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_157.png"
   },
@@ -1159,7 +1159,7 @@
     "name_en": "Element Vape",
     "name_cn": "",
     "url": "https://www.elementvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_158.png"
   },
@@ -1175,9 +1175,9 @@
   {
     "id": 160,
     "name_en": "ELFBAR",
-    "name_cn": "\u7231\u5947\u8ff9",
+    "name_cn": "爱奇迹",
     "url": "https://www.elfbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_160.png"
   },
@@ -1186,7 +1186,7 @@
     "name_en": "Elfliq",
     "name_cn": "",
     "url": "https://www.elfliq.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_161.png"
   },
@@ -1195,14 +1195,14 @@
     "name_en": "ELFWORLD",
     "name_cn": "",
     "url": "https://elfworldvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_162.png"
   },
   {
     "id": 163,
     "name_en": "ELM BAR",
-    "name_cn": "\u5347\u7ea7\u4e2d",
+    "name_cn": "升级中",
     "url": "https://elmbars.com/",
     "region": "",
     "level": 1,
@@ -1212,9 +1212,9 @@
   {
     "id": 164,
     "name_en": "ELUX",
-    "name_cn": "\u62d3\u4f38",
+    "name_cn": "拓伸",
     "url": "https://www.eluxtech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_164.png"
   },
@@ -1223,7 +1223,7 @@
     "name_en": "ENEMK",
     "name_cn": "",
     "url": "https://www.enemk.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_165.webp"
   },
@@ -1241,7 +1241,7 @@
     "name_en": "ESMOO",
     "name_cn": "",
     "url": "http://www.esmoovape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_167.png"
   },
@@ -1329,9 +1329,9 @@
   {
     "id": 178,
     "name_en": "fasta",
-    "name_cn": "\u60a6\u514b",
+    "name_cn": "悦克",
     "url": "https://www.fastavape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_178.webp"
   },
@@ -1340,25 +1340,25 @@
     "name_en": "FEED SYNC",
     "name_cn": "",
     "url": "https://feedvapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_179.png"
   },
   {
     "id": 180,
     "name_en": "FEELA",
-    "name_cn": "\u62d3\u4f38",
+    "name_cn": "拓伸",
     "url": "https://www.feelavape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_180.svg"
   },
   {
     "id": 181,
     "name_en": "FEELM",
-    "name_cn": "\u601d\u6469\u5c14",
+    "name_cn": "思摩尔",
     "url": "https://www.feelmtech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_181.png"
   },
@@ -1376,7 +1376,7 @@
     "name_en": "Felix Lab",
     "name_cn": "",
     "url": "https://www.felixlab.kr/en",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_183.png"
   },
@@ -1392,9 +1392,9 @@
   {
     "id": 185,
     "name_en": "Fifty Bar",
-    "name_cn": "\u4e1c\u704f\u5174-\u65e0\u6cd5\u8fdb\u5165",
+    "name_cn": "东灏兴-无法进入",
     "url": "https://thefiftybar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_185.png",
     "rating": 0
@@ -1402,9 +1402,9 @@
   {
     "id": 186,
     "name_en": "Firerose",
-    "name_cn": "\u62d3\u4f38",
+    "name_cn": "拓伸",
     "url": "https://www.firerosetech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_186.png",
     "rating": 0
@@ -1414,7 +1414,7 @@
     "name_en": "FIRST UNION",
     "name_cn": "",
     "url": "https://en.cfugroup.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_187.png"
   },
@@ -1433,7 +1433,7 @@
     "name_en": "Fitpod",
     "name_cn": "",
     "url": "https://fitpodvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_189.png"
   },
@@ -1442,7 +1442,7 @@
     "name_en": "FIZZ VAPOR",
     "name_cn": "",
     "url": "https://fizzvapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 1,
     "logo": "logos/brand_190.png"
   },
@@ -1469,7 +1469,7 @@
     "name_en": "Flavour Beas",
     "name_cn": "",
     "url": "https://flavourbeast.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_194.png"
   },
@@ -1485,18 +1485,18 @@
   {
     "id": 196,
     "name_en": "FLER",
-    "name_cn": "\u96c1\u626c",
+    "name_cn": "雁扬",
     "url": "https://flerbrand.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_196.jpg"
   },
   {
     "id": 197,
     "name_en": "FLERBAR",
-    "name_cn": "\u96c1\u626c",
+    "name_cn": "雁扬",
     "url": "https://www.facebook.com/Flerbarofficial/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_197.png"
   },
@@ -1505,7 +1505,7 @@
     "name_en": "Flong Vape",
     "name_cn": "",
     "url": "https://www.flong.global/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_198.png"
   },
@@ -1514,7 +1514,7 @@
     "name_en": "flonq",
     "name_cn": "",
     "url": "https://www.flonq.global/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_199.png"
   },
@@ -1523,16 +1523,16 @@
     "name_en": "Flowermate",
     "name_cn": "",
     "url": "https://flowermate.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_200.png"
   },
   {
     "id": 201,
     "name_en": "FLUM",
-    "name_cn": "\u9053\u68ee",
+    "name_cn": "道森",
     "url": "https://flumgio.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_201.jpg"
   },
@@ -1566,9 +1566,9 @@
   {
     "id": 205,
     "name_en": "foger",
-    "name_cn": "\u5361\u9177\u5947",
+    "name_cn": "卡酷奇",
     "url": "https://www.fogertech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_205.png"
   },
@@ -1595,16 +1595,16 @@
     "name_en": "FOOM",
     "name_cn": "",
     "url": "https://foom.id",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_208.png"
   },
   {
     "id": 209,
     "name_en": "foose",
-    "name_cn": "\u4fc4\u7f57\u65af\u516c\u53f8",
+    "name_cn": "俄罗斯公司",
     "url": "https://foosevape.ru/",
-    "region": "\u4fc4\u7f57\u65af",
+    "region": "俄罗斯",
     "level": 2,
     "logo": "logos/brand_209.svg"
   },
@@ -1629,18 +1629,18 @@
   {
     "id": 212,
     "name_en": "FreeMax",
-    "name_cn": "\u6c5f\u5a01",
+    "name_cn": "江威",
     "url": "https://www.freemaxvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_212.png"
   },
   {
     "id": 214,
     "name_en": "FRESOR",
-    "name_cn": "\u5353\u529b\u80fd\u65d7\u4e0b",
+    "name_cn": "卓力能旗下",
     "url": "https://www.fresortech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_214.png"
   },
@@ -1694,7 +1694,7 @@
     "name_en": "fum",
     "name_cn": "",
     "url": "https://tryfum.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_222.png"
   },
@@ -1703,25 +1703,25 @@
     "name_en": "Fume Extracts",
     "name_cn": "",
     "url": "https://www.fumevapors.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_223.png"
   },
   {
     "id": 224,
     "name_en": "fummo",
-    "name_cn": "\u4fc4\u7f57\u65af\u516c\u53f8",
+    "name_cn": "俄罗斯公司",
     "url": "https://fummo.ru/",
-    "region": "\u4fc4\u7f57\u65af",
+    "region": "俄罗斯",
     "level": 2,
     "logo": "logos/brand_224.png"
   },
   {
     "id": 225,
     "name_en": "fumot",
-    "name_cn": "\u798f\u6469\u7279",
+    "name_cn": "福摩特",
     "url": "https://szfumotvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_225.png"
   },
@@ -1739,7 +1739,7 @@
     "name_en": "Funky Republic",
     "name_cn": "",
     "url": "https://www.funkyrepublic.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_227.png"
   },
@@ -1755,9 +1755,9 @@
   {
     "id": 229,
     "name_en": "FUUMY",
-    "name_cn": "\u8299\u9ea6\u79d1\u6280",
+    "name_cn": "芙麦科技",
     "url": "https://www.fuumy.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_229.png"
   },
@@ -1800,9 +1800,9 @@
   {
     "id": 234,
     "name_en": "GCORE",
-    "name_cn": "\u8d1d\u601d\u4f73",
+    "name_cn": "贝思佳",
     "url": "https://gcorevape.ca/",
-    "region": "\u52a0\u62ff\u5927",
+    "region": "加拿大",
     "level": 3,
     "logo": "logos/brand_234.png"
   },
@@ -1811,43 +1811,43 @@
     "name_en": "Geek Fuze",
     "name_cn": "",
     "url": "https://geek-fuze.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_235.png"
   },
   {
     "id": 236,
     "name_en": "GEEKBAR",
-    "name_cn": "\u57fa\u514b\u7eb3",
+    "name_cn": "基克纳",
     "url": "https://www.geekbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_236.png"
   },
   {
     "id": 237,
     "name_en": "GEEKVAPE",
-    "name_cn": "\u57fa\u514b\u7eb3",
+    "name_cn": "基克纳",
     "url": "https://www.geekvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_237.webp"
   },
   {
     "id": 239,
     "name_en": "Glamee",
-    "name_cn": "\u9053\u540c",
+    "name_cn": "道同",
     "url": "https://www.glameevape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_239.png"
   },
   {
     "id": 240,
     "name_en": "Glo",
-    "name_cn": "\u82f1\u7f8e\u70df\u8349",
+    "name_cn": "英美烟草",
     "url": "https://www.myglo.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_240.png"
   },
@@ -1856,7 +1856,7 @@
     "name_en": "GLOW VAPE",
     "name_cn": "VOPK",
     "url": "http://www.glow-vape.com",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_241.png"
   },
@@ -1872,7 +1872,7 @@
   {
     "id": 243,
     "name_en": "GOAT",
-    "name_cn": "wordpress\u5efa\u7ad9",
+    "name_cn": "wordpress建站",
     "url": "https://goatdisposable.com/",
     "region": "",
     "level": 1,
@@ -1891,9 +1891,9 @@
   {
     "id": 245,
     "name_en": "GOLD BAR",
-    "name_cn": "\u4e00\u4e91\u96fe",
+    "name_cn": "一云雾",
     "url": "https://vapegold.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_245.png"
   },
@@ -1920,7 +1920,7 @@
     "name_en": "GRABIT",
     "name_cn": "",
     "url": "https://www.grabitvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_248.png"
   },
@@ -1945,7 +1945,7 @@
   {
     "id": 251,
     "name_en": "Green Sound",
-    "name_cn": "\u751f\u4ea7\u5546-\u5de5\u5382",
+    "name_cn": "生产商-工厂",
     "url": "https://greensoundtech.com/",
     "region": "",
     "level": 1,
@@ -2003,7 +2003,7 @@
     "name_en": "Hamcl",
     "name_cn": "",
     "url": "https://hamclvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_257.png"
   },
@@ -2012,7 +2012,7 @@
     "name_en": "Han Tech",
     "name_cn": "",
     "url": "https://hanone.com.cn/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_258.png"
   },
@@ -2028,9 +2028,9 @@
   {
     "id": 260,
     "name_en": "Happi",
-    "name_cn": "\u77f3\u5f00",
+    "name_cn": "石开",
     "url": "https://happihemp.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_260.png"
   },
@@ -2064,11 +2064,12 @@
   {
     "id": 264,
     "name_en": "HAYATI",
-    "name_cn": "\u6d3e\u514b\u65af\u521b\u65b0",
+    "name_cn": "派克斯创新",
     "url": "https://hayativapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
-    "logo": "logos/brand_264.png"
+    "logo": "logos/brand_264.png",
+    "rating": 0
   },
   {
     "id": 265,
@@ -2084,7 +2085,7 @@
     "name_en": "HCIGAR/AKSO",
     "name_cn": "",
     "url": "https://www.hcigar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_266.png"
   },
@@ -2093,7 +2094,7 @@
     "name_en": "Heaven Gifts",
     "name_cn": "",
     "url": "https://www.heavengifts.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_267.png"
   },
@@ -2118,9 +2119,9 @@
   {
     "id": 270,
     "name_en": "HELLVAPE",
-    "name_cn": "\u5609\u8054\u5174",
+    "name_cn": "嘉联兴",
     "url": "https://www.hellvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_270.png"
   },
@@ -2129,7 +2130,7 @@
     "name_en": "Hemper",
     "name_cn": "",
     "url": "https://www.hemper.co/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_271.png"
   },
@@ -2165,16 +2166,16 @@
     "name_en": "HifhiFlow Vape",
     "name_cn": "",
     "url": "https://www.myhiflow.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_275.png"
   },
   {
     "id": 276,
     "name_en": "HIFLOW",
-    "name_cn": "\u4e94\u8f6e\u79d1\u6280-\u7f51\u7ad9\u8fc7\u671f",
+    "name_cn": "五轮科技-网站过期",
     "url": "https://www.myhiflow.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_276.png",
     "rating": 0
@@ -2193,7 +2194,7 @@
     "name_en": "hiio",
     "name_cn": "",
     "url": "https://www.hiio.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_278.png"
   },
@@ -2220,14 +2221,14 @@
     "name_en": "holyvaping",
     "name_cn": "",
     "url": "http://www.holyvaping.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_281.png"
   },
   {
     "id": 282,
     "name_en": "HONGYI LAB",
-    "name_cn": "\u5f18\u6bc5",
+    "name_cn": "弘毅",
     "url": "https://www.hongyilab.com/",
     "region": "",
     "level": 4,
@@ -2247,7 +2248,7 @@
     "name_en": "Horizon Tech",
     "name_cn": "",
     "url": "https://www.horizone-cig.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_284.png"
   },
@@ -2272,9 +2273,9 @@
   {
     "id": 287,
     "name_en": "HQD",
-    "name_cn": "\u6c49\u6e05\u8fbe",
+    "name_cn": "汉清达",
     "url": "https://hqdtech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_287.png"
   },
@@ -2337,7 +2338,7 @@
     "name_en": "Hyde disposables",
     "name_cn": "https://hydedisposables.com/",
     "url": "https://hydedisposables.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_294.png"
   },
@@ -2346,7 +2347,7 @@
     "name_en": "Hyde disposables",
     "name_cn": "https://hydedisposables.com/",
     "url": "https://hydedisposables.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_1782803144369.png"
   },
@@ -2355,7 +2356,7 @@
     "name_en": "Hyde Raves",
     "name_cn": "",
     "url": "https://hyderaves.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_295.png"
   },
@@ -2364,7 +2365,7 @@
     "name_en": "Hyde Raves",
     "name_cn": "",
     "url": "https://hyderaves.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_1782803054069.png"
   },
@@ -2380,7 +2381,7 @@
   {
     "id": 297,
     "name_en": "hydvape",
-    "name_cn": "\u60e0\u82f1\u8fbe",
+    "name_cn": "惠英达",
     "url": "https://www.hydvape.cn/",
     "region": "",
     "level": 3,
@@ -2409,16 +2410,16 @@
     "name_en": "Hyperbar",
     "name_cn": "",
     "url": "https://hyperbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_137.png"
   },
   {
     "id": 301,
     "name_en": "HYPPE",
-    "name_cn": "\u96c1\u626c",
+    "name_cn": "雁扬",
     "url": "https://hyppemaxflowbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_301.jpg"
   },
@@ -2436,7 +2437,7 @@
     "name_en": "i:FORCE",
     "name_cn": "",
     "url": "https://myiforce.ru/",
-    "region": "\u4fc4\u7f57\u65af",
+    "region": "俄罗斯",
     "level": 3,
     "logo": "logos/brand_303.png",
     "rating": 0
@@ -2462,9 +2463,9 @@
   {
     "id": 310,
     "name_en": "iccpp",
-    "name_cn": "\u5409\u8fe9",
+    "name_cn": "吉迩",
     "url": "https://www.iccpp.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 1,
     "logo": "logos/brand_310.jpg"
   },
@@ -2489,9 +2490,9 @@
   {
     "id": 313,
     "name_en": "icewave",
-    "name_cn": "\u5409\u8fe9",
+    "name_cn": "吉迩",
     "url": "https://www.icewave.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_313.png"
   },
@@ -2500,7 +2501,7 @@
     "name_en": "ICON",
     "name_cn": "",
     "url": "https://www.iconvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_314.jpg"
   },
@@ -2509,7 +2510,7 @@
     "name_en": "iFORCE",
     "name_cn": "",
     "url": "https://myiforce.ru/",
-    "region": "\u4fc4\u7f57\u65af",
+    "region": "俄罗斯",
     "level": 3,
     "logo": "logos/brand_315.png"
   },
@@ -2518,7 +2519,7 @@
     "name_en": "IGNITE",
     "name_cn": "",
     "url": "https://puffignite.co/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_317.png",
     "rating": 3
@@ -2528,16 +2529,16 @@
     "name_en": "IGNITE Vape",
     "name_cn": "",
     "url": "https://puffignite.co/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_318.png"
   },
   {
     "id": 319,
     "name_en": "IJOY",
-    "name_cn": "\u7231\u5353\u4f9d",
+    "name_cn": "爱卓依",
     "url": "https://www.ijoycig.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_319.png",
     "rating": 0
@@ -2547,7 +2548,7 @@
     "name_en": "IJOY Bar Vape",
     "name_cn": "",
     "url": "https://ijoybarvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_320.png",
     "rating": 0
@@ -2574,9 +2575,9 @@
   {
     "id": 323,
     "name_en": "imoment",
-    "name_cn": "\u96fe\u5883",
+    "name_cn": "雾境",
     "url": "https://www.imomentvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_323.png"
   },
@@ -2594,7 +2595,7 @@
     "name_en": "INFLAVE",
     "name_cn": "",
     "url": "https://inflave.com/en/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_325.png",
     "rating": 0
@@ -2620,18 +2621,18 @@
   {
     "id": 152,
     "name_en": "INNOKIN",
-    "name_cn": "\u65b0\u5b9c\u5eb7",
+    "name_cn": "新宜康",
     "url": "https://www.innokin.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_152.png"
   },
   {
     "id": 328,
     "name_en": "INNOKIN",
-    "name_cn": "\u65b0\u5b9c\u5eb7",
+    "name_cn": "新宜康",
     "url": "https://www.innokin.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_328.png"
   },
@@ -2647,18 +2648,18 @@
   {
     "id": 330,
     "name_en": "INSTA FILL",
-    "name_cn": "\u6613\u4f73\u7279",
+    "name_cn": "易佳特",
     "url": "https://insta-fill.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_330.jpg"
   },
   {
     "id": 331,
     "name_en": "instaBar",
-    "name_cn": "\u6d69\u701a\u9633\u5929",
+    "name_cn": "浩瀚阳天",
     "url": "https://instabar.net/lander",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_331.jpg"
   },
@@ -2676,7 +2677,7 @@
     "name_en": "instapod",
     "name_cn": "",
     "url": "https://instapod.net/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_333.png"
   },
@@ -2692,16 +2693,16 @@
   {
     "id": 335,
     "name_en": "IPlay",
-    "name_cn": "\u9177\u73a9\u65f6\u4ee3",
+    "name_cn": "酷玩时代",
     "url": "https://www.iplayvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_335.png"
   },
   {
     "id": 336,
     "name_en": "ipuff",
-    "name_cn": "\u7f8e\u56fd",
+    "name_cn": "美国",
     "url": "https://myipuff.com/",
     "region": "",
     "level": 3,
@@ -2710,9 +2711,9 @@
   {
     "id": 337,
     "name_en": "IQOS",
-    "name_cn": "\u83f2\u83ab\u56fd\u9645",
+    "name_cn": "菲莫国际",
     "url": "https://www.iqos.com/global",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_337.png"
   },
@@ -2730,7 +2731,7 @@
     "name_en": "Ispire",
     "name_cn": "",
     "url": "https://www.getispire.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_339.svg"
   },
@@ -2746,18 +2747,18 @@
   {
     "id": 341,
     "name_en": "itsuwa",
-    "name_cn": "\u4e94\u8f6e",
+    "name_cn": "五轮",
     "url": "https://www.itsuwacig.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_341.png"
   },
   {
     "id": 342,
     "name_en": "IVG",
-    "name_cn": "\u82f1\u56fdIVG",
+    "name_cn": "英国IVG",
     "url": "https://ivapegreat.com/",
-    "region": "\u82f1\u56fd",
+    "region": "英国",
     "level": 5,
     "logo": "logos/brand_342.png"
   },
@@ -2766,7 +2767,7 @@
     "name_en": "IZY Vape",
     "name_cn": "",
     "url": "https://www.izyvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_343.png"
   },
@@ -2782,18 +2783,18 @@
   {
     "id": 345,
     "name_en": "JEX",
-    "name_cn": "\u5409\u745e",
+    "name_cn": "吉瑞",
     "url": "http://jexvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_345.png"
   },
   {
     "id": 346,
     "name_en": "JNR",
-    "name_cn": "\u57fa\u4f0d",
+    "name_cn": "基伍",
     "url": "https://www.jnrvapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_346.png"
   },
@@ -2818,27 +2819,27 @@
   {
     "id": 349,
     "name_en": "Joyetech",
-    "name_cn": "\u5353\u5c14\u60a6",
+    "name_cn": "卓尔悦",
     "url": "https://www.joyetech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_349.png"
   },
   {
     "id": 350,
     "name_en": "joyevita",
-    "name_cn": "\u805a\u4e3a\u96c6\u56e2",
+    "name_cn": "聚为集团",
     "url": "https://www.joyevita.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_350.png"
   },
   {
     "id": 351,
     "name_en": "JSB vape",
-    "name_cn": "\u6770\u4ed5\u535a",
+    "name_cn": "杰仕博",
     "url": "https://www.jsbvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_351.png"
   },
@@ -2901,7 +2902,7 @@
     "name_en": "Just Fog",
     "name_cn": "",
     "url": "https://www.justfog.com/main.php",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_358.png"
   },
@@ -2926,7 +2927,7 @@
   {
     "id": 361,
     "name_en": "Juul",
-    "name_cn": "\u7f8e\u56fdJuul",
+    "name_cn": "美国Juul",
     "url": "https://www.juul.com/",
     "region": "",
     "level": 4,
@@ -2935,9 +2936,9 @@
   {
     "id": 362,
     "name_en": "Kado Bar",
-    "name_cn": "\u9053\u68ee",
+    "name_cn": "道森",
     "url": "https://kadobar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_362.png"
   },
@@ -2962,18 +2963,18 @@
   {
     "id": 365,
     "name_en": "Kangertech",
-    "name_cn": "\u5eb7\u5c14",
+    "name_cn": "康尔",
     "url": "https://www.kangertech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_365.png"
   },
   {
     "id": 366,
     "name_en": "KANGVAPE",
-    "name_cn": "\u5eb7\u552f\u666e",
+    "name_cn": "康唯普",
     "url": "https://www.kangvapecig.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_366.png"
   },
@@ -2982,7 +2983,7 @@
     "name_en": "Kardinal",
     "name_cn": "",
     "url": "https://www.kardinal.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_367.png"
   },
@@ -3007,9 +3008,9 @@
   {
     "id": 370,
     "name_en": "KEYSTONE",
-    "name_cn": "\u94a5\u77f3",
+    "name_cn": "钥石",
     "url": "https://keystonevape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_370.png"
   },
@@ -3072,7 +3073,7 @@
     "name_en": "KING SONG",
     "name_cn": "",
     "url": "https://www.kscig.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_377.png"
   },
@@ -3088,9 +3089,9 @@
   {
     "id": 379,
     "name_en": "KingZone",
-    "name_cn": "\u5c0a\u4e00\u54c1",
+    "name_cn": "尊一品",
     "url": "https://www.kingzonetech.com/home",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_379.png"
   },
@@ -3099,7 +3100,7 @@
     "name_en": "Kiwi",
     "name_cn": "",
     "url": "https://www.kiwivapor.com/en/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_380.png"
   },
@@ -3115,9 +3116,9 @@
   {
     "id": 382,
     "name_en": "KMOSE",
-    "name_cn": "\u523b\u7c73",
+    "name_cn": "刻米",
     "url": "https://vapelala.com/collections/kmose?srsltid=AfmBOorHcKbpH46ikNqkV1Wtozv7qQnPNqFLcsatvVo7VgZeOnZHqxJP",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_382.jpg"
   },
@@ -3133,9 +3134,9 @@
   {
     "id": 384,
     "name_en": "kori",
-    "name_cn": "\u4f9d\u601d\u4f73",
+    "name_cn": "依思佳",
     "url": "https://korivape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_384.png"
   },
@@ -3171,7 +3172,7 @@
     "name_en": "kumisix",
     "name_cn": "",
     "url": "https://www.kumisixofficial.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_388.png"
   },
@@ -3205,18 +3206,18 @@
   {
     "id": 392,
     "name_en": "lafume",
-    "name_cn": "\u4e30\u4e3d\u7535\u5b50",
+    "name_cn": "丰丽电子",
     "url": "https://lafume.de/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_392.png"
   },
   {
     "id": 393,
     "name_en": "Lami",
-    "name_cn": "\u5f95\u7c73",
+    "name_cn": "徕米",
     "url": "http://www.lamivape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_393.png"
   },
@@ -3225,7 +3226,7 @@
     "name_en": "LANA VAPE",
     "name_cn": "",
     "url": "https://lanasale.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_394.jpg"
   },
@@ -3234,7 +3235,7 @@
     "name_en": "LANAVAPE Vape",
     "name_cn": "",
     "url": "https://www.lanavape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_395.png"
   },
@@ -3261,7 +3262,7 @@
     "name_en": "Lavie",
     "name_cn": "",
     "url": "https://www.lavievape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_398.png"
   },
@@ -3288,7 +3289,7 @@
     "name_en": "Lem The New Smoke",
     "name_cn": "",
     "url": "https://www.inimex.it/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_401.png"
   },
@@ -3297,7 +3298,7 @@
     "name_en": "Life pod",
     "name_cn": "",
     "url": "https://www.lifepodoficial.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_402.svg"
   },
@@ -3358,9 +3359,9 @@
   {
     "id": 409,
     "name_en": "Logic",
-    "name_cn": "\u65e5\u672c\u70df\u8349",
+    "name_cn": "日本烟草",
     "url": "https://logicvapes.co.uk/",
-    "region": "\u82f1\u56fd",
+    "region": "英国",
     "level": 3,
     "logo": "logos/brand_409.png"
   },
@@ -3412,9 +3413,9 @@
   {
     "id": 415,
     "name_en": "LOST MARY",
-    "name_cn": "\u7231\u5947\u8ff9\u65d7\u4e0b",
+    "name_cn": "爱奇迹旗下",
     "url": "https://www.lostmary.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_415.png"
   },
@@ -3423,7 +3424,7 @@
     "name_en": "LOST MARY Vape",
     "name_cn": "",
     "url": "https://lostmary.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_416.png"
   },
@@ -3439,18 +3440,18 @@
   {
     "id": 418,
     "name_en": "Lost THC",
-    "name_cn": "\u7231\u5947\u8ff9",
+    "name_cn": "爱奇迹",
     "url": "https://lost-thc.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_418.png"
   },
   {
     "id": 419,
     "name_en": "Lost Vape",
-    "name_cn": "\u52b3\u65af\u97e6\u4f2f",
+    "name_cn": "劳斯韦伯",
     "url": "https://lostvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_419.png"
   },
@@ -3459,7 +3460,7 @@
     "name_en": "Lostthc",
     "name_cn": "",
     "url": "https://lostthc.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_420.png"
   },
@@ -3495,7 +3496,7 @@
     "name_en": "Luckee",
     "name_cn": "",
     "url": "https://www.atingbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_424.png"
   },
@@ -3511,9 +3512,9 @@
   {
     "id": 426,
     "name_en": "Luffbar",
-    "name_cn": "\u7f8e\u597d\u96fe\u5316",
+    "name_cn": "美好雾化",
     "url": "http://www.luffbar.com/index.aspx",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_426.png"
   },
@@ -3522,7 +3523,7 @@
     "name_en": "LUMINOVA",
     "name_cn": "",
     "url": "https://luminova-vape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_427.png"
   },
@@ -3646,9 +3647,9 @@
   {
     "id": 441,
     "name_en": "maskking",
-    "name_cn": "\u6f2b\u79d1\u65af\u5a01",
+    "name_cn": "漫科斯威",
     "url": "https://www.maskkingvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_441.jpg"
   },
@@ -3727,34 +3728,34 @@
   {
     "id": 450,
     "name_en": "meebaco",
-    "name_cn": "\u5609\u626c\u96fe\u521b",
+    "name_cn": "嘉扬雾创",
     "url": "https://www.meebaco.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_450.png"
   },
   {
     "id": 451,
     "name_en": "megabar",
-    "name_cn": "\u8d28\u8d62",
+    "name_cn": "质赢",
     "url": "https://megabarshop.de/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_451.png"
   },
   {
     "id": 452,
     "name_en": "Memers",
-    "name_cn": "\u65af\u79d1\u5c14",
+    "name_cn": "斯科尔",
     "url": "https://www.memersvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_452.png"
   },
   {
     "id": 453,
     "name_en": "merrymi",
-    "name_cn": "\u715c\u8fce",
+    "name_cn": "煜迎",
     "url": "https://mmvapor.com/",
     "region": "",
     "level": 3,
@@ -3763,27 +3764,27 @@
   {
     "id": 454,
     "name_en": "METEX",
-    "name_cn": "\u601d\u6469\u5c14",
+    "name_cn": "思摩尔",
     "url": "https://www.metextech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_454.png"
   },
   {
     "id": 455,
     "name_en": "Metre",
-    "name_cn": "\u7c73\u8304",
+    "name_cn": "米茄",
     "url": "https://www.metre-tech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_455.png"
   },
   {
     "id": 456,
     "name_en": "mevol",
-    "name_cn": "\u7c73\u6211",
+    "name_cn": "米我",
     "url": "https://www.mevol.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_456.png"
   },
@@ -3817,18 +3818,18 @@
   {
     "id": 460,
     "name_en": "MIVIO",
-    "name_cn": "\u715c\u8fce",
+    "name_cn": "煜迎",
     "url": "https://miviobar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_460.png"
   },
   {
     "id": 461,
-    "name_en": "MKG (\u5fc3\u4e4b\u529b)",
-    "name_cn": "\u9999\u6e2f",
+    "name_en": "MKG (心之力)",
+    "name_cn": "香港",
     "url": "https://mkgvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_461.png"
   },
@@ -3837,7 +3838,7 @@
     "name_en": "MNKE Bars",
     "name_cn": "",
     "url": "https://mnkebars.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_462.png"
   },
@@ -3853,9 +3854,9 @@
   {
     "id": 464,
     "name_en": "MOCIG",
-    "name_cn": "\u96e8\u5e06",
+    "name_cn": "雨帆",
     "url": "https://www.mocig.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_464.png"
   },
@@ -3864,7 +3865,7 @@
     "name_en": "MOKI",
     "name_cn": "",
     "url": "https://www.mokiecig.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_465.png"
   },
@@ -3882,7 +3883,7 @@
     "name_en": "Mopuff",
     "name_cn": "",
     "url": "https://mopuff.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_467.png"
   },
@@ -3898,27 +3899,27 @@
   {
     "id": 469,
     "name_en": "Moshvape",
-    "name_cn": "\u9b54\u5c71",
+    "name_cn": "魔山",
     "url": "https://www.moshvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_469.png"
   },
   {
     "id": 470,
     "name_en": "MOSMO",
-    "name_cn": "\u7231\u661f\u65fa",
+    "name_cn": "爱星旺",
     "url": "https://www.mosmovape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_470.png"
   },
   {
     "id": 471,
     "name_en": "MOTI",
-    "name_cn": "\u9b54\u7b1b",
+    "name_cn": "魔笛",
     "url": "https://motiplanet.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_471.png"
   },
@@ -3934,9 +3935,9 @@
   {
     "id": 473,
     "name_en": "MR FOG",
-    "name_cn": "\u6052\u6cf0\u751f\u7269",
+    "name_cn": "恒泰生物",
     "url": "https://www.mrfog.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_473.png"
   },
@@ -3981,7 +3982,7 @@
     "name_en": "Myle",
     "name_cn": "",
     "url": "https://www.mylevape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_478.png"
   },
@@ -3997,9 +3998,9 @@
   {
     "id": 480,
     "name_en": "MYSMOK",
-    "name_cn": "\u9ea6\u65af\u83ab\u79d1",
+    "name_cn": "麦斯莫科",
     "url": "http://www.mysmok.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_480.png"
   },
@@ -4042,7 +4043,7 @@
   {
     "id": 485,
     "name_en": "Nasty",
-    "name_cn": "\u9a6c\u6765\u897f\u4e9a Nasty",
+    "name_cn": "马来西亚 Nasty",
     "url": "https://nastyworldwide.com/",
     "region": "",
     "level": 5,
@@ -4053,7 +4054,7 @@
     "name_en": "Nebben",
     "name_cn": "",
     "url": "https://www.nebben.com/nebben-pro-by-swarovski",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_486.png"
   },
@@ -4078,18 +4079,18 @@
   {
     "id": 489,
     "name_en": "NEXA",
-    "name_cn": "\u5409\u8fe9",
+    "name_cn": "吉迩",
     "url": "https://www.nexabar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_489.png"
   },
   {
     "id": 490,
     "name_en": "nextvapor",
-    "name_cn": "\u4e94\u8f6e",
+    "name_cn": "五轮",
     "url": "https://www.nextvapor.cc/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_490.png"
   },
@@ -4098,16 +4099,16 @@
     "name_en": "NIQ",
     "name_cn": "",
     "url": "https://niqbrand.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_491.jpg"
   },
   {
     "id": 492,
     "name_en": "NJOY",
-    "name_cn": "\u7f8e\u56fdSottera",
+    "name_cn": "美国Sottera",
     "url": "https://www.njoy.com/",
-    "region": "\u7f8e\u56fd",
+    "region": "美国",
     "level": 3,
     "logo": "logos/brand_492.png"
   },
@@ -4132,9 +4133,9 @@
   {
     "id": 495,
     "name_en": "NOVA",
-    "name_cn": "\u94a5\u77f3",
+    "name_cn": "钥石",
     "url": "https://nova510.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_495.png"
   },
@@ -4159,7 +4160,7 @@
   {
     "id": 498,
     "name_en": "off-stamp",
-    "name_cn": "\u7231\u5947\u8ff9",
+    "name_cn": "爱奇迹",
     "url": "https://www.off-stampvape.com/",
     "region": "",
     "level": 4,
@@ -4186,9 +4187,9 @@
   {
     "id": 501,
     "name_en": "Olit",
-    "name_cn": "\u5eb7\u5c14",
+    "name_cn": "康尔",
     "url": "https://www.olitvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_501.png"
   },
@@ -4222,9 +4223,9 @@
   {
     "id": 505,
     "name_en": "Onto",
-    "name_cn": "\u5047\u65e5\u84b8\u6c7d",
+    "name_cn": "假日蒸汽",
     "url": "https://www.ontovape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_505.png"
   },
@@ -4267,9 +4268,9 @@
   {
     "id": 510,
     "name_en": "Oukitel",
-    "name_cn": "\u9177\u65af\u8fbe",
+    "name_cn": "酷斯达",
     "url": "https://oukitelvapein.com/",
-    "region": "\u82f1\u56fd",
+    "region": "英国",
     "level": 3,
     "logo": "logos/brand_510.png"
   },
@@ -4285,27 +4286,27 @@
   {
     "id": 512,
     "name_en": "OVNS",
-    "name_cn": "\u50b2\u4e16\u5a01",
+    "name_cn": "傲世威",
     "url": "https://www.ovnstech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_512.png"
   },
   {
     "id": 513,
     "name_en": "OXBAR",
-    "name_cn": "\u7231\u4e50\u7c73",
+    "name_cn": "爱乐米",
     "url": "https://www.oxbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_513.jpg"
   },
   {
     "id": 514,
     "name_en": "OXVA",
-    "name_cn": "\u7231\u4e50\u7c73",
+    "name_cn": "爱乐米",
     "url": "https://www.oxva.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_514.png"
   },
@@ -4348,7 +4349,7 @@
   {
     "id": 519,
     "name_en": "pafos",
-    "name_cn": "\u4fc4\u7f57\u65af",
+    "name_cn": "俄罗斯",
     "url": "https://pafos.pro/en",
     "region": "",
     "level": 4,
@@ -4377,7 +4378,7 @@
     "name_en": "Pava",
     "name_cn": "",
     "url": "https://www.pavainnov.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_522.png"
   },
@@ -4386,25 +4387,25 @@
     "name_en": "peak-bar",
     "name_cn": "",
     "url": "https://www.peak-bar.com/index.html",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_523.png"
   },
   {
     "id": 524,
     "name_en": "Peakbar",
-    "name_cn": "\u5934\u7b49\u7a97",
+    "name_cn": "头等窗",
     "url": "https://peak-bar.com/index.html",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_524.png"
   },
   {
     "id": 525,
     "name_en": "Pillow Talk",
-    "name_cn": "\u9053\u68ee",
+    "name_cn": "道森",
     "url": "https://www.pillowtalkvaping.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_525.png"
   },
@@ -4422,7 +4423,7 @@
     "name_en": "Pixl",
     "name_cn": "",
     "url": "https://pixlvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_527.jpg"
   },
@@ -4431,43 +4432,43 @@
     "name_en": "plena",
     "name_cn": "",
     "url": "https://plenavape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_528.jpg"
   },
   {
     "id": 529,
     "name_en": "Plonq",
-    "name_cn": "\u4ee3\u4e2d\u4ee3\u5de5",
+    "name_cn": "代中代工",
     "url": "https://www.plonq.az/en/home",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_529.png"
   },
   {
     "id": 530,
     "name_en": "PLOOM",
-    "name_cn": "\u65e5\u672c\u70df\u8349",
+    "name_cn": "日本烟草",
     "url": "https://www.ploom.com/en",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_530.png"
   },
   {
     "id": 238,
     "name_en": "Ploox",
-    "name_cn": "\u5a01\u666e\u6d1b\u65af",
+    "name_cn": "威普洛斯",
     "url": "https://www.ploox.cloud/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_238.png"
   },
   {
     "id": 531,
     "name_en": "Ploox",
-    "name_cn": "\u5a01\u666e\u6d1b\u65af",
+    "name_cn": "威普洛斯",
     "url": "https://www.ploox.cloud/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_531.png"
   },
@@ -4521,7 +4522,7 @@
     "name_en": "Pod Salt",
     "name_cn": "",
     "url": "https://www.podsalt.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_537.png"
   },
@@ -4530,7 +4531,7 @@
     "name_en": "Pod Salt Global",
     "name_cn": "",
     "url": "https://podsalt.global/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_538.png"
   },
@@ -4557,7 +4558,7 @@
     "name_en": "Posh",
     "name_cn": "",
     "url": "https://nowposh.com/verify-product/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_541.png"
   },
@@ -4584,25 +4585,25 @@
     "name_en": "PRIVBAR",
     "name_cn": "",
     "url": "https://www.privbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_544.png"
   },
   {
     "id": 545,
     "name_en": "pthmaster",
-    "name_cn": "\u5408\u5143",
+    "name_cn": "合元",
     "url": "https://pthmaster.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_545.png"
   },
   {
     "id": 546,
     "name_en": "Puff bar",
-    "name_cn": "\u9053\u68ee",
+    "name_cn": "道森",
     "url": "https://puffbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_546.png"
   },
@@ -4629,14 +4630,14 @@
     "name_en": "puffbar",
     "name_cn": "",
     "url": "https://puffbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_549.png"
   },
   {
     "id": 550,
     "name_en": "puffeel",
-    "name_cn": "\u7f8e\u56fd",
+    "name_cn": "美国",
     "url": "https://puffeelbar.com/",
     "region": "",
     "level": 3,
@@ -4645,9 +4646,9 @@
   {
     "id": 551,
     "name_en": "puffmi",
-    "name_cn": "\u4e50\u6ecb",
+    "name_cn": "乐滋",
     "url": "https://www.puffmivape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_551.png"
   },
@@ -4656,7 +4657,7 @@
     "name_en": "Puffmi Official",
     "name_cn": "",
     "url": "https://www.puffmivape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_552.png"
   },
@@ -4665,7 +4666,7 @@
     "name_en": "puffpaw",
     "name_cn": "",
     "url": "https://www.puffpaw.xyz/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_553.png"
   },
@@ -4717,9 +4718,9 @@
   {
     "id": 559,
     "name_en": "Pynepod",
-    "name_cn": "\u6f58\u6069",
+    "name_cn": "潘恩",
     "url": "https://www.pynepod.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_559.png"
   },
@@ -4744,9 +4745,9 @@
   {
     "id": 562,
     "name_en": "Qst",
-    "name_cn": "\u6dc7\u987a\u901a",
+    "name_cn": "淇顺通",
     "url": "https://www.qstvapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_562.png"
   },
@@ -4762,9 +4763,9 @@
   {
     "id": 564,
     "name_en": "QUAWINS",
-    "name_cn": "\u8d28\u8d62",
+    "name_cn": "质赢",
     "url": "http://www.quawins.com",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_564.png"
   },
@@ -4782,7 +4783,7 @@
     "name_en": "quokka",
     "name_cn": "",
     "url": "https://vapequokka.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_566.svg"
   },
@@ -4845,7 +4846,7 @@
     "name_en": "RAZ",
     "name_cn": "Geek Bar",
     "url": "https://www.raz-vapes.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_573.png"
   },
@@ -4854,7 +4855,7 @@
     "name_en": "Raz Vape",
     "name_cn": "",
     "url": "https://www.raz-vapes.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_574.png"
   },
@@ -4863,16 +4864,16 @@
     "name_en": "reignbar",
     "name_cn": "",
     "url": "https://reignbarvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_575.png"
   },
   {
     "id": 576,
     "name_en": "RELX",
-    "name_cn": "\u60a6\u523b",
+    "name_cn": "悦刻",
     "url": "https://relxnow.com/?srsltid=AfmBOoqYoEQt0JomJqY7mWU6QJ-NJOgCTqv4Vyulp5bhvGvzeZVJzRcY",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_576.png"
   },
@@ -4881,7 +4882,7 @@
     "name_en": "RELX UK",
     "name_cn": "",
     "url": "https://relxnow.co.uk/",
-    "region": "\u82f1\u56fd",
+    "region": "英国",
     "level": 3,
     "logo": "logos/brand_577.png"
   },
@@ -4890,7 +4891,7 @@
     "name_en": "RELX VAPE",
     "name_cn": "",
     "url": "https://relxvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_578.png"
   },
@@ -4924,9 +4925,9 @@
   {
     "id": 582,
     "name_en": "reymont",
-    "name_cn": "\u83b1\u8499\u7279",
+    "name_cn": "莱蒙特",
     "url": "https://www.reymonttech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_582.jpg"
   },
@@ -4944,7 +4945,7 @@
     "name_en": "RIFBAR",
     "name_cn": "",
     "url": "https://rifbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_584.png"
   },
@@ -4971,7 +4972,7 @@
     "name_en": "Riot E-Liquid",
     "name_cn": "",
     "url": "https://rioteliquid.com",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_587.svg"
   },
@@ -4996,9 +4997,9 @@
   {
     "id": 590,
     "name_en": "ritchy",
-    "name_cn": "\u68b5\u6d3b\u80fd\u6e90",
+    "name_cn": "梵活能源",
     "url": "https://ritchy.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 1,
     "logo": "logos/brand_590.png"
   },
@@ -5032,9 +5033,9 @@
   {
     "id": 594,
     "name_en": "Romio",
-    "name_cn": "\u8302\u5b89\u8fbe",
+    "name_cn": "茂安达",
     "url": "https://www.romioecig.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_594.png"
   },
@@ -5061,7 +5062,7 @@
     "name_en": "ROQY",
     "name_cn": "",
     "url": "https://roqy.ru/",
-    "region": "\u4fc4\u7f57\u65af",
+    "region": "俄罗斯",
     "level": 3,
     "logo": "logos/brand_597.png"
   },
@@ -5160,16 +5161,16 @@
     "name_en": "Sigelei",
     "name_cn": "",
     "url": "https://www.sigelei.com/Product/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_608.png"
   },
   {
     "id": 609,
     "name_en": "Sikary",
-    "name_cn": "\u65af\u79d1\u5c14",
+    "name_cn": "斯科尔",
     "url": "https://www.sikaryvapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_609.png"
   },
@@ -5185,9 +5186,9 @@
   {
     "id": 611,
     "name_en": "Silvaper",
-    "name_cn": "\u94f6\u70df",
+    "name_cn": "银烟",
     "url": "https://silvaper.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_611.png"
   },
@@ -5203,27 +5204,27 @@
   {
     "id": 613,
     "name_en": "Sixhill",
-    "name_cn": "\u5408\u5143",
+    "name_cn": "合元",
     "url": "https://www.sixhill.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_613.png"
   },
   {
     "id": 614,
     "name_en": "SKE",
-    "name_cn": "\u65af\u79d1\u5c14",
+    "name_cn": "斯科尔",
     "url": "https://www.skevape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_614.png"
   },
   {
     "id": 615,
     "name_en": "Skey",
-    "name_cn": "\u5180\u8c6b\u6052",
+    "name_cn": "冀豫恒",
     "url": "https://www.skeycig.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_615.png"
   },
@@ -5257,27 +5258,27 @@
   {
     "id": 619,
     "name_en": "smiss",
-    "name_cn": "\u8d5b\u5c14\u7f8e",
+    "name_cn": "赛尔美",
     "url": "https://www.smissvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_619.png"
   },
   {
     "id": 620,
     "name_en": "Smoant",
-    "name_cn": "\u514b\u83b1\u9e4f",
+    "name_cn": "克莱鹏",
     "url": "https://smoant.com/pod-systems/charon-racer-refillable-vape/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_620.webp"
   },
   {
     "id": 621,
     "name_en": "SMOK",
-    "name_cn": "\u827e\u7ef4\u666e\u601d",
+    "name_cn": "艾维普思",
     "url": "https://www.smoktech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_621.png"
   },
@@ -5295,7 +5296,7 @@
     "name_en": "Smoor",
     "name_cn": "",
     "url": "https://en.smooreholdings.com",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_623.png"
   },
@@ -5304,25 +5305,25 @@
     "name_en": "Smooth",
     "name_cn": "",
     "url": "https://smooth-500.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_624.png"
   },
   {
     "id": 625,
     "name_en": "Smpo",
-    "name_cn": "\u60a6\u4e4b\u9014",
+    "name_cn": "悦之途",
     "url": "https://smpovapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_625.png"
   },
   {
     "id": 626,
     "name_en": "Smucci Vapes",
-    "name_cn": "\u9510\u8fbe\u741b",
+    "name_cn": "锐达琛",
     "url": "https://www.smuccivapes.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_626.png"
   },
@@ -5347,9 +5348,9 @@
   {
     "id": 629,
     "name_en": "SNOWPLUS",
-    "name_cn": "\u96ea\u52a0",
+    "name_cn": "雪加",
     "url": "https://www.snowplustech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_629.png"
   },
@@ -5367,7 +5368,7 @@
     "name_en": "so soul",
     "name_cn": "",
     "url": "https://www.sosoulvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_631.png"
   },
@@ -5383,9 +5384,9 @@
   {
     "id": 633,
     "name_en": "Solobar",
-    "name_cn": "\u5927\u9053\u56db\u4e5d",
+    "name_cn": "大道四九",
     "url": "https://www.solobar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_633.png"
   },
@@ -5410,9 +5411,9 @@
   {
     "id": 636,
     "name_en": "Sp2s",
-    "name_cn": "\u4e00\u53e3\u6fc0\u9876",
+    "name_cn": "一口激顶",
     "url": "https://www.sp2sglobal.com/product/swift-keyboard.html",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_636.png"
   },
@@ -5437,9 +5438,9 @@
   {
     "id": 639,
     "name_en": "SPACEMAN",
-    "name_cn": "\u827e\u7ef4\u666e\u601d",
+    "name_cn": "艾维普思",
     "url": "https://www.spacemans.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_639.png"
   },
@@ -5448,7 +5449,7 @@
     "name_en": "SPACEMEN VAPE",
     "name_cn": "",
     "url": "https://www.spacemen.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_640.png"
   },
@@ -5500,7 +5501,7 @@
   {
     "id": 646,
     "name_en": "stlth",
-    "name_cn": "\u52a0\u62ff\u5927",
+    "name_cn": "加拿大",
     "url": "https://stlthvape.com/",
     "region": "",
     "level": 4,
@@ -5536,18 +5537,18 @@
   {
     "id": 650,
     "name_en": "suonon",
-    "name_cn": "\u5409\u8fe9",
+    "name_cn": "吉迩",
     "url": "https://www.suonon.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_650.png"
   },
   {
     "id": 651,
     "name_en": "SUORIN",
-    "name_cn": "\u4f60\u6211\u96c6\u56e2",
+    "name_cn": "你我集团",
     "url": "https://suorin.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_651.svg"
   },
@@ -5583,7 +5584,7 @@
     "name_en": "SWFT Vape",
     "name_cn": "",
     "url": "https://www.swftbar.net/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_655.png"
   },
@@ -5646,7 +5647,7 @@
     "name_en": "tastefog",
     "name_cn": "",
     "url": "https://www.mytastefog.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_662.webp"
   },
@@ -5671,9 +5672,9 @@
   {
     "id": 665,
     "name_en": "Tesiyi",
-    "name_cn": "\u897f\u601d\u7f57",
+    "name_cn": "西思罗",
     "url": "https://www.tesiyi.net/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_665.png"
   },
@@ -5682,16 +5683,16 @@
     "name_en": "Teslabar",
     "name_cn": "",
     "url": "https://www.teslacigs.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_666.png"
   },
   {
     "id": 667,
     "name_en": "TESLACIGS",
-    "name_cn": "\u5c0a\u4e00\u54c1",
+    "name_cn": "尊一品",
     "url": "https://www.teslacigs.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_667.png"
   },
@@ -5727,7 +5728,7 @@
     "name_en": "Thinkvape",
     "name_cn": "",
     "url": "https://thinkvapetech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_671.png"
   },
@@ -5736,7 +5737,7 @@
     "name_en": "thunderheadcreations",
     "name_cn": "",
     "url": "https://thunderheadcreations.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_672.png"
   },
@@ -5763,7 +5764,7 @@
     "name_en": "Todoov Vape",
     "name_cn": "",
     "url": "https://www.todoovape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_675.png"
   },
@@ -5806,9 +5807,9 @@
   {
     "id": 680,
     "name_en": "TORCH",
-    "name_cn": "\u96c1\u626c",
+    "name_cn": "雁扬",
     "url": "https://www.torchenterprise.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_680.webp"
   },
@@ -5833,9 +5834,9 @@
   {
     "id": 683,
     "name_en": "trinods",
-    "name_cn": "\u5168\u901a\u7535\u7535\u6c14",
+    "name_cn": "全通电电气",
     "url": "https://www.trinods.com/index.html",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_683.png"
   },
@@ -5862,7 +5863,7 @@
     "name_en": "Tugboat",
     "name_cn": "",
     "url": "https://tugboatvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_686.webp"
   },
@@ -5887,18 +5888,18 @@
   {
     "id": 689,
     "name_en": "Tyson",
-    "name_cn": "\u7f8e\u56fdCarma HoldCo",
+    "name_cn": "美国Carma HoldCo",
     "url": "https://vapetyson.com/",
-    "region": "\u7f8e\u56fd",
+    "region": "美国",
     "level": 4,
     "logo": "logos/brand_689.png"
   },
   {
     "id": 690,
     "name_en": "uiii",
-    "name_cn": "\u76df\u592a",
+    "name_cn": "盟太",
     "url": "https://www.uiiivape.com/Home",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_690.png"
   },
@@ -5959,9 +5960,9 @@
   {
     "id": 697,
     "name_en": "UPENDS",
-    "name_cn": "\u5353\u529b\u80fd",
+    "name_cn": "卓力能",
     "url": "https://www.upends.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_697.png"
   },
@@ -5977,7 +5978,7 @@
   {
     "id": 699,
     "name_en": "UT",
-    "name_cn": "\u82b1\u8299",
+    "name_cn": "花芙",
     "url": "https://utvape.com/#",
     "region": "",
     "level": 4,
@@ -5986,27 +5987,27 @@
   {
     "id": 300,
     "name_en": "UWELL",
-    "name_cn": "\u4f18\u7ef4\u5c14",
+    "name_cn": "优维尔",
     "url": "https://www.myuwell.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_300.png"
   },
   {
     "id": 700,
     "name_en": "UWELL",
-    "name_cn": "\u4f18\u7ef4\u5c14",
+    "name_cn": "优维尔",
     "url": "https://www.myuwell.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_700.png"
   },
   {
     "id": 701,
     "name_en": "vaal",
-    "name_cn": "\u805a\u4e3a\u96c6\u56e2",
+    "name_cn": "聚为集团",
     "url": "https://www.vaalvapor.com/product.php",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_701.png"
   },
@@ -6015,7 +6016,7 @@
     "name_en": "vaalv",
     "name_cn": "",
     "url": "https://www.vaalvapor.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_702.png"
   },
@@ -6031,9 +6032,9 @@
   {
     "id": 704,
     "name_en": "Vabeen",
-    "name_cn": "\u5c0a\u4e00\u54c1",
+    "name_cn": "尊一品",
     "url": "https://www.vabeen.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_704.png"
   },
@@ -6049,9 +6050,9 @@
   {
     "id": 706,
     "name_en": "VandyVape",
-    "name_cn": "\u5409\u5eb7\u7ef4\u666e",
+    "name_cn": "吉康维普",
     "url": "http://vandyvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_706.png"
   },
@@ -6087,7 +6088,7 @@
     "name_en": "Vape One",
     "name_cn": "",
     "url": "https://vape-one.net/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_710.jpg"
   },
@@ -6096,7 +6097,7 @@
     "name_en": "VapeEZ",
     "name_cn": "",
     "url": "https://www.myvapeez.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_711.png"
   },
@@ -6112,9 +6113,9 @@
   {
     "id": 713,
     "name_en": "Vapengin",
-    "name_cn": "\u5927\u9053\u56db\u4e5d",
+    "name_cn": "大道四九",
     "url": "https://www.vapengin.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_713.jpg"
   },
@@ -6130,36 +6131,36 @@
   {
     "id": 715,
     "name_en": "VAPERZ CLOUD",
-    "name_cn": "\u5609\u5229\u7f8e\u8fbe",
+    "name_cn": "嘉利美达",
     "url": "https://vaperzcloud.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_715.png"
   },
   {
     "id": 716,
     "name_en": "Vapes-bars",
-    "name_cn": "\u82f1\u56fd VAPES BARS",
+    "name_cn": "英国 VAPES BARS",
     "url": "https://vapes-bars.com/",
-    "region": "\u82f1\u56fd",
+    "region": "英国",
     "level": 4,
     "logo": "logos/brand_716.svg"
   },
   {
     "id": 717,
     "name_en": "vapes-studio",
-    "name_cn": "\u96fe\u9053",
+    "name_cn": "雾道",
     "url": "https://vapes-studio.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_717.png"
   },
   {
     "id": 718,
     "name_en": "vapesoul",
-    "name_cn": "\u4e94\u8f6e",
+    "name_cn": "五轮",
     "url": "http://www.vapesoul.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_718.png"
   },
@@ -6193,9 +6194,9 @@
   {
     "id": 722,
     "name_en": "vapirit",
-    "name_cn": "\u60a6\u56fe",
+    "name_cn": "悦图",
     "url": "https://www.vapirit.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_722.png"
   },
@@ -6204,7 +6205,7 @@
     "name_en": "VAPKI",
     "name_cn": "",
     "url": "https://vapki.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_723.png"
   },
@@ -6229,9 +6230,9 @@
   {
     "id": 726,
     "name_en": "VAPORESSO",
-    "name_cn": "\u601d\u6469\u5c14",
+    "name_cn": "思摩尔",
     "url": "https://www.vaporesso.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_726.png"
   },
@@ -6240,7 +6241,7 @@
     "name_en": "VapoRider",
     "name_cn": "",
     "url": "https://vaporider.deals/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_727.png"
   },
@@ -6321,7 +6322,7 @@
     "name_en": "VECEE",
     "name_cn": "",
     "url": "https://www.vecee.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_736.png"
   },
@@ -6330,16 +6331,16 @@
     "name_en": "VEEPON",
     "name_cn": "",
     "url": "https://www.veepontech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_737.png"
   },
   {
     "id": 738,
     "name_en": "VEEV",
-    "name_cn": "\u83f2\u83ab\u56fd\u9645",
+    "name_cn": "菲莫国际",
     "url": "https://www.veev-vape.com/hr/en",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_738.png"
   },
@@ -6348,25 +6349,25 @@
     "name_en": "VEEX",
     "name_cn": "",
     "url": "https://veexstore.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_739.png"
   },
   {
     "id": 740,
     "name_en": "VEIIK",
-    "name_cn": "\u5fae\u523b",
+    "name_cn": "微刻",
     "url": "https://www.veiik.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_740.png"
   },
   {
     "id": 741,
     "name_en": "VELO",
-    "name_cn": "\u82f1\u7f8e\u70df\u8349",
+    "name_cn": "英美烟草",
     "url": "https://www.velo.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_741.png"
   },
@@ -6375,7 +6376,7 @@
     "name_en": "Velx",
     "name_cn": "GEEKVAPE",
     "url": "https://www.velxtech.com/products.html",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_742.png"
   },
@@ -6400,9 +6401,9 @@
   {
     "id": 745,
     "name_en": "vfly",
-    "name_cn": "\u65af\u79d1\u5c14",
+    "name_cn": "斯科尔",
     "url": "https://www.vflyvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_745.png"
   },
@@ -6411,7 +6412,7 @@
     "name_en": "VGOD",
     "name_cn": "",
     "url": "https://www.officialvgod.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_746.webp"
   },
@@ -6420,7 +6421,7 @@
     "name_en": "VIDGE",
     "name_cn": "",
     "url": "https://www.vidge.cn/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_747.png"
   },
@@ -6429,16 +6430,16 @@
     "name_en": "VIHO",
     "name_cn": "",
     "url": "https://vihorape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_748.png"
   },
   {
     "id": 749,
-    "name_en": "Viho\uff08\u82b1\u8299)",
+    "name_en": "Viho（花芙)",
     "name_cn": "",
     "url": "https://vihovape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_749.png"
   },
@@ -6472,9 +6473,9 @@
   {
     "id": 753,
     "name_en": "VITABON",
-    "name_cn": "\u8d85\u8d8a\u7535\u5b50\u70df",
+    "name_cn": "超越电子烟",
     "url": "http://en.vitabonbio.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_753.png"
   },
@@ -6508,9 +6509,9 @@
   {
     "id": 757,
     "name_en": "Vnm",
-    "name_cn": "\u9053\u68ee",
+    "name_cn": "道森",
     "url": "https://www.vnm.io/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_757.png"
   },
@@ -6519,7 +6520,7 @@
     "name_en": "VNSN",
     "name_cn": "",
     "url": "https://www.vnsntech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_758.png"
   },
@@ -6537,7 +6538,7 @@
     "name_en": "Volf Bar",
     "name_cn": "",
     "url": "https://www.volfbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_760.png"
   },
@@ -6562,36 +6563,36 @@
   {
     "id": 763,
     "name_en": "VOOKBAR",
-    "name_cn": "\u8513\u8bfa",
+    "name_cn": "蔓诺",
     "url": "https://mn-vookbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_763.png"
   },
   {
     "id": 764,
     "name_en": "VOOM",
-    "name_cn": "\u6781\u96fe",
+    "name_cn": "极雾",
     "url": "https://voomlabs.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_764.png"
   },
   {
     "id": 765,
     "name_en": "VOOPOO",
-    "name_cn": "\u5409\u8fe9",
+    "name_cn": "吉迩",
     "url": "https://www.voopoo.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_765.png"
   },
   {
     "id": 766,
     "name_en": "VOZOL",
-    "name_cn": "\u5fae\u7eb5",
+    "name_cn": "微纵",
     "url": "https://www.vozol.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_766.png"
   },
@@ -6600,7 +6601,7 @@
     "name_en": "Vplus",
     "name_cn": "",
     "url": "https://vplusx.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_767.png"
   },
@@ -6618,7 +6619,7 @@
     "name_en": "Vpure",
     "name_cn": "",
     "url": "https://www.vpure-tech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_769.png"
   },
@@ -6643,18 +6644,18 @@
   {
     "id": 772,
     "name_en": "Vsunlab",
-    "name_cn": "\u96fe\u665f",
+    "name_cn": "雾晟",
     "url": "https://www.vsunlab.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_772.png"
   },
   {
     "id": 773,
     "name_en": "VUSE",
-    "name_cn": "\u82f1\u7f8e\u70df\u8349",
+    "name_cn": "英美烟草",
     "url": "https://www.vuse.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_773.png"
   },
@@ -6690,16 +6691,16 @@
     "name_en": "Wafoo",
     "name_cn": "",
     "url": "https://www.wafoovape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_777.png"
   },
   {
     "id": 778,
     "name_en": "WAKA",
-    "name_cn": "\u96fe\u82af",
+    "name_cn": "雾芯",
     "url": "https://www.wakavaping.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_778.png"
   },
@@ -6708,7 +6709,7 @@
     "name_en": "Waka Vape",
     "name_cn": "",
     "url": "https://www.wakavaping.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_779.png"
   },
@@ -6717,7 +6718,7 @@
     "name_en": "WAKER",
     "name_cn": "",
     "url": "https://www.wakerworld.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_780.png"
   },
@@ -6726,7 +6727,7 @@
     "name_en": "WALAR",
     "name_cn": "",
     "url": "https://www.walar.ae/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_781.png"
   },
@@ -6735,7 +6736,7 @@
     "name_en": "Waspe",
     "name_cn": "",
     "url": "https://waspevape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_782.png"
   },
@@ -6744,7 +6745,7 @@
     "name_en": "Waspe",
     "name_cn": "",
     "url": "https://waspevape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_1782803753917.png"
   },
@@ -6780,7 +6781,7 @@
     "name_en": "WERTI",
     "name_cn": "",
     "url": "https://www.wertiofficial.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_786.png"
   },
@@ -6859,9 +6860,9 @@
   {
     "id": 795,
     "name_en": "wismec",
-    "name_cn": "\u805a\u4e3a\u96c6\u56e2",
+    "name_cn": "聚为集团",
     "url": "https://www.wismec.co.uk/",
-    "region": "\u82f1\u56fd",
+    "region": "英国",
     "level": 2,
     "logo": "logos/brand_795.png"
   },
@@ -6886,9 +6887,9 @@
   {
     "id": 798,
     "name_en": "WOTOFO",
-    "name_cn": "\u8d5b\u8bfa\u90a6\u683c",
+    "name_cn": "赛诺邦格",
     "url": "https://www.wotofo.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_798.png"
   },
@@ -6906,7 +6907,7 @@
     "name_en": "X-Posed",
     "name_cn": "",
     "url": "https://x-posedbar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_800.png"
   },
@@ -6924,7 +6925,7 @@
     "name_en": "Xtra",
     "name_cn": "",
     "url": "https://xtraflavors.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_802.png"
   },
@@ -6940,9 +6941,9 @@
   {
     "id": 804,
     "name_en": "Yalla",
-    "name_cn": "\u8d28\u8d62\u6301\u6709\u5546\u6807",
+    "name_cn": "质赢持有商标",
     "url": "https://yalla-vape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_804.png"
   },
@@ -6951,16 +6952,16 @@
     "name_en": "Yerevan Vape",
     "name_cn": "",
     "url": "https://vane.am",
-    "region": "\u4fc4\u7f57\u65af",
+    "region": "俄罗斯",
     "level": 3,
     "logo": "logos/brand_805.png"
   },
   {
     "id": 806,
     "name_en": "YOCAN",
-    "name_cn": "\u4f18\u53ef\u65b0",
+    "name_cn": "优可新",
     "url": "https://www.yocanvaporizer.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_806.png"
   },
@@ -7003,18 +7004,18 @@
   {
     "id": 811,
     "name_en": "YOOZ",
-    "name_cn": "\u67da\u5b50",
+    "name_cn": "柚子",
     "url": "https://www.yooz.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_811.png"
   },
   {
     "id": 812,
     "name_en": "YouMe",
-    "name_cn": "\u4f60\u6211\u96c6\u56e2",
+    "name_cn": "你我集团",
     "url": "https://www.youmegroup.com/vapsi.html",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_812.png"
   },
@@ -7039,9 +7040,9 @@
   {
     "id": 815,
     "name_en": "Yuoto",
-    "name_cn": "\u5fb7\u6d77\u6625",
+    "name_cn": "德海春",
     "url": "https://yuototech.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_815.png"
   },
@@ -7050,7 +7051,7 @@
     "name_en": "ZAHAB",
     "name_cn": "",
     "url": "https://mayice.co/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_816.png"
   },
@@ -7131,7 +7132,7 @@
     "name_en": "Zgar",
     "name_cn": "",
     "url": "https://www.zgar.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 5,
     "logo": "logos/brand_825.png"
   },
@@ -7140,14 +7141,14 @@
     "name_en": "zgar Vape",
     "name_cn": "",
     "url": "https://www.zgarshop.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_826.png"
   },
   {
     "id": 827,
     "name_en": "Ziggiys",
-    "name_cn": "\u5c0a\u4e00\u54c1",
+    "name_cn": "尊一品",
     "url": "https://www.ziggiys.com/",
     "region": "",
     "level": 3,
@@ -7156,7 +7157,7 @@
   {
     "id": 828,
     "name_en": "Zinwi",
-    "name_cn": "\u771f\u5473",
+    "name_cn": "真味",
     "url": "https://en.zinwi.com/",
     "region": "",
     "level": 4,
@@ -7165,25 +7166,25 @@
   {
     "id": 829,
     "name_en": "ZLAB",
-    "name_cn": "\u7ece\u67cf",
+    "name_cn": "绎柏",
     "url": "https://zland.ziiplab.com/?_gl=1*14m3t59*_ga*MTk2ODQxNjQ2NS4xNzQ5NzgxMjA2*_ga_448B886CM7*czE3NDk3ODEyMDUkbzEkZzAkdDE3NDk3ODEyMDUkajYwJGwwJGgw",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 3,
     "logo": "logos/brand_829.png"
   },
   {
     "id": 830,
-    "name_en": "ZOFO (\u5409\u7965\u817e\u8fbe\uff09",
+    "name_en": "ZOFO (吉祥腾达）",
     "name_cn": "",
     "url": "https://www.zofo.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 4,
     "logo": "logos/brand_830.png"
   },
   {
     "id": 831,
     "name_en": "Zooy",
-    "name_cn": "\u821f\u96e8",
+    "name_cn": "舟雨",
     "url": "https://www.zooyvape.com/",
     "region": "",
     "level": 3,
@@ -7192,16 +7193,16 @@
   {
     "id": 832,
     "name_en": "ZOVOO",
-    "name_cn": "\u5409\u8fe9",
+    "name_cn": "吉迩",
     "url": "https://www.izovoo.com/zovoo-c1-pod/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_832.png"
   },
   {
     "id": 833,
     "name_en": "ZQ",
-    "name_cn": "\u601d\u683c",
+    "name_cn": "思格",
     "url": "https://www.zqvapor.com/",
     "region": "",
     "level": 4,
@@ -7210,18 +7211,18 @@
   {
     "id": 834,
     "name_en": "ZUMO",
-    "name_cn": "\u5409\u987a",
+    "name_cn": "吉顺",
     "url": "https://zumovape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "level": 2,
     "logo": "logos/brand_834.png"
   },
   {
     "id": 1787101453463,
     "name_en": "IGET",
-    "name_cn": "\u534e\u946b\u5b87",
+    "name_cn": "华鑫宇",
     "url": "https://www.igetvape.com/",
-    "region": "\u5168\u7403",
+    "region": "全球",
     "rating": 4,
     "level": 3,
     "logo": "logos/brand_1787101453463.png"
