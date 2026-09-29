@@ -12,12 +12,13 @@
   {
     "id": 9018,
     "name_en": "2FDeal",
-    "name_cn": "",
+    "name_cn": "网站有问题",
     "url": "https://2fdeal.com",
-    "region": "全球、欧洲、北美",
+    "region": "",
     "country": "出海直邮及配件独立站/中国仓",
     "logo": "logos/shop_9018.png",
-    "biz_type": "retailer"
+    "biz_type": "retailer",
+    "rating": 0
   },
   {
     "id": 9104,
