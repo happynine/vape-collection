@@ -527,13 +527,14 @@
   },
   {
     "id": 9005,
-    "name_en": "pyne pod-Vaping360",
+    "name_en": "vapesourcing",
     "name_cn": "",
     "url": "https://vapesourcing.com",
     "region": "美国",
     "country": "美国",
     "logo": "logos/shop_9005.ico",
-    "biz_type": "retailer"
+    "biz_type": "retailer",
+    "rating": 0
   },
   {
     "id": 9007,
