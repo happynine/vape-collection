@@ -33,6 +33,15 @@
     .rating-filter-btn { padding:2px 10px; border-radius:6px; font-size:12px; color:#9ca3af; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); cursor:pointer; transition:all 0.15s; }
     .rating-filter-btn:hover { background:rgba(255,255,255,0.12); color:#d1d5db; }
     .rating-filter-btn.active { background:rgba(239,68,68,0.25); color:#fca5a5; border-color:rgba(239,68,68,0.4); }
+    .type-filter { display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:24px; flex-wrap:wrap; }
+    .type-filter-label { color:#ef4444; font-size:13px; font-weight:500; margin-right:4px; }
+    .type-filter-btn { padding:2px 12px; border-radius:6px; font-size:12px; color:#9ca3af; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); cursor:pointer; transition:all 0.15s; }
+    .type-filter-btn:hover { background:rgba(255,255,255,0.12); color:#d1d5db; }
+    .type-filter-btn.active { background:rgba(59,130,246,0.25); color:#93c5fd; border-color:rgba(59,130,246,0.45); }
+    .biz-type-badge { display:inline-block; padding:1px 7px; border-radius:5px; font-size:10px; line-height:16px; font-weight:500; }
+    .biz-factory { background:rgba(249,115,22,0.18); color:#fdba74; border:1px solid rgba(249,115,22,0.35); }
+    .biz-brand { background:rgba(168,85,247,0.18); color:#d8b4fe; border:1px solid rgba(168,85,247,0.35); }
+    .biz-retailer { background:rgba(34,197,94,0.15); color:#86efac; border:1px solid rgba(34,197,94,0.32); }
   </style>
 </head>
 <body class="text-white font-sans">
@@ -122,6 +131,15 @@
         <button onclick="filterShopRating(3)" data-shop-rating="3" class="rating-filter-btn">三星</button>
         <button onclick="filterShopRating(2)" data-shop-rating="2" class="rating-filter-btn">二星</button>
         <button onclick="filterShopRating(1)" data-shop-rating="1" class="rating-filter-btn">一星</button>
+      </div>
+
+      <!-- Biz Type Filter (Shop) -->
+      <div class="type-filter">
+        <span class="type-filter-label">类型：</span>
+        <button onclick="filterShopType('')" data-shop-type="" class="type-filter-btn active">全部</button>
+        <button onclick="filterShopType('factory')" data-shop-type="factory" class="type-filter-btn">工厂</button>
+        <button onclick="filterShopType('brand')" data-shop-type="brand" class="type-filter-btn">品牌方</button>
+        <button onclick="filterShopType('retailer')" data-shop-type="retailer" class="type-filter-btn">零售商</button>
       </div>
 
       <!-- Shop Cards Grid -->
@@ -221,6 +239,15 @@
         <div id="formCountryWrap" class="hidden">
           <label class="block text-xs text-gray-400 mb-1">国家/地区详情</label>
           <input id="formCountry" type="text" placeholder="如：中国深圳、美国加州" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+        </div>
+        <!-- Shop-specific: business type -->
+        <div id="formBizTypeWrap" class="hidden">
+          <label class="block text-xs text-gray-400 mb-1">类型</label>
+          <select id="formBizType" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm">
+            <option value="retailer" class="bg-gray-800">零售商（多品牌 B2C 电商）</option>
+            <option value="brand" class="bg-gray-800">品牌方（自有品牌官方站）</option>
+            <option value="factory" class="bg-gray-800">工厂（OEM/ODM、B2B 批发）</option>
+          </select>
         </div>
         <!-- Logo -->
         <div>
@@ -365,7 +392,19 @@
     let shopSearchTimeout = null;
     let selectedRating = 0;       // 官网评分筛选：0=全部，1-5
     let selectedShopRating = 0;   // 商城评分筛选
+    let selectedShopType = '';    // 商城类型筛选：''=全部，factory/brand/retailer
     let formRating = 0;           // 弹窗中当前选择的评分
+
+    // 商城经营类型元数据
+    const BIZ_TYPES = {
+      factory:  { label: '工厂',   cls: 'biz-factory' },
+      brand:    { label: '品牌方', cls: 'biz-brand' },
+      retailer: { label: '零售商', cls: 'biz-retailer' }
+    };
+    function bizTypeBadge(t) {
+      const m = BIZ_TYPES[t];
+      return m ? `<span class="biz-type-badge ${m.cls}">${m.label}</span>` : '';
+    }
 
     // Group data
     let groupData = [];
@@ -726,9 +765,7 @@
       Object.keys(groups).sort().forEach(letter => {
         html += `<div class="col-span-full"><h2 class="text-xl font-bold text-white/80 mb-3 mt-2 border-b border-white/10 pb-2">${letter}</h2></div>`;
         groups[letter].forEach(b => {
-          const logoHtml = b.logo
-            ? `<img src="${escapeHtml(b.logo)}" class="w-12 h-12 rounded-lg object-contain bg-white" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="logo-fallback" style="display:none">${escapeHtml(b.name_en[0])}</div>`
-            : `<div class="logo-fallback">${escapeHtml(b.name_en[0])}</div>`;
+          const logoHtml = logoHtmlFor(b.logo, b.name_en[0]);
           const editOverlay = editMode ? `<div class="edit-overlay"><button onclick="openEditModal(${b.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="transferToShop(${b.id})" class="px-3 py-1.5 rounded bg-green-500 text-white text-xs">转商城</button><button onclick="openDeleteModal(${b.id},'${escapeHtml(b.name_en)}','official')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
           html += `<div class="glass-card rounded-xl p-4 relative cursor-pointer" onclick="${editMode ? '' : `window.open('${escapeHtml(b.url)}','_blank')`}">
             ${editOverlay}
@@ -763,6 +800,12 @@
       renderShopBrands();
     }
 
+    function filterShopType(t) {
+      selectedShopType = t;
+      document.querySelectorAll('[data-shop-type]').forEach(b => b.classList.toggle('active', b.dataset.shopType === t));
+      renderShopBrands();
+    }
+
     function filterShopLetter(l) {
       selectedShopLetter = selectedShopLetter === l ? '' : l;
       document.querySelectorAll('.shop-letter-btn').forEach(b => {
@@ -779,6 +822,7 @@
       if (selectedShopRegion) filtered = filtered.filter(b => b.region === selectedShopRegion);
       if (selectedShopLetter) filtered = filtered.filter(b => b.name_en[0].toUpperCase() === selectedShopLetter);
       if (selectedShopRating) filtered = filtered.filter(b => Math.round(b.rating || 0) === selectedShopRating);
+      if (selectedShopType) filtered = filtered.filter(b => (b.biz_type || '') === selectedShopType);
       filtered.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en', { sensitivity: 'base' }));
 
       // Generate shop letter filter bar
@@ -806,7 +850,10 @@
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0">${logoHtml}</div>
             <div class="flex-1 min-w-0">
-              <div class="text-sm font-semibold text-white truncate">${escapeHtml(b.name_en)}</div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm font-semibold text-white truncate">${escapeHtml(b.name_en)}</span>
+                ${bizTypeBadge(b.biz_type)}
+              </div>
               <div class="text-xs text-gray-400 truncate">${escapeHtml(b.name_cn || '')}</div>
               <div class="text-xs text-gray-500 mt-1">${b.country ? escapeHtml(b.country) + ' · ' : ''}${escapeHtml(b.region)}</div>
               <div class="mt-1.5">${renderStars(b.rating)}</div>
@@ -1039,6 +1086,7 @@
       document.getElementById('formType').value = 'official';
       document.getElementById('formUrlLabel').textContent = '官网地址 *';
       document.getElementById('formCountryWrap').classList.add('hidden');
+      document.getElementById('formBizTypeWrap').classList.add('hidden');
       document.getElementById('formLogoValue').value = '';
       document.getElementById('formLogoUrl').value = '';
       logoBase64 = '';
@@ -1062,6 +1110,7 @@
       document.getElementById('formType').value = 'official';
       document.getElementById('formUrlLabel').textContent = '官网地址 *';
       document.getElementById('formCountryWrap').classList.add('hidden');
+      document.getElementById('formBizTypeWrap').classList.add('hidden');
       logoBase64 = '';
       if (brand.logo) {
         document.getElementById('formLogoValue').value = brand.logo;
@@ -1099,13 +1148,14 @@
       const region = document.getElementById('formRegion').value;
       const type = document.getElementById('formType').value;
       const country = document.getElementById('formCountry') ? document.getElementById('formCountry').value.trim() : '';
+      const bizType = document.getElementById('formBizType') ? document.getElementById('formBizType').value : 'retailer';
       const logoVal = logoBase64 || document.getElementById('formLogoValue').value || '';
       const ratingVal = Number(document.getElementById('formRatingValue').value) || 0;
 
       if (!nameEn || !url) return;
 
       if (type === 'shop') {
-        saveShopBrand(editId, nameEn, nameCn, url, region, country, logoVal, ratingVal);
+        saveShopBrand(editId, nameEn, nameCn, url, region, country, bizType, logoVal, ratingVal);
         return;
       }
 
@@ -1141,6 +1191,8 @@
       document.getElementById('formUrlLabel').textContent = '商城地址 *';
       document.getElementById('formCountryWrap').classList.remove('hidden');
       document.getElementById('formCountry').value = '';
+      document.getElementById('formBizTypeWrap').classList.remove('hidden');
+      document.getElementById('formBizType').value = 'retailer';
       document.getElementById('formLogoValue').value = '';
       document.getElementById('formLogoUrl').value = '';
       logoBase64 = '';
@@ -1163,6 +1215,8 @@
       document.getElementById('formUrlLabel').textContent = '商城地址 *';
       document.getElementById('formCountryWrap').classList.remove('hidden');
       document.getElementById('formCountry').value = brand.country || '';
+      document.getElementById('formBizTypeWrap').classList.remove('hidden');
+      document.getElementById('formBizType').value = BIZ_TYPES[brand.biz_type] ? brand.biz_type : 'retailer';
       logoBase64 = '';
       if (brand.logo) {
         document.getElementById('formLogoValue').value = brand.logo;
@@ -1176,21 +1230,21 @@
       document.getElementById('brandModal').classList.add('flex');
     }
 
-    function saveShopBrand(editId, nameEn, nameCn, url, region, country, logo, rating) {
+    function saveShopBrand(editId, nameEn, nameCn, url, region, country, bizType, logo, rating) {
       if (editId) {
         const numId = Number(editId);
         const idx = shopBrands.findIndex(b => b.id === numId); if (idx === -1) return;
-        shopBrands[idx] = { ...shopBrands[idx], name_en: nameEn, name_cn: nameCn, url, region, country, logo, rating };
+        shopBrands[idx] = { ...shopBrands[idx], name_en: nameEn, name_cn: nameCn, url, region, country, biz_type: bizType, logo, rating };
         const shop = { ...shopBrands[idx] };
         closeModal(); renderShopBrands();
         showToast('正在保存…');
         if (window.VapeDB) VapeDB.upsertShop(shop).then(r => toastSaveResult(r, '商城修改成功！', '商城'));
       } else {
-        const newShop = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, country, logo, rating };
+        const newShop = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, country, biz_type: bizType, logo, rating };
         shopBrands.push(newShop);
         closeModal(); renderShopBrands();
         showToast('正在保存…');
-        if (window.VapeDB) VapeDB.upsertShop({ ...newShop }).then(() => showToast('商城添加成功，已同步云端！'));
+        if (window.VapeDB) VapeDB.upsertShop(newShop).then(r => toastSaveResult(r, '商城添加成功！', '商城'));
       }
     }
 
@@ -1334,6 +1388,7 @@
         url: brand.url || '',
         region: brand.region || '',
         country: '',
+        biz_type: 'brand',
         logo: brand.logo || '',
         rating: brand.rating || 0
       };
