@@ -1,5 +1,8 @@
 {
   "deploy": {
-    "entrypoint": "deno/main.ts"
+    "runtime": {
+      "type": "dynamic",
+      "entrypoint": "./deno/main.ts"
+    }
   }
 }
