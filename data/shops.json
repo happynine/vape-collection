@@ -12,23 +12,23 @@
   {
     "id": 9018,
     "name_en": "2FDeal",
-    "name_cn": "网站有问题",
+    "name_cn": "",
     "url": "https://2fdeal.com",
-    "region": "",
+    "region": "全球、欧洲、北美",
     "country": "出海直邮及配件独立站/中国仓",
     "logo": "logos/shop_9018.png",
-    "biz_type": "retailer",
-    "rating": 0
+    "biz_type": "retailer"
   },
   {
     "id": 9104,
     "name_en": "3FVape",
     "name_cn": "",
     "url": "https://3fvape.com",
-    "region": "全球 (极客玩家)",
+    "region": "",
     "country": "专注于高端客制化/配件跨境独立站",
-    "logo": "logos/shop_9104.ico",
-    "biz_type": "retailer"
+    "logo": "logos/shop_9104.png",
+    "biz_type": "retailer",
+    "rating": 0
   },
   {
     "id": 9103,
