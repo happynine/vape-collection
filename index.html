@@ -848,11 +848,13 @@
         html += `<div class="glass-card rounded-xl p-4 relative cursor-pointer" onclick="${shopEditMode ? '' : `window.open('${escapeHtml(b.url)}','_blank')`}">
           ${editOverlay}
           <div class="flex items-start gap-3">
-            <div class="flex-shrink-0">${logoHtml}</div>
+            <div class="flex-shrink-0 flex flex-col items-center gap-1.5">
+              ${logoHtml}
+              ${bizTypeBadge(b.biz_type)}
+            </div>
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-1.5">
                 <span class="text-sm font-semibold text-white truncate">${escapeHtml(b.name_en)}</span>
-                ${bizTypeBadge(b.biz_type)}
               </div>
               <div class="text-xs text-gray-400 truncate">${escapeHtml(b.name_cn || '')}</div>
               <div class="text-xs text-gray-500 mt-1">${b.country ? escapeHtml(b.country) + ' · ' : ''}${escapeHtml(b.region)}</div>
