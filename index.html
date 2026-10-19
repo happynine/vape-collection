@@ -42,6 +42,11 @@
     .biz-factory { background:rgba(249,115,22,0.18); color:#fdba74; border:1px solid rgba(249,115,22,0.35); }
     .biz-brand { background:rgba(168,85,247,0.18); color:#d8b4fe; border:1px solid rgba(168,85,247,0.35); }
     .biz-retailer { background:rgba(34,197,94,0.15); color:#86efac; border:1px solid rgba(34,197,94,0.32); }
+    /* 失效网站标记 */
+    .dead-badge { display:inline-block; padding:1px 7px; border-radius:5px; font-size:10px; line-height:16px; font-weight:500; background:rgba(239,68,68,0.18); color:#fca5a5; border:1px solid rgba(239,68,68,0.4); margin-left:6px; vertical-align:middle; }
+    .dead-card .card-link { color:#9ca3af !important; text-decoration:line-through; }
+    .dead-card .dead-ribbon { position:absolute; top:8px; right:8px; z-index:2; padding:1px 8px; border-radius:5px; font-size:10px; line-height:16px; font-weight:600; color:#fff; background:rgba(239,68,68,0.9); }
+    #btnToggleDead.active { background:rgba(239,68,68,0.2); color:#fca5a5; border:1px solid rgba(239,68,68,0.45); }
   </style>
 </head>
 <body class="text-white font-sans">
@@ -168,6 +173,7 @@
     <button id="btnAdd" onclick="handleAdd()" class="px-3 py-1.5 rounded-lg bg-blue-500 text-white text-xs font-medium hover:bg-blue-600 transition shadow-lg">添加</button>
     <button id="btnEdit" onclick="handleEdit()" class="px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 text-xs font-medium hover:bg-white/20 transition backdrop-blur shadow-lg">编辑</button>
     <button id="btnExport" onclick="handleExport()" class="px-3 py-1.5 rounded-lg bg-green-500 text-white text-xs font-medium hover:bg-green-600 transition shadow-lg">导出数据</button>
+    <button id="btnToggleDead" onclick="toggleDeadSites()" class="hidden px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 text-xs font-medium hover:bg-white/20 transition backdrop-blur shadow-lg">显示失效</button>
   </div>
   <!-- Edit Mode Bar (Fixed) -->
   <div id="fixedEditBar" class="hidden fixed bottom-4 left-4 z-40 py-1.5 px-3 flex flex-col gap-1.5 bg-red-500/80 backdrop-blur rounded-lg shadow-lg">
@@ -285,6 +291,13 @@
           <div id="formRatingStars" class="rate-stars"></div>
           <input type="hidden" id="formRatingValue" value="0" />
         </div>
+        <!-- Official brand only: mark site dead -->
+        <div id="formDeadWrap" class="hidden">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="formDead" class="w-4 h-4 accent-red-500" />
+            <span class="text-sm text-gray-300">失效网站（官网无法访问/已关闭）</span>
+          </label>
+        </div>
         <div class="flex gap-3">
           <button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-lg bg-white/10 text-gray-300 text-sm">取消</button>
           <button type="submit" class="flex-1 py-2.5 rounded-lg bg-blue-500 text-white text-sm">保存</button>
@@ -377,6 +390,7 @@
     let editMode = false;
     let shopEditMode = false;
     let groupEditMode = false;
+    let showDeadSites = false;    // 是否显示已标记失效的品牌官网
     let isAuthenticated = false;
     let pendingAction = null;
     let deleteTargetId = null;
@@ -420,6 +434,8 @@
       document.getElementById('tabOfficial').className = (tab === 'official' ? 'tab-active ' : '') + 'px-6 py-2 rounded-full text-sm font-medium border border-white/10 transition-all' + (tab !== 'official' ? ' bg-white/5 text-gray-400' : '');
       document.getElementById('tabShop').className = (tab === 'shop' ? 'tab-active ' : '') + 'px-6 py-2 rounded-full text-sm font-medium border border-white/10 transition-all' + (tab !== 'shop' ? ' bg-white/5 text-gray-400' : '');
       document.getElementById('tabGroup').className = (tab === 'group' ? 'tab-active ' : '') + 'px-6 py-2 rounded-full text-sm font-medium border border-white/10 transition-all' + (tab !== 'group' ? ' bg-white/5 text-gray-400' : '');
+      // “显示失效”按钮仅在官网 tab 出现
+      document.getElementById('btnToggleDead').classList.toggle('hidden', tab !== 'official');
       // Reset edit mode when switching tabs
       if (editMode) exitEditMode();
       if (shopEditMode) exitShopEditMode();
@@ -438,6 +454,15 @@
         handleScroll();
       }
       updateStatsBar();
+    }
+
+    // ========== 失效网站显示切换 ==========
+    function toggleDeadSites() {
+      showDeadSites = !showDeadSites;
+      const btn = document.getElementById('btnToggleDead');
+      btn.textContent = showDeadSites ? '隐藏失效' : '显示失效';
+      btn.classList.toggle('active', showDeadSites);
+      renderBrands();
     }
 
     // ========== Fixed Bottom Bar Handlers ==========
@@ -753,6 +778,7 @@
       if (selectedLetter) filtered = filtered.filter(b => b.name_en[0].toUpperCase() === selectedLetter);
       if (selectedRegion) filtered = filtered.filter(b => b.region === selectedRegion);
       if (selectedRating) filtered = filtered.filter(b => Math.round(b.rating || 0) === selectedRating);
+      if (!showDeadSites) filtered = filtered.filter(b => !b.dead);
 
       const grid = document.getElementById('brandGrid');
       if (!filtered.length) { grid.innerHTML = '<p class="text-gray-500 text-center col-span-full py-12">没有找到匹配的品牌</p>'; return; }
@@ -767,12 +793,13 @@
         groups[letter].forEach(b => {
           const logoHtml = logoHtmlFor(b.logo, b.name_en[0]);
           const editOverlay = editMode ? `<div class="edit-overlay"><button onclick="openEditModal(${b.id})" class="px-3 py-1.5 rounded bg-blue-500 text-white text-xs">编辑</button><button onclick="transferToShop(${b.id})" class="px-3 py-1.5 rounded bg-green-500 text-white text-xs">转商城</button><button onclick="openDeleteModal(${b.id},'${escapeHtml(b.name_en)}','official')" class="px-3 py-1.5 rounded bg-red-500 text-white text-xs">删除</button></div>` : '';
-          html += `<div class="glass-card rounded-xl p-4 relative cursor-pointer" onclick="${editMode ? '' : `window.open('${escapeHtml(b.url)}','_blank')`}">
+          html += `<div class="glass-card rounded-xl p-4 relative cursor-pointer${b.dead ? ' dead-card' : ''}" onclick="${editMode ? '' : `window.open('${escapeHtml(b.url)}','_blank')`}">
             ${editOverlay}
+            ${b.dead ? '<div class="dead-ribbon">失效</div>' : ''}
             <div class="flex items-start gap-3">
               <div class="flex-shrink-0">${logoHtml}</div>
               <div class="flex-1 min-w-0">
-                <div class="text-sm font-semibold text-white truncate">${escapeHtml(b.name_en)}</div>
+                <div class="text-sm font-semibold text-white truncate">${escapeHtml(b.name_en)}${b.dead ? '<span class="dead-badge">失效</span>' : ''}</div>
                 <div class="text-xs text-gray-400 truncate">${escapeHtml(b.name_cn || '')}</div>
                 <div class="text-xs text-gray-500 mt-1">主打地区：${escapeHtml(b.region)}</div>
                 <div class="mt-1.5">${renderStars(b.rating)}</div>
@@ -1089,6 +1116,8 @@
       document.getElementById('formUrlLabel').textContent = '官网地址 *';
       document.getElementById('formCountryWrap').classList.add('hidden');
       document.getElementById('formBizTypeWrap').classList.add('hidden');
+      document.getElementById('formDeadWrap').classList.remove('hidden');
+      document.getElementById('formDead').checked = false;
       document.getElementById('formLogoValue').value = '';
       document.getElementById('formLogoUrl').value = '';
       logoBase64 = '';
@@ -1113,6 +1142,8 @@
       document.getElementById('formUrlLabel').textContent = '官网地址 *';
       document.getElementById('formCountryWrap').classList.add('hidden');
       document.getElementById('formBizTypeWrap').classList.add('hidden');
+      document.getElementById('formDeadWrap').classList.remove('hidden');
+      document.getElementById('formDead').checked = !!brand.dead;
       logoBase64 = '';
       if (brand.logo) {
         document.getElementById('formLogoValue').value = brand.logo;
@@ -1153,6 +1184,7 @@
       const bizType = document.getElementById('formBizType') ? document.getElementById('formBizType').value : 'retailer';
       const logoVal = logoBase64 || document.getElementById('formLogoValue').value || '';
       const ratingVal = Number(document.getElementById('formRatingValue').value) || 0;
+      const isDead = !!document.getElementById('formDead').checked;
 
       if (!nameEn || !url) return;
 
@@ -1165,7 +1197,7 @@
       if (editId) {
         const numId = Number(editId);
         const idx = allBrands.findIndex(b => b.id === numId); if (idx === -1) return;
-        allBrands[idx].name_en = nameEn; allBrands[idx].name_cn = nameCn; allBrands[idx].url = url; allBrands[idx].region = region; allBrands[idx].rating = ratingVal;
+        allBrands[idx].name_en = nameEn; allBrands[idx].name_cn = nameCn; allBrands[idx].url = url; allBrands[idx].region = region; allBrands[idx].rating = ratingVal; allBrands[idx].dead = isDead;
         if (logoVal) allBrands[idx].logo = logoVal;
         const brand = { ...allBrands[idx] };
         allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
@@ -1173,7 +1205,7 @@
         showToast('正在保存…');
         if (window.VapeDB) VapeDB.upsertBrand(brand).then(() => showToast('品牌修改成功，已同步云端！'));
       } else {
-        const newBrand = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, rating: ratingVal, level: 3, logo: logoVal };
+        const newBrand = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, rating: ratingVal, level: 3, dead: isDead, logo: logoVal };
         allBrands.push(newBrand); allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
         closeModal(); buildLetterFilter(); renderBrands();
         showToast('正在保存…');
@@ -1194,6 +1226,8 @@
       document.getElementById('formCountryWrap').classList.remove('hidden');
       document.getElementById('formCountry').value = '';
       document.getElementById('formBizTypeWrap').classList.remove('hidden');
+      document.getElementById('formDeadWrap').classList.add('hidden');
+      document.getElementById('formDead').checked = false;
       document.getElementById('formBizType').value = 'retailer';
       document.getElementById('formLogoValue').value = '';
       document.getElementById('formLogoUrl').value = '';
@@ -1218,6 +1252,8 @@
       document.getElementById('formCountryWrap').classList.remove('hidden');
       document.getElementById('formCountry').value = brand.country || '';
       document.getElementById('formBizTypeWrap').classList.remove('hidden');
+      document.getElementById('formDeadWrap').classList.add('hidden');
+      document.getElementById('formDead').checked = false;
       document.getElementById('formBizType').value = BIZ_TYPES[brand.biz_type] ? brand.biz_type : 'retailer';
       logoBase64 = '';
       if (brand.logo) {
