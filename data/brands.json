@@ -33,7 +33,9 @@
     "url": "https://www.acrohm.com/",
     "region": "",
     "level": 1,
-    "logo": "logos/brand_4.png"
+    "logo": "logos/brand_4.png",
+    "rating": 0,
+    "dead": true
   },
   {
     "id": 5,
