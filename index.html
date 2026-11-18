@@ -331,19 +331,10 @@
         <div>
           <label class="block text-xs text-gray-400 mb-1">旗下子品牌（从已有品牌中关联）</label>
           <div class="relative">
-            <input id="groupSubSearch" type="text" placeholder="搜索品牌名关联..." oninput="searchSubBrands()" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
-            <div id="subBrandResults" class="hidden absolute top-full left-0 right-0 mt-1 glass rounded-lg max-h-40 overflow-y-auto z-10"></div>
+            <input id="groupSubSearch" type="text" placeholder="搜索或点击选择品牌..." onfocus="searchSubBrands()" oninput="searchSubBrands()" onblur="setTimeout(hideSubBrandResults,180)" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
+            <div id="subBrandResults" class="hidden absolute top-full left-0 right-0 mt-1 glass rounded-lg max-h-60 overflow-y-auto z-20"></div>
           </div>
           <div id="selectedSubBrands" class="flex flex-wrap gap-2 mt-2"></div>
-        </div>
-        <div>
-          <label class="block text-xs text-gray-400 mb-1">从官网品牌中选择</label>
-          <div class="flex gap-2">
-            <select id="subBrandSelect" class="flex-1 px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm">
-              <option value="" class="bg-gray-800">请选择官网品牌...</option>
-            </select>
-            <button type="button" onclick="addSubBrandFromSelect()" class="px-3 py-2 rounded-lg bg-blue-500/30 text-blue-300 text-sm whitespace-nowrap">添加</button>
-          </div>
         </div>
         <div>
           <label class="block text-xs text-gray-400 mb-1">手动添加子品牌</label>
@@ -1305,7 +1296,6 @@
       document.getElementById('groupLogo').value = '';
       currentSubBrands = [];
       renderSelectedSubBrands();
-      fillSubBrandSelect();
       document.getElementById('groupModal').classList.remove('hidden');
       document.getElementById('groupModal').classList.add('flex');
     }
@@ -1320,7 +1310,6 @@
       document.getElementById('groupLogo').value = group.logo || '';
       currentSubBrands = (group.sub_brands || []).map(sb => ({...sb}));
       renderSelectedSubBrands();
-      fillSubBrandSelect();
       document.getElementById('groupModal').classList.remove('hidden');
       document.getElementById('groupModal').classList.add('flex');
     }
@@ -1333,9 +1322,16 @@
     function searchSubBrands() {
       const query = document.getElementById('groupSubSearch').value.trim().toLowerCase();
       const container = document.getElementById('subBrandResults');
-      if (!query) { container.classList.add('hidden'); return; }
-      const results = allBrands.filter(b => b.name_en.toLowerCase().includes(query) || (b.name_cn && b.name_cn.toLowerCase().includes(query))).slice(0, 10);
-      if (!results.length) { container.classList.add('hidden'); return; }
+      const pool = (allBrands || []).slice().sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
+      const matched = query
+        ? pool.filter(b => b.name_en.toLowerCase().includes(query) || (b.name_cn && b.name_cn.toLowerCase().includes(query)))
+        : pool;
+      const results = matched.slice(0, 50);
+      if (!results.length) {
+        container.innerHTML = '<div class="px-3 py-2 text-xs text-gray-500">没有匹配的品牌</div>';
+        container.classList.remove('hidden');
+        return;
+      }
       let html = '';
       results.forEach(b => {
         const already = currentSubBrands.some(sb => sb.name === b.name_en);
@@ -1347,37 +1343,17 @@
       container.classList.remove('hidden');
     }
 
+    function hideSubBrandResults() {
+      const container = document.getElementById('subBrandResults');
+      if (container) container.classList.add('hidden');
+    }
+
     function addSubBrand(brandId) {
       const brand = allBrands.find(b => b.id === brandId); if (!brand) return;
       if (currentSubBrands.some(sb => sb.name === brand.name_en)) return;
       currentSubBrands.push({ name: brand.name_en, url: brand.url, logo: brand.logo || '' });
       document.getElementById('groupSubSearch').value = '';
       document.getElementById('subBrandResults').classList.add('hidden');
-      renderSelectedSubBrands();
-    }
-
-    // 填充“从官网品牌中选择”下拉框
-    function fillSubBrandSelect() {
-      const sel = document.getElementById('subBrandSelect');
-      if (!sel) return;
-      const list = (allBrands || []).slice().sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
-      let html = '<option value="" class="bg-gray-800">请选择官网品牌...</option>';
-      list.forEach(b => {
-        const cn = b.name_cn ? `（${b.name_cn}）` : '';
-        html += `<option value="${b.id}" class="bg-gray-800">${escapeHtml(b.name_en)}${escapeHtml(cn)}</option>`;
-      });
-      sel.innerHTML = html;
-    }
-
-    function addSubBrandFromSelect() {
-      const sel = document.getElementById('subBrandSelect');
-      const id = sel.value;
-      if (!id) { showToast('请先在下拉框选择一个官网品牌'); return; }
-      const brand = allBrands.find(b => String(b.id) === String(id));
-      if (!brand) { showToast('未找到该品牌'); return; }
-      if (currentSubBrands.some(sb => sb.name === brand.name_en)) { showToast('该品牌已在子品牌列表中'); return; }
-      currentSubBrands.push({ name: brand.name_en, url: brand.url, logo: brand.logo || '' });
-      sel.value = '';
       renderSelectedSubBrands();
     }
 
