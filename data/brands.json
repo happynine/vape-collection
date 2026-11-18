@@ -3335,7 +3335,9 @@
     "url": "https://www.liquidarom.com/",
     "region": "",
     "level": 4,
-    "logo": "logos/brand_405.png"
+    "logo": "logos/brand_405.png",
+    "rating": 0,
+    "dead": false
   },
   {
     "id": 406,
