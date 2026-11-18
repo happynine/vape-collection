@@ -337,6 +337,15 @@
           <div id="selectedSubBrands" class="flex flex-wrap gap-2 mt-2"></div>
         </div>
         <div>
+          <label class="block text-xs text-gray-400 mb-1">从官网品牌中选择</label>
+          <div class="flex gap-2">
+            <select id="subBrandSelect" class="flex-1 px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm">
+              <option value="" class="bg-gray-800">请选择官网品牌...</option>
+            </select>
+            <button type="button" onclick="addSubBrandFromSelect()" class="px-3 py-2 rounded-lg bg-blue-500/30 text-blue-300 text-sm whitespace-nowrap">添加</button>
+          </div>
+        </div>
+        <div>
           <label class="block text-xs text-gray-400 mb-1">手动添加子品牌</label>
           <div class="flex gap-2">
             <input id="manualSubName" type="text" placeholder="子品牌名" class="flex-1 px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm" />
@@ -1296,6 +1305,7 @@
       document.getElementById('groupLogo').value = '';
       currentSubBrands = [];
       renderSelectedSubBrands();
+      fillSubBrandSelect();
       document.getElementById('groupModal').classList.remove('hidden');
       document.getElementById('groupModal').classList.add('flex');
     }
@@ -1310,6 +1320,7 @@
       document.getElementById('groupLogo').value = group.logo || '';
       currentSubBrands = (group.sub_brands || []).map(sb => ({...sb}));
       renderSelectedSubBrands();
+      fillSubBrandSelect();
       document.getElementById('groupModal').classList.remove('hidden');
       document.getElementById('groupModal').classList.add('flex');
     }
@@ -1329,7 +1340,7 @@
       results.forEach(b => {
         const already = currentSubBrands.some(sb => sb.name === b.name_en);
         html += `<div class="px-3 py-2 hover:bg-white/10 cursor-pointer flex items-center gap-2 ${already ? 'opacity-50' : ''}" onclick="addSubBrand(${b.id})">`;
-        if (b.logo) html += `<img src="${escapeHtml(b.logo)}" class="w-5 h-5 rounded object-contain bg-white" onerror="this.style.display='none'" />`;
+        if (b.logo) html += `<img src="${escapeHtml(logoSrc(b.logo))}" class="w-5 h-5 rounded object-contain bg-white" onerror="this.style.display='none'" />`;
         html += `<span class="text-sm text-white">${escapeHtml(b.name_en)}</span>${b.name_cn ? `<span class="text-xs text-gray-400">${escapeHtml(b.name_cn)}</span>` : ''}${already ? '<span class="text-xs text-green-400">已添加</span>' : ''}</div>`;
       });
       container.innerHTML = html;
@@ -1342,6 +1353,31 @@
       currentSubBrands.push({ name: brand.name_en, url: brand.url, logo: brand.logo || '' });
       document.getElementById('groupSubSearch').value = '';
       document.getElementById('subBrandResults').classList.add('hidden');
+      renderSelectedSubBrands();
+    }
+
+    // 填充“从官网品牌中选择”下拉框
+    function fillSubBrandSelect() {
+      const sel = document.getElementById('subBrandSelect');
+      if (!sel) return;
+      const list = (allBrands || []).slice().sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
+      let html = '<option value="" class="bg-gray-800">请选择官网品牌...</option>';
+      list.forEach(b => {
+        const cn = b.name_cn ? `（${b.name_cn}）` : '';
+        html += `<option value="${b.id}" class="bg-gray-800">${escapeHtml(b.name_en)}${escapeHtml(cn)}</option>`;
+      });
+      sel.innerHTML = html;
+    }
+
+    function addSubBrandFromSelect() {
+      const sel = document.getElementById('subBrandSelect');
+      const id = sel.value;
+      if (!id) { showToast('请先在下拉框选择一个官网品牌'); return; }
+      const brand = allBrands.find(b => String(b.id) === String(id));
+      if (!brand) { showToast('未找到该品牌'); return; }
+      if (currentSubBrands.some(sb => sb.name === brand.name_en)) { showToast('该品牌已在子品牌列表中'); return; }
+      currentSubBrands.push({ name: brand.name_en, url: brand.url, logo: brand.logo || '' });
+      sel.value = '';
       renderSelectedSubBrands();
     }
 
