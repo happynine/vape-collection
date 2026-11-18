@@ -1350,7 +1350,7 @@
 
     function addSubBrand(brandId) {
       const brand = allBrands.find(b => b.id === brandId); if (!brand) return;
-      if (currentSubBrands.some(sb => sb.name === brand.name_en)) return;
+      if (currentSubBrands.some(sb => sb.name === brand.name_en)) { showToast('该品牌已在子品牌列表中'); return; }
       currentSubBrands.push({ name: brand.name_en, url: brand.url, logo: brand.logo || '' });
       document.getElementById('groupSubSearch').value = '';
       document.getElementById('subBrandResults').classList.add('hidden');
