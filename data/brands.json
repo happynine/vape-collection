@@ -3371,7 +3371,9 @@
     "url": "https://logicvapes.co.uk/",
     "region": "英国",
     "level": 3,
-    "logo": "logos/brand_409.png"
+    "logo": "logos/brand_409.png",
+    "rating": 0,
+    "dead": false
   },
   {
     "id": 410,
