@@ -499,6 +499,10 @@
       const badge = document.getElementById('cloudStatus');
       if (btn) { btn.disabled = true; btn.textContent = '同步中…'; }
       if (badge) badge.textContent = '☁ 同步中…';
+      let flushed = { tried: 0, ok: 0, failed: 0 };
+      if (VapeDB.flushPending) {
+        try { flushed = await VapeDB.flushPending(); } catch (e) {}
+      }
       let r;
       try {
         r = await VapeDB.reloadAll();
@@ -518,7 +522,11 @@
       renderGroups();
       if (typeof updateStatsBar === 'function') updateStatsBar();
       if (showResult !== false) {
-        if (r.ok) showToast('已连接云端，数据已刷新，可以正常编辑上传');
+        const keptTotal = r.kept ? ((r.kept.brands || 0) + (r.kept.shops || 0) + (r.kept.groups || 0)) : 0;
+        const up = flushed.ok > 0 ? `已补传 ${flushed.ok} 条；` : '';
+        if (r.ok && keptTotal > 0) showToast(`${up}云端数据还没刷新，已保留你本地的 ${keptTotal} 条记录`);
+        else if (r.ok && flushed.failed > 0) showToast(`${up}还有 ${flushed.failed} 条没传上去，请稍后重试`);
+        else if (r.ok) showToast(`${up}已连接云端，数据已刷新，可以正常编辑上传`);
         else {
           const map = { brands: '品牌', shops: '商城', groups: '集团' };
           const f = (r.failed || []).map(k => map[k] || k).join('、');

@@ -47,6 +47,28 @@
   const LS_SHOPS  = 'cloud_shops_cache';
   const LS_GROUPS = 'cloud_groups_cache';
   const LS_META   = 'cloud_meta';
+  // 本地写过但尚未确认出现在云端的记录 id（防止 CDN 缓存滞后导致刷新后“新数据消失”）
+  const LS_PROTECT = 'cloud_protect_ids';
+
+  function readProtect() {
+    try { return JSON.parse(localStorage.getItem(LS_PROTECT) || '{}'); } catch { return {}; }
+  }
+  function writeProtect(o) {
+    try { localStorage.setItem(LS_PROTECT, JSON.stringify(o)); } catch {}
+  }
+  function protectAdd(dataset, id) {
+    if (id === undefined || id === null) return;
+    const p = readProtect();
+    const arr = p[dataset] || [];
+    const key = String(id);
+    if (!arr.includes(key)) { arr.push(key); p[dataset] = arr.slice(-800); writeProtect(p); }
+  }
+  function protectRemove(dataset, id) {
+    const p = readProtect();
+    p[dataset] = (p[dataset] || []).filter(x => x !== String(id));
+    writeProtect(p);
+  }
+  function protectedIds(dataset) { return readProtect()[dataset] || []; }
 
   // 内存数据：唯一可信的写入源，防止 localStorage 被旧缓存污染
   let memData = { brands: [], shops: [], groups: [] };
@@ -55,6 +77,8 @@
 
   let cloudOk = false;
   let pendingWrites = 0;
+  // 每次加载时因 CDN 滞后而回填的本地记录数
+  const staleKept = { brands: 0, shops: 0, groups: 0 };
 
   // ---------- logo MIME → 扩展名 ----------
   const MIME_EXT = {
@@ -131,18 +155,28 @@
   // 单个文件独立加载：云端成功 → 更新内存和缓存；失败 → 用本地缓存（标记为不可写）
   async function loadOne(name, lsKey) {
     try {
-      const data = await fetchJSON(name);
+      let data = await fetchJSON(name);
       if (!isCloudDataValid(data)) {
         console.warn(`[VapeDB] ${name} 云端响应非数组，跳过覆盖缓存`);
         return { data: readCache(lsKey), ok: false };
       }
+      // 云端数据可能因 CDN 缓存滞后而缺少刚写入的记录：把本地受保护记录补回来
+      const pids = protectedIds(name);
+      let kept = 0;
+      if (pids.length) {
+        const cloudIds = new Set(data.map(d => String(d.id)));
+        const localArr = readCache(lsKey);
+        const extra = localArr.filter(d => pids.includes(String(d.id)) && !cloudIds.has(String(d.id)));
+        if (extra.length) { data = data.concat(extra); kept = extra.length; }
+      }
+      staleKept[name] = kept;
       memData[name] = data;        // 更新内存（写入的唯一数据源）
       cloudLoaded[name] = true;    // 标记云端加载成功
       writeCache(lsKey, data);     // 更新 localStorage 缓存
       const meta = readMeta();
       meta[name] = { count: data.length, ts: Date.now() };
       writeMeta(meta);
-      return { data, ok: true };
+      return { data, ok: true, kept };
     } catch (e) {
       console.warn(`[VapeDB] ${name} 云端加载失败，使用本地缓存:`, e.message);
       memData[name] = readCache(lsKey);
@@ -255,6 +289,15 @@
         cloudOk = true;
         // localStorage 缓存用云端版本（小体积，logo 为路径）
         const lsKey = dataset === 'brands' ? LS_BRANDS : dataset === 'shops' ? LS_SHOPS : LS_GROUPS;
+        const pids = protectedIds(dataset);
+        if (pids.length) {
+          const cloudIds = new Set(cloudArray.map(d => String(d.id)));
+          // 已确认写进云端的记录解除保护；仍未出现的继续保持保护
+          const stillMissing = pids.filter(id => !cloudIds.has(id));
+          const pr = readProtect(); pr[dataset] = stillMissing; writeProtect(pr);
+          const extra = readCache(lsKey).filter(d => stillMissing.includes(String(d.id)) && !cloudIds.has(String(d.id)));
+          if (extra.length) cloudArray = cloudArray.concat(extra);
+        }
         writeCache(lsKey, cloudArray);
         updateStatusUI();
         return { ok: true, mode: 'cloud' };
@@ -307,6 +350,7 @@
   }
 
   function upsertBrand(brand) {
+    protectAdd('brands', brand.id);
     return syncWrap('brands',
       () => {
         memData.brands = applyUpsert(memData.brands, brand, 'id');
@@ -316,6 +360,7 @@
     );
   }
   function deleteBrand(id) {
+    protectRemove('brands', id);
     return syncWrap('brands',
       () => {
         memData.brands = applyDelete(memData.brands, id, 'id');
@@ -326,6 +371,7 @@
   }
 
   function upsertShop(shop) {
+    protectAdd('shops', shop.id);
     return syncWrap('shops',
       () => {
         memData.shops = applyUpsert(memData.shops, shop, 'id');
@@ -335,6 +381,7 @@
     );
   }
   function deleteShop(id) {
+    protectRemove('shops', id);
     return syncWrap('shops',
       () => {
         memData.shops = applyDelete(memData.shops, id, 'id');
@@ -345,6 +392,7 @@
   }
 
   function upsertGroup(group) {
+    protectAdd('groups', group.id);
     return syncWrap('groups',
       () => {
         memData.groups = applyUpsert(memData.groups, group, 'id');
@@ -354,6 +402,7 @@
     );
   }
   function deleteGroup(id) {
+    protectRemove('groups', id);
     return syncWrap('groups',
       () => {
         memData.groups = applyDelete(memData.groups, id, 'id');
@@ -376,8 +425,36 @@
       ok: cloudOk,
       loaded: { brands: b.ok, shops: s.ok, groups: g.ok },
       data: { brands: b.data, shops: s.data, groups: g.data },
+      kept: { brands: staleKept.brands, shops: staleKept.shops, groups: staleKept.groups },
       failed: failedDatasets()
     };
+  }
+
+  // 本地还有多少条记录没确认写进云端
+  function pendingLocalCount() {
+    return ['brands', 'shops', 'groups'].reduce((n, ds) => n + protectedIds(ds).length, 0);
+  }
+
+  // 把本地受保护（未确认上传）的记录补传到云端
+  async function flushPending() {
+    const summary = { tried: 0, ok: 0, failed: 0 };
+    for (const ds of ['brands', 'shops', 'groups']) {
+      const pids = protectedIds(ds);
+      if (!pids.length) continue;
+      const lsKey = ds === 'brands' ? LS_BRANDS : ds === 'shops' ? LS_SHOPS : LS_GROUPS;
+      const arr = readCache(lsKey);
+      const items = arr.filter(d => pids.includes(String(d.id)));
+      const fn = ds === 'brands' ? upsertBrand : ds === 'shops' ? upsertShop : upsertGroup;
+      for (const it of items) {
+        summary.tried++;
+        let r;
+        try { r = await fn(it); } catch (e) { r = { ok: false }; }
+        if (r && r.ok && r.mode === 'cloud') { protectRemove(ds, it.id); summary.ok++; }
+        else summary.failed++;
+      }
+    }
+    updateStatusUI();
+    return summary;
   }
 
   function isCloudEnabled()  { return CLOUD_ENABLED; }
@@ -396,10 +473,16 @@
     if (!CLOUD_READ) { el.style.display = 'none'; return; }
     el.style.display = 'inline-flex';
     el.style.cursor = 'pointer';
+    const pendingLocal = pendingLocalCount();
     if (pendingWrites > 0) {
       el.style.background = 'rgba(234,179,8,0.2)';
       el.style.color = '#fde047';
       el.textContent = '☁ 同步中…';
+    } else if (pendingLocal > 0) {
+      el.style.background = 'rgba(234,179,8,0.2)';
+      el.style.color = '#fde047';
+      el.textContent = `☁ ${pendingLocal} 条未上传 ↻`;
+      el.title = '有记录只存在本地，点击重试上传';
     } else if (!CLOUD_WRITE) {
       el.style.background = 'rgba(59,130,246,0.2)';
       el.style.color = '#93c5fd';
@@ -429,7 +512,7 @@
     upsertShop, deleteShop,
     upsertGroup, deleteGroup,
     isCloudEnabled, isCloudOk, getPendingCount,
-    reloadAll, getFailedDatasets: failedDatasets,
+    reloadAll, flushPending, pendingLocalCount, getFailedDatasets: failedDatasets,
     updateStatusUI
   };
 })();
