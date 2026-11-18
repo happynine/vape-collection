@@ -3335,9 +3335,7 @@
     "url": "https://www.liquidarom.com/",
     "region": "",
     "level": 4,
-    "logo": "logos/brand_405.png",
-    "rating": 0,
-    "dead": false
+    "logo": "logos/brand_405.png"
   },
   {
     "id": 406,
@@ -3382,7 +3380,9 @@
     "url": "https://www.lookah.com/",
     "region": "",
     "level": 4,
-    "logo": "logos/brand_410.png"
+    "logo": "logos/brand_410.png",
+    "rating": 0,
+    "dead": true
   },
   {
     "id": 411,
