@@ -110,7 +110,7 @@
       const url = CDN_SOURCES[i](name);
       try {
         const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), 15000);
+        const timer = setTimeout(() => ctrl.abort(), 20000);
         const res = await fetch(url, { cache: 'no-store', signal: ctrl.signal });
         clearTimeout(timer);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -225,7 +225,7 @@
     }
     if (!cloudLoaded[dataset]) {
       console.warn(`[VapeDB] ${dataset} 未从云端加载，跳过云端写入以保护数据`);
-      if (window.showToast) window.showToast('当前为离线缓存模式，更改仅保存在本地（不会覆盖云端）');
+      if (window.showToast) window.showToast('未连上云端，已存本地；点左下角「☁ 同步」重连后再保存');
       updateStatusUI();
       return Promise.resolve({ ok: true, mode: 'local', reason: 'offline' });
     }
@@ -363,16 +363,39 @@
     );
   }
 
+  // 手动重试：重新拉取三个数据集，返回每个数据集是否成功 + 最新数据
+  async function reloadAll() {
+    const [b, s, g] = await Promise.all([
+      loadOne('brands', LS_BRANDS),
+      loadOne('shops',   LS_SHOPS),
+      loadOne('groups',  LS_GROUPS)
+    ]);
+    cloudOk = b.ok && s.ok && g.ok;
+    updateStatusUI();
+    return {
+      ok: cloudOk,
+      loaded: { brands: b.ok, shops: s.ok, groups: g.ok },
+      data: { brands: b.data, shops: s.data, groups: g.data },
+      failed: failedDatasets()
+    };
+  }
+
   function isCloudEnabled()  { return CLOUD_ENABLED; }
   function isCloudOk()       { return cloudOk; }
   function getPendingCount() { return pendingWrites; }
 
   // ---------- 顶部状态小徽标 ----------
+  const DS_LABEL = { brands: '品牌', shops: '商城', groups: '集团' };
+  function failedDatasets() {
+    return Object.keys(cloudLoaded).filter(k => !cloudLoaded[k]);
+  }
+
   function updateStatusUI() {
     const el = document.getElementById('cloudStatus');
     if (!el) return;
     if (!CLOUD_READ) { el.style.display = 'none'; return; }
     el.style.display = 'inline-flex';
+    el.style.cursor = 'pointer';
     if (pendingWrites > 0) {
       el.style.background = 'rgba(234,179,8,0.2)';
       el.style.color = '#fde047';
@@ -389,13 +412,13 @@
     } else if (cloudLoaded.brands || cloudLoaded.shops || cloudLoaded.groups) {
       el.style.background = 'rgba(234,179,8,0.2)';
       el.style.color = '#fde047';
-      el.textContent = '☁ 部分离线';
-      el.title = '部分数据从本地缓存加载，编辑不会覆盖云端';
+      el.textContent = '☁ 部分离线 ↻';
+      el.title = `以下数据未从云端加载：${failedDatasets().map(k => DS_LABEL[k]).join('、')}（点击重试）`;
     } else {
       el.style.background = 'rgba(239,68,68,0.2)';
       el.style.color = '#fca5a5';
-      el.textContent = '☁ 离线（本地缓存）';
-      el.title = '无法连接云端，编辑仅保存在本地，不会覆盖云端数据';
+      el.textContent = '☁ 离线（本地缓存） ↻';
+      el.title = '无法连接云端，编辑仅保存在本地；点击重试连接';
     }
   }
 
@@ -406,6 +429,7 @@
     upsertShop, deleteShop,
     upsertGroup, deleteGroup,
     isCloudEnabled, isCloudOk, getPendingCount,
+    reloadAll, getFailedDatasets: failedDatasets,
     updateStatusUI
   };
 })();

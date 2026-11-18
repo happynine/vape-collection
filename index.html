@@ -55,7 +55,7 @@
     <h1 class="text-3xl font-bold text-center mb-2">Vape品牌商官网查找系统</h1>
     <p class="text-center text-gray-400 text-sm mb-2">快速查找全球 Vape 品牌官方网站信息</p>
     <div id="cloudStatusWrap" class="fixed top-4 left-4 z-50">
-      <span id="cloudStatus" class="hidden items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium shadow-lg backdrop-blur-sm"></span>
+      <span id="cloudStatus" onclick="retryCloud()" class="hidden items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium shadow-lg backdrop-blur-sm cursor-pointer hover:brightness-125" title="点击重新连接云端"></span>
     </div>
 
     <!-- Tab Navigation -->
@@ -173,6 +173,7 @@
     <button id="btnAdd" onclick="handleAdd()" class="px-3 py-1.5 rounded-lg bg-blue-500 text-white text-xs font-medium hover:bg-blue-600 transition shadow-lg">添加</button>
     <button id="btnEdit" onclick="handleEdit()" class="px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 text-xs font-medium hover:bg-white/20 transition backdrop-blur shadow-lg">编辑</button>
     <button id="btnExport" onclick="handleExport()" class="px-3 py-1.5 rounded-lg bg-green-500 text-white text-xs font-medium hover:bg-green-600 transition shadow-lg">导出数据</button>
+    <button id="btnSync" onclick="retryCloud(true)" class="px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 text-xs font-medium hover:bg-white/20 transition backdrop-blur shadow-lg">☁ 同步</button>
     <button id="btnToggleDead" onclick="toggleDeadSites()" class="px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 text-xs font-medium hover:bg-white/20 transition backdrop-blur shadow-lg">显示失效</button>
   </div>
   <!-- Edit Mode Bar (Fixed) -->
@@ -489,6 +490,41 @@
       btn.textContent = showDeadSites ? '隐藏失效' : '显示失效';
       btn.classList.toggle('active', showDeadSites);
       renderBrands();
+    }
+
+    // ========== 手动重连云端 / 刷新数据 ==========
+    async function retryCloud(showResult) {
+      if (!window.VapeDB || !VapeDB.reloadAll) { showToast('云端模块未加载'); return; }
+      const btn = document.getElementById('btnSync');
+      const badge = document.getElementById('cloudStatus');
+      if (btn) { btn.disabled = true; btn.textContent = '同步中…'; }
+      if (badge) badge.textContent = '☁ 同步中…';
+      let r;
+      try {
+        r = await VapeDB.reloadAll();
+      } catch (e) {
+        r = { ok: false, loaded: {}, data: {}, failed: ['brands', 'shops', 'groups'] };
+      }
+      if (btn) { btn.disabled = false; btn.textContent = '☁ 同步'; }
+      // 只覆盖成功加载的数据集，避免冲掉未上传的本地改动
+      if (r.loaded && r.loaded.brands && r.data.brands) allBrands = r.data.brands.map(b => ({ ...b }));
+      if (r.loaded && r.loaded.shops && r.data.shops) shopBrands = r.data.shops.map(s => ({ ...s }));
+      if (r.loaded && r.loaded.groups && r.data.groups) groupData = r.data.groups.map(g => ({ ...g }));
+      allBrands.sort((a, b) => (a.name_en || '').localeCompare(b.name_en || '', 'en'));
+      shopBrands.sort((a, b) => (a.name_en || '').localeCompare(b.name_en || '', 'en', { sensitivity: 'base' }));
+      buildLetterFilter();
+      renderBrands();
+      renderShopBrands();
+      renderGroups();
+      if (typeof updateStatsBar === 'function') updateStatsBar();
+      if (showResult !== false) {
+        if (r.ok) showToast('已连接云端，数据已刷新，可以正常编辑上传');
+        else {
+          const map = { brands: '品牌', shops: '商城', groups: '集团' };
+          const f = (r.failed || []).map(k => map[k] || k).join('、');
+          showToast(f ? `仍然连不上云端：${f}，请检查网络后重试` : '仍然连不上云端，请检查网络后重试');
+        }
+      }
     }
 
     // ========== Fixed Bottom Bar Handlers ==========
