@@ -1,1 +1,824 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "吉迩科技 ICCPP",
+    "desc": "深圳电子雾化集团，VOOPOO 主打开放式设备，ZOVOO / DRAGBAR 主打一次性产品。",
+    "url": "https://www.iccpp.com/",
+    "logo": "logos/brand_765.png",
+    "sub_brands": [
+      {
+        "name": "CRAZYACE",
+        "url": "https://www.crazyacevape.com/",
+        "logo": "logos/brand_113.png"
+      },
+      {
+        "name": "DRAGBAR",
+        "url": "https://www.idragbar.com/",
+        "logo": "logos/brand_147.jpg"
+      },
+      {
+        "name": "icewave",
+        "url": "https://www.icewave.com/",
+        "logo": "logos/brand_313.png"
+      },
+      {
+        "name": "NEXA",
+        "url": "https://www.nexabar.com/",
+        "logo": "logos/brand_489.png"
+      },
+      {
+        "name": "suonon",
+        "url": "https://www.suonon.com/",
+        "logo": "logos/brand_650.png"
+      },
+      {
+        "name": "VOOPOO",
+        "url": "https://www.voopoo.com/",
+        "logo": "logos/brand_765.png"
+      },
+      {
+        "name": "ZOVOO",
+        "url": "https://www.izovoo.com/zovoo-c1-pod/",
+        "logo": "logos/brand_832.png"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "聚为集团 JWEI",
+    "desc": "2008 年成立的雾化集团，自有品牌包括 Joyetech、Eleaf、Wismec、VAAL。",
+    "url": "https://www.jwei.com/",
+    "logo": "logos/brand_349.png",
+    "sub_brands": [
+      {
+        "name": "ELEAF",
+        "url": "https://www.eleafworld.com/products/",
+        "logo": "logos/brand_156.png"
+      },
+      {
+        "name": "Joyetech",
+        "url": "https://www.joyetech.com/",
+        "logo": "logos/brand_349.png"
+      },
+      {
+        "name": "joyevita",
+        "url": "https://www.joyevita.com/",
+        "logo": "logos/brand_350.png"
+      },
+      {
+        "name": "vaal",
+        "url": "https://www.vaalvapor.com/product.php",
+        "logo": "logos/brand_701.png"
+      },
+      {
+        "name": "wismec",
+        "url": "https://www.wismec.co.uk/",
+        "logo": "logos/brand_795.png"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "道森 DS Vaping",
+    "desc": "深圳道森，FLUM 品牌母公司，主打北美一次性市场。",
+    "url": "https://flumgio.com/",
+    "logo": "logos/brand_201.jpg",
+    "sub_brands": [
+      {
+        "name": "FLUM",
+        "url": "https://flumgio.com/",
+        "logo": "logos/brand_201.jpg"
+      },
+      {
+        "name": "Kado Bar",
+        "url": "https://kadobar.com/",
+        "logo": "logos/brand_362.png"
+      },
+      {
+        "name": "Pillow Talk",
+        "url": "https://www.pillowtalkvaping.com/",
+        "logo": "logos/brand_525.png"
+      },
+      {
+        "name": "Puff bar",
+        "url": "https://puffbar.com/",
+        "logo": "logos/brand_546.png"
+      },
+      {
+        "name": "Vnm",
+        "url": "https://www.vnm.io/",
+        "logo": "logos/brand_757.png"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "尊一品 ZUNYIPIN",
+    "desc": "旗下品牌 KingZone、TESLACIGS、Vabeen、Ziggiys。",
+    "url": "https://www.kingzonetech.com/home",
+    "logo": "logos/brand_379.png",
+    "sub_brands": [
+      {
+        "name": "KingZone",
+        "url": "https://www.kingzonetech.com/home",
+        "logo": "logos/brand_379.png"
+      },
+      {
+        "name": "TESLACIGS",
+        "url": "https://www.teslacigs.com/",
+        "logo": "logos/brand_667.png"
+      },
+      {
+        "name": "Vabeen",
+        "url": "https://www.vabeen.com/",
+        "logo": "logos/brand_704.png"
+      },
+      {
+        "name": "Ziggiys",
+        "url": "https://www.ziggiys.com/",
+        "logo": "logos/brand_827.png"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "思摩尔国际 SMOORE",
+    "desc": "全球最大电子雾化设备制造商（HK:6969），FEELM 为陶瓷芯技术品牌，VAPORESSO 为自有消费品牌。",
+    "url": "https://www.smooreholdings.com/",
+    "logo": "logos/brand_181.png",
+    "sub_brands": [
+      {
+        "name": "CCELL",
+        "url": "https://www.ccell.com/",
+        "logo": "logos/brand_98.png"
+      },
+      {
+        "name": "FEELM",
+        "url": "https://www.feelmtech.com/",
+        "logo": "logos/brand_181.png"
+      },
+      {
+        "name": "METEX",
+        "url": "https://www.metextech.com/",
+        "logo": "logos/brand_454.png"
+      },
+      {
+        "name": "VAPORESSO",
+        "url": "https://www.vaporesso.com/",
+        "logo": "logos/brand_726.png"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "斯科尔科技 SKE",
+    "desc": "深圳斯科尔，SKE Crystal 系列为英国畅销一次性产品，另有 Sikary、MEMERS 等品牌。",
+    "url": "https://www.sikaryofficial.com/",
+    "logo": "logos/brand_614.png",
+    "sub_brands": [
+      {
+        "name": "Memers",
+        "url": "https://www.memersvape.com/",
+        "logo": "logos/brand_452.png"
+      },
+      {
+        "name": "Sikary",
+        "url": "https://www.sikaryvapor.com/",
+        "logo": "logos/brand_609.png"
+      },
+      {
+        "name": "SKE",
+        "url": "https://www.skevape.com/",
+        "logo": "logos/brand_614.png"
+      },
+      {
+        "name": "vfly",
+        "url": "https://www.vflyvape.com/",
+        "logo": "logos/brand_745.png"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "爱奇迹 Heaven Gifts",
+    "desc": "从贸易平台转型为品牌商，拥有 ELFBAR 与 LOST MARY 两大全球一次性雾化品牌。",
+    "url": "https://www.heavengifts.com/",
+    "logo": "logos/brand_160.png",
+    "sub_brands": [
+      {
+        "name": "ELFBAR",
+        "url": "https://www.elfbar.com/",
+        "logo": "logos/brand_160.png"
+      },
+      {
+        "name": "LOST MARY",
+        "url": "https://www.lostmary.com/",
+        "logo": "logos/brand_415.png"
+      },
+      {
+        "name": "Lost THC",
+        "url": "https://lost-thc.com/",
+        "logo": "logos/brand_418.png"
+      },
+      {
+        "name": "off-stamp",
+        "url": "https://www.off-stampvape.com/",
+        "logo": "logos/brand_498.webp"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "福摩特 Fumot",
+    "desc": "深圳福摩特，RandM Tornado 系列母公司，另有 Supbliss、VOME 等品牌。",
+    "url": "https://www.fumottech-global.com/",
+    "logo": "logos/brand_225.png",
+    "sub_brands": [
+      {
+        "name": "fumot",
+        "url": "https://szfumotvape.com/",
+        "logo": "logos/brand_225.png"
+      },
+      {
+        "name": "RandM",
+        "url": "https://randmvape.com/",
+        "logo": "logos/brand_572.png"
+      },
+      {
+        "name": "Supbliss",
+        "url": "https://www.supblissvape.com/",
+        "logo": "logos/brand_652.png"
+      },
+      {
+        "name": "VOME",
+        "url": "https://vomevape.com/",
+        "logo": "logos/brand_761.png"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "雁扬 YANYANG",
+    "desc": "旗下品牌 FLER、FLERBAR、HYPPE、TORCH。",
+    "url": "https://flerbrand.com/",
+    "logo": "logos/brand_196.jpg",
+    "sub_brands": [
+      {
+        "name": "FLER",
+        "url": "https://flerbrand.com/",
+        "logo": "logos/brand_196.jpg"
+      },
+      {
+        "name": "FLERBAR",
+        "url": "https://www.facebook.com/Flerbarofficial/",
+        "logo": "logos/brand_197.png"
+      },
+      {
+        "name": "HYPPE",
+        "url": "https://hyppemaxflowbar.com/",
+        "logo": "logos/brand_301.jpg"
+      },
+      {
+        "name": "TORCH",
+        "url": "https://www.torchenterprise.com/",
+        "logo": "logos/brand_680.webp"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "五轮 WULUN",
+    "desc": "旗下品牌 itsuwa、nextvapor、vapesoul。",
+    "url": "https://www.itsuwacig.com/",
+    "logo": "logos/brand_341.png",
+    "sub_brands": [
+      {
+        "name": "itsuwa",
+        "url": "https://www.itsuwacig.com/",
+        "logo": "logos/brand_341.png"
+      },
+      {
+        "name": "nextvapor",
+        "url": "https://www.nextvapor.cc/",
+        "logo": "logos/brand_490.png"
+      },
+      {
+        "name": "vapesoul",
+        "url": "http://www.vapesoul.com/",
+        "logo": "logos/brand_718.png"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "你我集团 YouMe",
+    "desc": "旗下拥有 Airbar、SUORIN、YouMe 等雾化品牌。",
+    "url": "https://www.airbar.com/",
+    "logo": "logos/brand_812.png",
+    "sub_brands": [
+      {
+        "name": "Airbar",
+        "url": "https://www.airbar.com/",
+        "logo": "logos/brand_216.png"
+      },
+      {
+        "name": "SUORIN",
+        "url": "https://suorin.com/",
+        "logo": "logos/brand_651.svg"
+      },
+      {
+        "name": "YouMe",
+        "url": "https://www.youmegroup.com/vapsi.html",
+        "logo": "logos/brand_812.png"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "合元集团",
+    "desc": "深圳合元，电子雾化 ODM/OEM 大厂，自有品牌包括 BECO 等。",
+    "url": "https://becovape.com/",
+    "logo": "logos/brand_31.png",
+    "sub_brands": [
+      {
+        "name": "BECO",
+        "url": "https://becovape.com/",
+        "logo": "logos/brand_31.png"
+      },
+      {
+        "name": "pthmaster",
+        "url": "https://pthmaster.com/",
+        "logo": "logos/brand_545.png"
+      },
+      {
+        "name": "Sixhill",
+        "url": "https://www.sixhill.com/",
+        "logo": "logos/brand_613.png"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "拓伸 Topson",
+    "desc": "东莞拓伸，ELUX（Legend / Firerose）品牌母公司，主打英国与欧洲市场。",
+    "url": "https://www.eluxtech.com/",
+    "logo": "logos/brand_164.png",
+    "sub_brands": [
+      {
+        "name": "ELUX",
+        "url": "https://www.eluxtech.com/",
+        "logo": "logos/brand_164.png"
+      },
+      {
+        "name": "FEELA",
+        "url": "https://www.feelavape.com/",
+        "logo": "logos/brand_180.svg"
+      },
+      {
+        "name": "Firerose",
+        "url": "https://www.firerosetech.com/",
+        "logo": "logos/brand_186.png"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "英美烟草 BAT",
+    "desc": "全球第二大跨国烟草集团，雾化品牌 Vuse、尼古丁袋 Velo 与加热不燃烧 glo 构成新型烟草矩阵。",
+    "url": "https://www.bat.com/",
+    "logo": "logos/brand_773.png",
+    "sub_brands": [
+      {
+        "name": "Glo",
+        "url": "https://www.myglo.com/",
+        "logo": "logos/brand_240.png"
+      },
+      {
+        "name": "VELO",
+        "url": "https://www.velo.com/",
+        "logo": "logos/brand_741.png"
+      },
+      {
+        "name": "VUSE",
+        "url": "https://www.vuse.com/",
+        "logo": "logos/brand_773.png"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "卓力能 ALD",
+    "desc": "深圳卓力能，FRESOR 雾化技术平台，自有品牌 ADL、UPENDS。",
+    "url": "https://www.aldvapor.com/",
+    "logo": "logos/brand_697.png",
+    "sub_brands": [
+      {
+        "name": "ADL",
+        "url": "https://www.aldvapor.com/",
+        "logo": "logos/brand_8.png"
+      },
+      {
+        "name": "UPENDS",
+        "url": "https://www.upends.com/",
+        "logo": "logos/brand_697.png"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "name": "基克纳 Geekvape",
+    "desc": "深圳雾化方案商，GEEKVAPE 主打开放式硬件，GEEKBAR 为其一次性品牌。",
+    "url": "https://www.geekvape.com/",
+    "logo": "logos/brand_237.webp",
+    "sub_brands": [
+      {
+        "name": "GEEKBAR",
+        "url": "https://www.geekbar.com/",
+        "logo": "logos/brand_236.png"
+      },
+      {
+        "name": "GEEKVAPE",
+        "url": "https://www.geekvape.com/",
+        "logo": "logos/brand_237.webp"
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "name": "大道四九",
+    "desc": "旗下品牌 Solobar、Vapengin。",
+    "url": "https://www.solobar.com/",
+    "logo": "logos/brand_633.png",
+    "sub_brands": [
+      {
+        "name": "Solobar",
+        "url": "https://www.solobar.com/",
+        "logo": "logos/brand_633.png"
+      },
+      {
+        "name": "Vapengin",
+        "url": "https://www.vapengin.com/",
+        "logo": "logos/brand_713.jpg"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "name": "康尔 Kangertech",
+    "desc": "早期开放式电子雾化设备代表厂商，产品线覆盖入门套装与雾化器。",
+    "url": "https://www.kangertech.com/",
+    "logo": "logos/brand_365.png",
+    "sub_brands": [
+      {
+        "name": "Kangertech",
+        "url": "https://www.kangertech.com/",
+        "logo": "logos/brand_365.png"
+      },
+      {
+        "name": "Olit",
+        "url": "https://www.olitvape.com/",
+        "logo": "logos/brand_501.png"
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "name": "日本烟草 JTI",
+    "desc": "日本跨国烟草集团，Ploom 布局加热不燃烧，Logic 为其雾化品牌。",
+    "url": "https://www.jti.com/",
+    "logo": "logos/brand_530.png",
+    "sub_brands": [
+      {
+        "name": "Logic",
+        "url": "https://logicvapes.co.uk/",
+        "logo": "logos/brand_409.png"
+      },
+      {
+        "name": "PLOOM",
+        "url": "https://www.ploom.com/en",
+        "logo": "logos/brand_530.png"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "name": "易佳特 Aspire",
+    "desc": "深圳易佳特，Aspire 为全球知名开放式设备与雾化芯品牌。",
+    "url": "https://www.aspirecig.com/",
+    "logo": "logos/brand_27.png",
+    "sub_brands": [
+      {
+        "name": "aspire",
+        "url": "https://www.aspirecig.com/",
+        "logo": "logos/brand_27.png"
+      },
+      {
+        "name": "INSTA FILL",
+        "url": "https://insta-fill.com/",
+        "logo": "logos/brand_330.jpg"
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "name": "汉清达 HQD",
+    "desc": "深圳一次性雾化大厂，HQD 品牌覆盖全球 120 多个国家和地区。",
+    "url": "https://hqdtech.com/",
+    "logo": "logos/brand_287.png",
+    "sub_brands": [
+      {
+        "name": "Cali Pods",
+        "url": "https://calipodsonline.com/",
+        "logo": "logos/brand_92.png"
+      },
+      {
+        "name": "HQD",
+        "url": "https://hqdtech.com/",
+        "logo": "logos/brand_287.png"
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "name": "派克斯创新 Hayati",
+    "desc": "英国成长最快的雾化品牌之一，子品牌含 Quokka、Moxy、Liora、Finebar、Philia。",
+    "url": "https://hayativapor.com/",
+    "logo": "logos/brand_264.png",
+    "sub_brands": [
+      {
+        "name": "HAYATI",
+        "url": "https://hayativapor.com/",
+        "logo": "logos/brand_264.png"
+      },
+      {
+        "name": "quokka",
+        "url": "https://vapequokka.com/",
+        "logo": "logos/brand_566.svg"
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "name": "煜迎 YUYING",
+    "desc": "旗下品牌 MIVIO、merrymi。",
+    "url": "https://mmvapor.com/",
+    "logo": "logos/brand_453.png",
+    "sub_brands": [
+      {
+        "name": "merrymi",
+        "url": "https://mmvapor.com/",
+        "logo": "logos/brand_453.png"
+      },
+      {
+        "name": "MIVIO",
+        "url": "https://miviobar.com/",
+        "logo": "logos/brand_460.png"
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "name": "爱乐米 OXVA",
+    "desc": "旗下 OXBAR 主攻一次性，OXVA 主打开放式设备。",
+    "url": "https://www.oxbar.com/",
+    "logo": "logos/brand_514.png",
+    "sub_brands": [
+      {
+        "name": "OXBAR",
+        "url": "https://www.oxbar.com/",
+        "logo": "logos/brand_513.jpg"
+      },
+      {
+        "name": "OXVA",
+        "url": "https://www.oxva.com/",
+        "logo": "logos/brand_514.png"
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "name": "艾维普思 IVPS",
+    "desc": "SMOK 品牌母公司，产品覆盖主机、套装、雾化器及雾化芯全品类。",
+    "url": "https://www.smoktech.com/",
+    "logo": "logos/brand_621.png",
+    "sub_brands": [
+      {
+        "name": "SMOK",
+        "url": "https://www.smoktech.com/",
+        "logo": "logos/brand_621.png"
+      },
+      {
+        "name": "SPACEMAN",
+        "url": "https://www.spacemans.com/",
+        "logo": "logos/brand_639.png"
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "name": "艾蒂威肯 Advken",
+    "desc": "旗下品牌 ASDF.、Advken。",
+    "url": "https://www.advken.com/",
+    "logo": "logos/brand_131.png",
+    "sub_brands": [
+      {
+        "name": "Advken",
+        "url": "https://www.advken.com/",
+        "logo": "logos/brand_131.png"
+      },
+      {
+        "name": "ASDF.",
+        "url": "https://asdfworldwide.com/",
+        "logo": "logos/brand_24.png"
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "name": "菲莫国际 PMI",
+    "desc": "全球最大烟草集团之一，IQOS 加热不燃烧、VEEV 雾化与 ZYN 尼古丁袋组成无烟产品矩阵。",
+    "url": "https://www.pmi.com/",
+    "logo": "logos/brand_337.png",
+    "sub_brands": [
+      {
+        "name": "IQOS",
+        "url": "https://www.iqos.com/global",
+        "logo": "logos/brand_337.png"
+      },
+      {
+        "name": "VEEV",
+        "url": "https://www.veev-vape.com/hr/en",
+        "logo": "logos/brand_738.png"
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "name": "质赢 ZHIYING",
+    "desc": "旗下品牌 QUAWINS、megabar。",
+    "url": "https://megabarshop.de/",
+    "logo": "logos/brand_451.png",
+    "sub_brands": [
+      {
+        "name": "megabar",
+        "url": "https://megabarshop.de/",
+        "logo": "logos/brand_451.png"
+      },
+      {
+        "name": "QUAWINS",
+        "url": "http://www.quawins.com",
+        "logo": "logos/brand_564.png"
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "name": "赛尔美 SAIERMEI",
+    "desc": "旗下品牌 Aloha Sun、smiss。",
+    "url": "https://alohasunvapor.com/",
+    "logo": "logos/brand_18.png",
+    "sub_brands": [
+      {
+        "name": "Aloha Sun",
+        "url": "https://alohasunvapor.com/",
+        "logo": "logos/brand_18.png"
+      },
+      {
+        "name": "smiss",
+        "url": "https://www.smissvape.com/",
+        "logo": "logos/brand_619.png"
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "name": "钥石 Keystone",
+    "desc": "旗下品牌 KEYSTONE、NOVA。",
+    "url": "https://keystonevape.com/",
+    "logo": "logos/brand_370.png",
+    "sub_brands": [
+      {
+        "name": "KEYSTONE",
+        "url": "https://keystonevape.com/",
+        "logo": "logos/brand_370.png"
+      },
+      {
+        "name": "NOVA",
+        "url": "https://nova510.com/",
+        "logo": "logos/brand_495.png"
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "name": "优维尔 UWELL",
+    "desc": "深圳优维尔，以严苛品控著称的开放式设备厂商，产品覆盖欧美与东南亚。",
+    "url": "https://www.myuwell.com/",
+    "logo": "logos/brand_300.png",
+    "sub_brands": [
+      {
+        "name": "UWELL",
+        "url": "https://www.myuwell.com/",
+        "logo": "logos/brand_300.png"
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "name": "劳斯韦伯 Lost Vape",
+    "desc": "深圳劳斯韦伯，主攻高端 DNA 芯片设备的开放式品牌。",
+    "url": "https://lostvape.com/",
+    "logo": "logos/brand_419.png",
+    "sub_brands": [
+      {
+        "name": "Lost Vape",
+        "url": "https://lostvape.com/",
+        "logo": "logos/brand_419.png"
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "name": "大利万维 ALIBARBAR",
+    "desc": "面向澳洲市场的一次性雾化品牌运营商。",
+    "url": "https://alibarbar.com/",
+    "logo": "logos/brand_17.png",
+    "sub_brands": [
+      {
+        "name": "ALIBARBAR",
+        "url": "https://alibarbar.com/",
+        "logo": "logos/brand_17.png"
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "name": "奥驰亚 Altria",
+    "desc": "美国最大烟草集团，2023 年完成对 NJOY 的全资收购，正式切入电子雾化赛道。",
+    "url": "https://www.altria.com/",
+    "logo": "logos/brand_492.png",
+    "sub_brands": [
+      {
+        "name": "NJOY",
+        "url": "https://www.njoy.com/",
+        "logo": "logos/brand_492.png"
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "name": "帝国烟草 Imperial Brands",
+    "desc": "英国跨国烟草集团，旗下 blu 为主力雾化品牌，Pulze 布局加热不燃烧。",
+    "url": "https://www.imperialbrandsplc.com/",
+    "logo": "logos/brand_35.png",
+    "sub_brands": [
+      {
+        "name": "BLU",
+        "url": "https://www.blu.com/en-GB",
+        "logo": "logos/brand_35.png"
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "name": "悦刻 RLX 雾芯科技",
+    "desc": "中国电子雾化品牌商（NYSE:RLX），RELX 悦刻为其核心品牌。",
+    "url": "https://relxtech.com/",
+    "logo": "logos/brand_576.png",
+    "sub_brands": [
+      {
+        "name": "RELX",
+        "url": "https://relxnow.com/?srsltid=AfmBOoqYoEQt0JomJqY7mWU6QJ-NJOgCTqv4Vyulp5bhvGvzeZVJzRcY",
+        "logo": "logos/brand_576.png"
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "name": "新宜康 Innokin",
+    "desc": "深圳新宜康，老牌开放式电子雾化设备厂商。",
+    "url": "https://www.innokin.com/",
+    "logo": "logos/brand_152.png",
+    "sub_brands": [
+      {
+        "name": "INNOKIN",
+        "url": "https://www.innokin.com/",
+        "logo": "logos/brand_152.png"
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "name": "漫科斯威 Maskking",
+    "desc": "北京起家的 OBM 厂商，一次性产品覆盖全球多个市场。",
+    "url": "https://www.maskkingvape.com/",
+    "logo": "logos/brand_441.jpg",
+    "sub_brands": [
+      {
+        "name": "maskking",
+        "url": "https://www.maskkingvape.com/",
+        "logo": "logos/brand_441.jpg"
+      }
+    ]
+  }
+]
