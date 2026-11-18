@@ -241,6 +241,32 @@
             <option value="中东" class="bg-gray-800">中东</option>
           </select>
         </div>
+        <!-- Official brand only: product type & company location -->
+        <div id="formBrandExtra">
+          <div class="mb-4">
+            <label class="block text-xs text-gray-400 mb-1">产品类型</label>
+            <select id="formProductType" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm">
+              <option value="不限" class="bg-gray-800">不限</option>
+              <option value="烟油" class="bg-gray-800">烟油</option>
+              <option value="电子烟" class="bg-gray-800">电子烟</option>
+              <option value="电子烟+烟油" class="bg-gray-800">电子烟+烟油</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1">公司所在地</label>
+            <select id="formCompanyLocation" class="w-full px-3 py-2 rounded-lg bg-white/10 text-white border border-white/10 focus:outline-none focus:border-blue-400/50 text-sm">
+              <option value="未知" class="bg-gray-800">未知</option>
+              <option value="中国" class="bg-gray-800">中国</option>
+              <option value="美国" class="bg-gray-800">美国</option>
+              <option value="加拿大" class="bg-gray-800">加拿大</option>
+              <option value="俄国" class="bg-gray-800">俄国</option>
+              <option value="英国" class="bg-gray-800">英国</option>
+              <option value="法国" class="bg-gray-800">法国</option>
+              <option value="德国" class="bg-gray-800">德国</option>
+              <option value="其他" class="bg-gray-800">其他</option>
+            </select>
+          </div>
+        </div>
         <!-- Shop-specific: country/region detail -->
         <div id="formCountryWrap" class="hidden">
           <label class="block text-xs text-gray-400 mb-1">国家/地区详情</label>
@@ -802,6 +828,7 @@
                 <div class="text-sm font-semibold text-white truncate">${escapeHtml(b.name_en)}${b.dead ? '<span class="dead-badge">失效</span>' : ''}</div>
                 <div class="text-xs text-gray-400 truncate">${escapeHtml(b.name_cn || '')}</div>
                 <div class="text-xs text-gray-500 mt-1">主打地区：${escapeHtml(b.region)}</div>
+                ${(b.product_type && b.product_type !== '不限') ? `<div class="text-xs text-gray-500 mt-0.5">产品类型：${escapeHtml(b.product_type)}</div>` : ''}
                 <div class="mt-1.5">${renderStars(b.rating)}</div>
               </div>
             </div>
@@ -1118,6 +1145,9 @@
       document.getElementById('formBizTypeWrap').classList.add('hidden');
       document.getElementById('formDeadWrap').classList.remove('hidden');
       document.getElementById('formDead').checked = false;
+      document.getElementById('formBrandExtra').classList.remove('hidden');
+      document.getElementById('formProductType').value = '不限';
+      document.getElementById('formCompanyLocation').value = '未知';
       document.getElementById('formLogoValue').value = '';
       document.getElementById('formLogoUrl').value = '';
       logoBase64 = '';
@@ -1144,6 +1174,9 @@
       document.getElementById('formBizTypeWrap').classList.add('hidden');
       document.getElementById('formDeadWrap').classList.remove('hidden');
       document.getElementById('formDead').checked = !!brand.dead;
+      document.getElementById('formBrandExtra').classList.remove('hidden');
+      document.getElementById('formProductType').value = brand.product_type || '不限';
+      document.getElementById('formCompanyLocation').value = brand.company_location || '未知';
       logoBase64 = '';
       if (brand.logo) {
         document.getElementById('formLogoValue').value = brand.logo;
@@ -1185,6 +1218,8 @@
       const logoVal = logoBase64 || document.getElementById('formLogoValue').value || '';
       const ratingVal = Number(document.getElementById('formRatingValue').value) || 0;
       const isDead = !!document.getElementById('formDead').checked;
+      const productType = document.getElementById('formProductType').value || '不限';
+      const companyLocation = document.getElementById('formCompanyLocation').value || '未知';
 
       if (!nameEn || !url) return;
 
@@ -1198,6 +1233,7 @@
         const numId = Number(editId);
         const idx = allBrands.findIndex(b => b.id === numId); if (idx === -1) return;
         allBrands[idx].name_en = nameEn; allBrands[idx].name_cn = nameCn; allBrands[idx].url = url; allBrands[idx].region = region; allBrands[idx].rating = ratingVal; allBrands[idx].dead = isDead;
+        allBrands[idx].product_type = productType; allBrands[idx].company_location = companyLocation;
         if (logoVal) allBrands[idx].logo = logoVal;
         const brand = { ...allBrands[idx] };
         allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
@@ -1205,7 +1241,7 @@
         showToast('正在保存…');
         if (window.VapeDB) VapeDB.upsertBrand(brand).then(() => showToast('品牌修改成功，已同步云端！'));
       } else {
-        const newBrand = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, rating: ratingVal, level: 3, dead: isDead, logo: logoVal };
+        const newBrand = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, rating: ratingVal, level: 3, dead: isDead, product_type: productType, company_location: companyLocation, logo: logoVal };
         allBrands.push(newBrand); allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
         closeModal(); buildLetterFilter(); renderBrands();
         showToast('正在保存…');
@@ -1228,6 +1264,7 @@
       document.getElementById('formBizTypeWrap').classList.remove('hidden');
       document.getElementById('formDeadWrap').classList.add('hidden');
       document.getElementById('formDead').checked = false;
+      document.getElementById('formBrandExtra').classList.add('hidden');
       document.getElementById('formBizType').value = 'retailer';
       document.getElementById('formLogoValue').value = '';
       document.getElementById('formLogoUrl').value = '';
@@ -1254,6 +1291,7 @@
       document.getElementById('formBizTypeWrap').classList.remove('hidden');
       document.getElementById('formDeadWrap').classList.add('hidden');
       document.getElementById('formDead').checked = false;
+      document.getElementById('formBrandExtra').classList.add('hidden');
       document.getElementById('formBizType').value = BIZ_TYPES[brand.biz_type] ? brand.biz_type : 'retailer';
       logoBase64 = '';
       if (brand.logo) {
