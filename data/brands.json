@@ -7245,5 +7245,16 @@
     "level": 3,
     "dead": false,
     "logo": "logos/brand_1794967214594.png"
+  },
+  {
+    "id": 1794967362444,
+    "name_en": "Level X Vape",
+    "name_cn": "",
+    "url": "https://levelxvape.com",
+    "region": "加拿大",
+    "rating": 0,
+    "level": 3,
+    "dead": false,
+    "logo": "logos/brand_1794967362444.png"
   }
 ]
