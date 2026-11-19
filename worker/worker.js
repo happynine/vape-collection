@@ -117,6 +117,72 @@ function bjDay() {
   return new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
 }
 
+// ---------------- D1 访问层（绑定优先，无绑定时走 REST API） ----------------
+let restDbCache = null;
+function restDb(env) {
+  if (restDbCache) return restDbCache;
+  const acct = env.CF_ACCOUNT_ID || 'cc869a7c08d117029f7af321cf54f89';
+  const url = `https://api.cloudflare.com/client/v4/accounts/${acct}/d1/database/${env.D1_DB_ID}/query`;
+  async function send(payload) {
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + env.CF_API_TOKEN,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+    const txt = await r.text();
+    let d;
+    try {
+      d = JSON.parse(txt);
+    } catch {
+      throw new Error('d1_rest_bad_json: ' + txt.slice(0, 120));
+    }
+    if (!d.success) throw new Error('d1_rest_failed: ' + JSON.stringify(d.errors || d).slice(0, 200));
+    return d.result || [];
+  }
+  function stmt(sql) {
+    const s = {
+      __sql: sql,
+      __params: [],
+      bind(...a) {
+        s.__params = a;
+        return s;
+      },
+      async all() {
+        const res = await send({ sql, params: s.__params });
+        return { results: (res[0] && res[0].results) || [] };
+      },
+      async first() {
+        const res = await send({ sql, params: s.__params });
+        const rows = (res[0] && res[0].results) || [];
+        return rows[0] || null;
+      },
+      async run() {
+        await send({ sql, params: s.__params });
+        return { success: true };
+      },
+    };
+    return s;
+  }
+  restDbCache = {
+    prepare: (sql) => stmt(sql),
+    async batch(list) {
+      if (!list || !list.length) return [];
+      const out = await send({ batch: list.map((s) => ({ sql: s.__sql, params: s.__params || [] })) });
+      return out.map((r) => ({ success: true, results: r.results || [] }));
+    },
+  };
+  return restDbCache;
+}
+
+function getDb(env) {
+  if (env.DB) return env.DB;
+  if (env.CF_API_TOKEN && env.D1_DB_ID) return restDb(env);
+  return null;
+}
+
 let schemaReady = false;
 async function ensureSchema(db) {
   if (schemaReady) return;
@@ -144,7 +210,8 @@ async function ensureSchema(db) {
 
 // ---------------- 统计 ----------------
 async function trackVisit(request, env, body) {
-  if (!env.DB) return json({ ok: false, error: 'db_unavailable' }, 503);
+  const db = getDb(env);
+  if (!db) return json({ ok: false, error: 'db_unavailable' }, 503);
   const ua = request.headers.get('User-Agent') || '';
   if (/bot|crawler|spider|headless|preview|curl|wget|python-requests/i.test(ua)) {
     return json({ ok: true, skipped: 'bot' });
@@ -160,7 +227,7 @@ async function trackVisit(request, env, body) {
   const day = bjDay();
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
 
-  await ensureSchema(env.DB);
+  await ensureSchema(db);
 
   const rows = [['pv', '']];
   if (self) rows.push(['self', '']);
@@ -174,38 +241,39 @@ async function trackVisit(request, env, body) {
   }
 
   const stmts = rows.map(([kind, dim]) =>
-    env.DB.prepare(
+    db.prepare(
       `INSERT INTO visits (day, kind, dim, n) VALUES (?, ?, ?, 1)
        ON CONFLICT(day, kind, dim) DO UPDATE SET n = n + 1`,
     ).bind(day, kind, dim)
   );
   stmts.push(
-    env.DB.prepare(
+    db.prepare(
       `INSERT OR IGNORE INTO uniques (day, kind, vid) VALUES (?, ?, ?)`,
     ).bind(day, self ? 'suv' : 'uv', hashStr(ip + '|' + ua))
   );
 
-  await env.DB.batch(stmts);
+  await db.batch(stmts);
   return json({ ok: true });
 }
 
 async function readStats(env, body) {
-  if (!env.DB) return json({ ok: false, error: 'db_unavailable' }, 503);
+  const db = getDb(env);
+  if (!db) return json({ ok: false, error: 'db_unavailable' }, 503);
   const range = body.range === 'year' ? 'year' : 'month';
   const key = String(body.key || '').slice(0, 10);
   if (!/^\d{4}(-\d{2})?$/.test(key)) return json({ ok: false, error: 'bad_range' }, 400);
   const excludeSelf = !!body.excludeSelf;
 
-  await ensureSchema(env.DB);
+  await ensureSchema(db);
   const like = key + '%';
 
-  const res = await env.DB.prepare(
+  const res = await db.prepare(
     `SELECT kind, dim, SUM(n) AS n FROM visits WHERE day LIKE ? GROUP BY kind, dim`,
   ).bind(like).all();
-  const uvRow = await env.DB.prepare(
+  const uvRow = await db.prepare(
     `SELECT COUNT(*) AS c FROM uniques WHERE day LIKE ? AND kind = 'uv'`,
   ).bind(like).first();
-  const suvRow = await env.DB.prepare(
+  const suvRow = await db.prepare(
     `SELECT COUNT(*) AS c FROM uniques WHERE day LIKE ? AND kind = 'suv'`,
   ).bind(like).first();
 
@@ -405,7 +473,7 @@ export default {
     }
 
     if (body.action === 'ping') {
-      return json({ ok: true, db: !!env.DB, ts: Date.now() });
+      return json({ ok: true, db: !!getDb(env), db_mode: env.DB ? 'binding' : (getDb(env) ? 'rest' : 'none'), ts: Date.now() });
     }
     if (body.action === 'track') return await trackVisit(request, env, body);
     if (body.action === 'stats') return await readStats(env, body);
