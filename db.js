@@ -457,6 +457,45 @@
     return summary;
   }
 
+  // ---------- 访问统计（经同一个 Deno 函数，action=track / stats） ----------
+  function postWorker(payload) {
+    return fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-App-Key': WORKER_KEY },
+      body: JSON.stringify(payload),
+    }).then(r => r.json());
+  }
+
+  function isOwner() {
+    try { return localStorage.getItem('vape_owner') === '1'; } catch { return false; }
+  }
+  function setOwner(v) {
+    try { v ? localStorage.setItem('vape_owner', '1') : localStorage.removeItem('vape_owner'); } catch {}
+  }
+
+  // 每次会话上报一次访问（不含任何个人身份信息，仅 IP 归属地 + UA 哈希）
+  function trackVisit() {
+    if (!CLOUD_WRITE) return Promise.resolve();
+    try {
+      if (sessionStorage.getItem('vape_tracked') === '1') return Promise.resolve();
+      sessionStorage.setItem('vape_tracked', '1');
+    } catch {}
+    return postWorker({ action: 'track', self: isOwner(), path: location.pathname }).catch(() => {});
+  }
+
+  function fetchStats(params) {
+    if (!CLOUD_WRITE) return Promise.reject(new Error('no_worker'));
+    return postWorker({
+      action: 'stats',
+      range: params.range,
+      key: params.key,
+      excludeSelf: !!params.excludeSelf,
+    }).then(d => {
+      if (!d || !d.ok) throw new Error((d && d.error) || 'stats_failed');
+      return d;
+    });
+  }
+
   function isCloudEnabled()  { return CLOUD_ENABLED; }
   function isCloudOk()       { return cloudOk; }
   function getPendingCount() { return pendingWrites; }
@@ -513,6 +552,7 @@
     upsertGroup, deleteGroup,
     isCloudEnabled, isCloudOk, getPendingCount,
     reloadAll, flushPending, pendingLocalCount, getFailedDatasets: failedDatasets,
+    trackVisit, fetchStats, isOwner, setOwner,
     updateStatusUI
   };
 })();

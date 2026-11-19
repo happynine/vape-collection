@@ -47,6 +47,8 @@
     .dead-card .card-link { color:#9ca3af !important; text-decoration:line-through; }
     .dead-card .dead-ribbon { position:absolute; top:8px; right:8px; z-index:2; padding:1px 8px; border-radius:5px; font-size:10px; line-height:16px; font-weight:600; color:#fff; background:rgba(239,68,68,0.9); }
     #btnToggleDead.active { background:rgba(239,68,68,0.2); color:#fca5a5; border:1px solid rgba(239,68,68,0.45); }
+    .stats-tab { background:rgba(255,255,255,0.08); color:#d1d5db; }
+    .stats-tab.active { background:#3b82f6; color:#fff; }
   </style>
 </head>
 <body class="text-white font-sans">
@@ -175,6 +177,7 @@
     <button id="btnExport" onclick="handleExport()" class="px-3 py-1.5 rounded-lg bg-green-500 text-white text-xs font-medium hover:bg-green-600 transition shadow-lg">导出数据</button>
     <button id="btnSync" onclick="retryCloud(true)" class="px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 text-xs font-medium hover:bg-white/20 transition backdrop-blur shadow-lg">☁ 同步</button>
     <button id="btnToggleDead" onclick="toggleDeadSites()" class="px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 text-xs font-medium hover:bg-white/20 transition backdrop-blur shadow-lg">显示失效</button>
+    <button id="btnStats" onclick="openStats()" class="px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 text-xs font-medium hover:bg-white/20 transition backdrop-blur shadow-lg">数据统计</button>
   </div>
   <!-- Edit Mode Bar (Fixed) -->
   <div id="fixedEditBar" class="hidden fixed bottom-4 left-4 z-40 py-1.5 px-3 flex flex-col gap-1.5 bg-red-500/80 backdrop-blur rounded-lg shadow-lg">
@@ -191,6 +194,32 @@
   <button id="backToTop" onclick="scrollToTop()" class="hidden fixed bottom-4 right-4 z-40 w-10 h-10 rounded-full bg-white/10 backdrop-blur text-gray-300 text-sm font-medium hover:bg-white/20 transition shadow-lg flex items-center justify-center" title="回到顶部">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
   </button>
+
+  <!-- ==================== STATS MODAL ==================== -->
+  <div id="statsModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div class="glass rounded-2xl p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold">数据统计</h3>
+        <button onclick="closeStats()" class="text-gray-400 hover:text-white text-xl leading-none">✕</button>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <div class="flex rounded-lg overflow-hidden border border-white/10 text-xs">
+          <button id="statsTabMonth" onclick="setStatsRange('month')" class="stats-tab px-3 py-1.5">按月</button>
+          <button id="statsTabYear" onclick="setStatsRange('year')" class="stats-tab px-3 py-1.5">按年</button>
+        </div>
+        <input id="statsMonth" type="month" onchange="loadStats()" class="px-2 py-1.5 rounded-lg bg-white/10 border border-white/10 text-xs text-white" />
+        <select id="statsYear" onchange="loadStats()" class="hidden px-2 py-1.5 rounded-lg bg-white/10 border border-white/10 text-xs text-white"></select>
+        <label class="flex items-center gap-1.5 text-xs text-gray-300 select-none cursor-pointer">
+          <input id="statsExcludeSelf" type="checkbox" checked onchange="loadStats()" class="w-3.5 h-3.5 accent-blue-500" />排除自己
+        </label>
+        <button onclick="loadStats()" class="px-3 py-1.5 rounded-lg bg-blue-500 text-white text-xs font-medium hover:bg-blue-600 transition">刷新</button>
+      </div>
+      <div id="statsBody" class="space-y-4 text-sm text-gray-300">
+        <p class="text-gray-500 text-center py-8">加载中…</p>
+      </div>
+      <p class="text-[11px] text-gray-500 mt-4">口径：按北京时间切日；访问量＝页面打开次数，访客数＝按 IP+浏览器指纹去重；地区依据 IP 归属地。</p>
+    </div>
+  </div>
 
   <!-- ==================== LOGIN MODAL ==================== -->
   <div id="loginModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
@@ -535,6 +564,120 @@
       }
     }
 
+    // ========== 数据统计 ==========
+    let statsRange = 'month';
+    let statsLoading = false;
+
+    function openStats() {
+      const modal = document.getElementById('statsModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      const now = new Date();
+      const mi = document.getElementById('statsMonth');
+      if (!mi.value) mi.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      const ys = document.getElementById('statsYear');
+      if (!ys.options.length) {
+        const y = now.getFullYear();
+        for (let i = y; i >= y - 5; i--) ys.add(new Option(String(i), String(i)));
+      }
+      setStatsRange(statsRange);
+    }
+
+    function closeStats() {
+      const modal = document.getElementById('statsModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function setStatsRange(r) {
+      statsRange = r;
+      document.getElementById('statsTabMonth').classList.toggle('active', r === 'month');
+      document.getElementById('statsTabYear').classList.toggle('active', r === 'year');
+      document.getElementById('statsMonth').classList.toggle('hidden', r !== 'month');
+      document.getElementById('statsYear').classList.toggle('hidden', r !== 'year');
+      loadStats();
+    }
+
+    async function loadStats() {
+      if (statsLoading) return;
+      const body = document.getElementById('statsBody');
+      if (!window.VapeDB || !VapeDB.fetchStats) { body.innerHTML = '<p class="text-gray-500 text-center py-8">统计模块未加载</p>'; return; }
+      statsLoading = true;
+      body.innerHTML = '<p class="text-gray-500 text-center py-8">加载中…</p>';
+      const key = statsRange === 'month'
+        ? (document.getElementById('statsMonth').value || new Date().toISOString().slice(0, 7))
+        : (document.getElementById('statsYear').value || String(new Date().getFullYear()));
+      const excludeSelf = document.getElementById('statsExcludeSelf').checked;
+      try {
+        const d = await VapeDB.fetchStats({ range: statsRange, key, excludeSelf });
+        renderStats(d);
+      } catch (e) {
+        const msg = String((e && e.message) || e);
+        body.innerHTML = msg === 'kv_unavailable'
+          ? '<div class="text-center py-8 text-xs text-yellow-300/90">统计数据库还没启用。<br>请到 Deno Deploy 后台 → Databases → 新建一个 Deno KV，并关联到本应用，然后重新部署。</div>'
+          : `<p class="text-red-400 text-center py-8 text-xs">统计加载失败：${escapeHtml(msg)}</p>`;
+      } finally {
+        statsLoading = false;
+      }
+    }
+
+    function statsBarRow(label, count, max, color) {
+      const pct = max > 0 ? Math.max(2, Math.round((count / max) * 100)) : 0;
+      return `<div class="flex items-center gap-2">
+        <span class="w-20 shrink-0 text-xs text-gray-400 truncate" title="${escapeHtml(label)}">${escapeHtml(label)}</span>
+        <div class="flex-1 h-2 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full" style="width:${pct}%;background:${color}"></div></div>
+        <span class="w-12 text-right text-xs text-gray-300 tabular-nums">${count}</span>
+      </div>`;
+    }
+
+    function renderStats(d) {
+      const body = document.getElementById('statsBody');
+      const provinces = d.provinces || [];
+      const countries = (d.countries || []).filter(c => c.code !== 'CN');
+      const cnTotal = (d.countries || []).filter(c => c.code === 'CN').reduce((n, c) => n + c.count, 0);
+      const maxP = provinces.reduce((m, x) => Math.max(m, x.count), 0);
+      const maxC = countries.reduce((m, x) => Math.max(m, x.count), 0);
+      const title = d.range === 'month' ? d.key : `${d.key} 年`;
+
+      const kpi = `<div class="grid grid-cols-3 gap-3">
+        <div class="rounded-xl bg-white/5 border border-white/10 p-3 text-center">
+          <div class="text-2xl font-bold text-white tabular-nums">${d.pv}</div>
+          <div class="text-[11px] text-gray-400 mt-1">访问量（PV）</div>
+        </div>
+        <div class="rounded-xl bg-white/5 border border-white/10 p-3 text-center">
+          <div class="text-2xl font-bold text-white tabular-nums">${d.uv}</div>
+          <div class="text-[11px] text-gray-400 mt-1">访客数（UV）</div>
+        </div>
+        <div class="rounded-xl bg-white/5 border border-white/10 p-3 text-center">
+          <div class="text-2xl font-bold text-white tabular-nums">${d.excluded ? d.selfPv : 0}</div>
+          <div class="text-[11px] text-gray-400 mt-1">${d.excluded ? '已排除本人访问' : '本人访问未排除'}</div>
+        </div>
+      </div>`;
+
+      const provBlock = `<div class="rounded-xl bg-white/5 border border-white/10 p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-sm font-semibold text-white">中国地区（按省）</h4>
+          <span class="text-[11px] text-gray-400">合计 ${cnTotal}</span>
+        </div>
+        <div class="space-y-2">
+          ${provinces.length ? provinces.map(p => statsBarRow(p.name, p.count, maxP, 'linear-gradient(90deg,#3b82f6,#60a5fa)')).join('') : '<p class="text-xs text-gray-500 py-3">暂无中国地区访问</p>'}
+        </div>
+      </div>`;
+
+      const countryBlock = `<div class="rounded-xl bg-white/5 border border-white/10 p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-sm font-semibold text-white">国际（按国家）</h4>
+          <span class="text-[11px] text-gray-400">${countries.reduce((n, c) => n + c.count, 0)} 次</span>
+        </div>
+        <div class="space-y-2">
+          ${countries.length ? countries.map(c => statsBarRow(c.name, c.count, maxC, 'linear-gradient(90deg,#8b5cf6,#a78bfa)')).join('') : '<p class="text-xs text-gray-500 py-3">暂无国际访问</p>'}
+        </div>
+      </div>`;
+
+      body.innerHTML = `<div class="text-xs text-gray-400 mb-1">统计区间：${escapeHtml(title)}</div>${kpi}
+        <div class="grid md:grid-cols-2 gap-3">${provBlock}${countryBlock}</div>`;
+    }
+
     // ========== Fixed Bottom Bar Handlers ==========
     function handleAdd() {
       if (currentTab === 'official') requireAuth('add');
@@ -704,6 +847,7 @@
       renderShopBrands();
       renderGroups();
       if (window.VapeDB) VapeDB.updateStatusUI();
+      if (window.VapeDB && VapeDB.trackVisit) VapeDB.trackVisit();
 
       // Search debounce
       document.getElementById('searchInput').addEventListener('input', function() {
@@ -1039,6 +1183,7 @@
       const pass = document.getElementById('loginPass').value.trim();
       if (user === 'admin' && pass === 'funan') {
         isAuthenticated = true;
+        if (window.VapeDB && VapeDB.setOwner) VapeDB.setOwner(true);
         const action = pendingAction;
         closeLoginModal();
         pendingAction = null;

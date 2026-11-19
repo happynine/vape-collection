@@ -36,7 +36,8 @@ function utf8ToBase64(str: string): string {
   let bin = "";
   const CHUNK = 0x8000;
   for (let i = 0; i < bytes.length; i += CHUNK) {
-    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+    const end = Math.min(i + CHUNK, bytes.length);
+    for (let j = i; j < end; j++) bin += String.fromCharCode(bytes[j]);
   }
   return btoa(bin);
 }
@@ -57,6 +58,244 @@ function rateLimited(ip: string): boolean {
     for (const [k, v] of rateMap) if (now - v.start > WINDOW) rateMap.delete(k);
   }
   return rec.count > MAX;
+}
+
+
+// ============================================================
+// 访问统计（Deno KV）
+//   写入：action=track  每次页面访问 +1
+//   读取：action=stats  按月 / 按年聚合
+// 数据按北京时间切日；国内按省、国外按国家；可排除站长本人
+// ============================================================
+
+type Geo = { country: string; region: string };
+
+let kvPromise: Promise<any> | null = null;
+function getKv(): Promise<any> {
+  if (!kvPromise) {
+    kvPromise = (async () => {
+      try {
+        const fn = (Deno as any).openKv;
+        if (typeof fn !== "function") return null;
+        return await fn.call(Deno);
+      } catch (e) {
+        console.warn("[stats] Deno KV 不可用:", e);
+        return null;
+      }
+    })();
+  }
+  return kvPromise;
+}
+
+function hashStr(s: string): string {
+  let h1 = 0x811c9dc5, h2 = 0x01000193;
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i);
+    h1 = ((h1 ^ c) * 16777619) >>> 0;
+    h2 = (h2 + c * (i + 1) * 2654435761) >>> 0;
+  }
+  return h1.toString(36) + h2.toString(36);
+}
+
+// ip-api / ipapi 返回英文省名时映射为中文
+const CN_PROVINCE: Record<string, string> = {
+  Beijing: "北京", Shanghai: "上海", Tianjin: "天津", Chongqing: "重庆",
+  Guangdong: "广东", Zhejiang: "浙江", Jiangsu: "江苏", Fujian: "福建",
+  Shandong: "山东", Henan: "河南", Sichuan: "四川", Hubei: "湖北",
+  Hunan: "湖南", Hebei: "河北", Anhui: "安徽", Jiangxi: "江西",
+  Shaanxi: "陕西", Liaoning: "辽宁", Guangxi: "广西", Yunnan: "云南",
+  Guizhou: "贵州", Shanxi: "山西", Heilongjiang: "黑龙江", Jilin: "吉林",
+  "Inner Mongolia": "内蒙古", Xinjiang: "新疆", Gansu: "甘肃", Hainan: "海南",
+  Ningxia: "宁夏", Qinghai: "青海", Tibet: "西藏", Xizang: "西藏",
+  "Hong Kong": "香港", Macau: "澳门", Macao: "澳门", Taiwan: "台湾",
+};
+
+function clientIp(req: Request): string {
+  const xff = req.headers.get("x-forwarded-for") || "";
+  return (xff.split(",")[0] || "").trim() || "unknown";
+}
+
+async function lookupGeo(ip: string): Promise<Geo> {
+  const kv = await getKv();
+  const ckey = ["geo", hashStr(ip)];
+  if (kv) {
+    try {
+      const r = await kv.get(ckey);
+      if (r.value && (r.value as Geo).country) return r.value as Geo;
+    } catch { /* ignore */ }
+  }
+
+  let out: Geo = { country: "", region: "" };
+
+  // 1) Deno Deploy 边缘节点自带的地理信息
+  const g = (Deno as any).geo;
+  if (g && g.country) {
+    out = { country: String(g.country).toUpperCase(), region: String(g.region || "") };
+  }
+
+  // 2) ip-api.com（中文省名）
+  if (!out.country && ip && ip !== "unknown") {
+    try {
+      const r = await fetch(
+        `http://ip-api.com/json/${ip}?fields=status,countryCode,regionName&lang=zh-CN`,
+        { signal: AbortSignal.timeout(2500) },
+      );
+      const d = await r.json();
+      if (d && d.status === "success" && d.countryCode) {
+        out = { country: String(d.countryCode).toUpperCase(), region: String(d.regionName || "") };
+      }
+    } catch { /* ignore */ }
+  }
+
+  // 3) ipapi.co 兜底
+  if (!out.country && ip && ip !== "unknown") {
+    try {
+      const r = await fetch(`https://ipapi.co/${ip}/json/`, { signal: AbortSignal.timeout(2500) });
+      const d = await r.json();
+      if (d && d.country_code) {
+        out = { country: String(d.country_code).toUpperCase(), region: String(d.region || "") };
+      }
+    } catch { /* ignore */ }
+  }
+
+  if (out.country === "CN" && out.region) {
+    out.region = CN_PROVINCE[out.region] || out.region;
+  }
+  if (kv && out.country) {
+    try { await kv.set(ckey, out, { expireIn: 7 * 24 * 3600 * 1000 }); } catch { /* ignore */ }
+  }
+  return out;
+}
+
+function bjDay(): string {
+  return new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
+}
+
+async function trackVisit(req: Request, body: any, ip: string): Promise<Response> {
+  const kv = await getKv();
+  if (!kv) return json({ ok: false, error: "kv_unavailable" }, 503);
+
+  const ua = req.headers.get("user-agent") || "";
+  if (/bot|crawler|spider|headless|preview|curl|wget|python-requests/i.test(ua)) {
+    return json({ ok: true, skipped: "bot" });
+  }
+
+  const geo = await lookupGeo(ip);
+  const self = body.self ? 1 : 0;
+  const day = bjDay();
+
+  let at = kv.atomic();
+  at = at.sum(["v", day, "pv"], 1n);
+  if (self) at = at.sum(["v", day, "self"], 1n);
+  if (geo.country) {
+    at = at.sum(["v", day, "cc", geo.country], 1n);
+    if (self) at = at.sum(["v", day, "sc", geo.country], 1n);
+  }
+  if (geo.country === "CN" && geo.region) {
+    at = at.sum(["v", day, "rg", geo.region], 1n);
+    if (self) at = at.sum(["v", day, "sr", geo.region], 1n);
+  }
+  await at.commit();
+
+  // 独立访客：按 ip+UA 哈希按天去重
+  const vh = hashStr(ip + "|" + ua);
+  try {
+    await kv.set(["v", day, self ? "suv" : "uv", vh], 1, { expireIn: 120 * 24 * 3600 * 1000 });
+  } catch { /* ignore */ }
+
+  return json({ ok: true });
+}
+
+const COUNTRY_CN: Record<string, string> = {
+  CN: "中国", HK: "中国香港", MO: "中国澳门", TW: "中国台湾",
+  US: "美国", GB: "英国", CA: "加拿大", RU: "俄罗斯", FR: "法国",
+  DE: "德国", NL: "荷兰", IT: "意大利", ES: "西班牙", PL: "波兰",
+  JP: "日本", KR: "韩国", SG: "新加坡", MY: "马来西亚", TH: "泰国",
+  VN: "越南", ID: "印度尼西亚", PH: "菲律宾", IN: "印度", PK: "巴基斯坦",
+  AU: "澳大利亚", NZ: "新西兰", AE: "阿联酋", SA: "沙特", IL: "以色列",
+  TR: "土耳其", BR: "巴西", MX: "墨西哥", AR: "阿根廷", CL: "智利",
+  ZA: "南非", NG: "尼日利亚", EG: "埃及", UA: "乌克兰", SE: "瑞典",
+  NO: "挪威", DK: "丹麦", FI: "芬兰", CH: "瑞士", AT: "奥地利",
+  BE: "比利时", CZ: "捷克", PT: "葡萄牙", GR: "希腊", IE: "爱尔兰",
+};
+
+async function readStats(body: any): Promise<Response> {
+  const kv = await getKv();
+  if (!kv) return json({ ok: false, error: "kv_unavailable" }, 503);
+
+  const range = body.range === "year" ? "year" : "month";
+  const key = String(body.key || "").slice(0, 10);
+  if (!/^\d{4}(-\d{2})?$/.test(key)) return json({ ok: false, error: "bad_range" }, 400);
+  const excludeSelf = !!body.excludeSelf;
+
+  const start = ["v", key];
+  const end = ["v", key + "\uffff"];
+
+  let pv = 0, selfPv = 0;
+  const cc = new Map<string, number>();
+  const sc = new Map<string, number>();
+  const rg = new Map<string, number>();
+  const sr = new Map<string, number>();
+  const uv = new Set<string>();
+  const suv = new Set<string>();
+
+  let cursor: string | undefined = undefined;
+  let guard = 0;
+  while (guard++ < 60) {
+    const page: any = await kv.list({ start, end }, { limit: 1000, cursor });
+    for await (const entry of page) {
+      const k = entry.key as string[];
+      const v = Number(entry.value || 0);
+      const kind = k[2];
+      if (kind === "pv") pv += v;
+      else if (kind === "self") selfPv += v;
+      else if (kind === "cc" && k[3]) cc.set(k[3], (cc.get(k[3]) || 0) + v);
+      else if (kind === "sc" && k[3]) sc.set(k[3], (sc.get(k[3]) || 0) + v);
+      else if (kind === "rg" && k[3]) rg.set(k[3], (rg.get(k[3]) || 0) + v);
+      else if (kind === "sr" && k[3]) sr.set(k[3], (sr.get(k[3]) || 0) + v);
+      else if (kind === "uv" && k[3]) uv.add(k[3]);
+      else if (kind === "suv" && k[3]) suv.add(k[3]);
+    }
+    cursor = page.cursor;
+    if (!cursor || page.list_complete) break;
+  }
+
+  let totalPv = pv;
+  let totalUv = uv.size + suv.size;
+  const countries: Array<{ code: string; name: string; count: number }> = [];
+  const provinces: Array<{ name: string; count: number }> = [];
+
+  if (excludeSelf) {
+    totalPv = Math.max(0, pv - selfPv);
+    totalUv = uv.size;
+    for (const [c, n] of cc) {
+      const v = Math.max(0, n - (sc.get(c) || 0));
+      if (v > 0) countries.push({ code: c, name: COUNTRY_CN[c] || c, count: v });
+    }
+    for (const [r, n] of rg) {
+      const v = Math.max(0, n - (sr.get(r) || 0));
+      if (v > 0) provinces.push({ name: r, count: v });
+    }
+  } else {
+    for (const [c, n] of cc) countries.push({ code: c, name: COUNTRY_CN[c] || c, count: n });
+    for (const [r, n] of rg) provinces.push({ name: r, count: n });
+  }
+
+  countries.sort((a, b) => b.count - a.count);
+  provinces.sort((a, b) => b.count - a.count);
+
+  return json({
+    ok: true,
+    range,
+    key,
+    pv: totalPv,
+    uv: totalUv,
+    selfPv,
+    selfUv: suv.size,
+    countries,
+    provinces,
+    excluded: excludeSelf,
+  });
 }
 
 Deno.serve(async (request: Request): Promise<Response> => {
@@ -89,13 +328,23 @@ Deno.serve(async (request: Request): Promise<Response> => {
     message?: string;
     files?: Array<{ path: string; content?: string; contentBase64?: string }>;
     deletes?: string[];
+    self?: boolean;
+    path?: string;
+    range?: string;
+    key?: string;
+    excludeSelf?: boolean;
   };
   try {
     body = await request.json();
   } catch {
     return json({ ok: false, error: "bad_json" }, 400);
   }
-  if (!body || body.action !== "commit") {
+  if (!body || !body.action) {
+    return json({ ok: false, error: "unknown_action" }, 400);
+  }
+  if (body.action === "track") return await trackVisit(request, body, ip);
+  if (body.action === "stats") return await readStats(body);
+  if (body.action !== "commit") {
     return json({ ok: false, error: "unknown_action" }, 400);
   }
 
