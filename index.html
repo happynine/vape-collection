@@ -538,6 +538,10 @@
       } catch (e) {
         r = { ok: false, loaded: {}, data: {}, failed: ['brands', 'shops', 'groups'] };
       }
+      let wr = { ok: true };
+      if (VapeDB.pingWorker) {
+        try { wr = await VapeDB.pingWorker(); } catch (e) { wr = { ok: false, error: String(e.message || e) }; }
+      }
       if (btn) { btn.disabled = false; btn.textContent = '☁ 同步'; }
       // 只覆盖成功加载的数据集，避免冲掉未上传的本地改动
       if (r.loaded && r.loaded.brands && r.data.brands) allBrands = r.data.brands.map(b => ({ ...b }));
@@ -553,7 +557,12 @@
       if (showResult !== false) {
         const keptTotal = r.kept ? ((r.kept.brands || 0) + (r.kept.shops || 0) + (r.kept.groups || 0)) : 0;
         const up = flushed.ok > 0 ? `已补传 ${flushed.ok} 条；` : '';
-        if (r.ok && keptTotal > 0) showToast(`${up}云端数据还没刷新，已保留你本地的 ${keptTotal} 条记录`);
+        if (!wr.ok) {
+          const suspended = /USAGE_EXCEEDED|suspended/i.test(wr.error || '');
+          showToast(suspended
+            ? '读取正常，但写入服务被暂停了（Deno 应用用量超限），现在无法上传'
+            : '读取正常，但写入服务连不上，现在无法上传');
+        } else if (r.ok && keptTotal > 0) showToast(`${up}云端数据还没刷新，已保留你本地的 ${keptTotal} 条记录`);
         else if (r.ok && flushed.failed > 0) showToast(`${up}还有 ${flushed.failed} 条没传上去，请稍后重试`);
         else if (r.ok) showToast(`${up}已连接云端，数据已刷新，可以正常编辑上传`);
         else {
@@ -613,9 +622,13 @@
         renderStats(d);
       } catch (e) {
         const msg = String((e && e.message) || e);
-        body.innerHTML = msg === 'kv_unavailable'
-          ? '<div class="text-center py-8 text-xs text-yellow-300/90">统计数据库还没启用。<br>请到 Deno Deploy 后台 → Databases → 新建一个 Deno KV，并关联到本应用，然后重新部署。</div>'
-          : `<p class="text-red-400 text-center py-8 text-xs">统计加载失败：${escapeHtml(msg)}</p>`;
+        if (/USAGE_EXCEEDED|suspended/i.test(msg)) {
+          body.innerHTML = '<div class="text-center py-8 text-xs text-red-300/90">Deno 应用已被暂停（用量超限），统计服务不可用。<br>恢复应用后才能统计。</div>';
+        } else if (msg === 'kv_unavailable') {
+          body.innerHTML = '<div class="text-center py-8 text-xs text-yellow-300/90">统计数据库还没启用。<br>请到 Deno Deploy 后台 → Databases → 新建一个 Deno KV，并关联到本应用，然后重新部署。</div>';
+        } else {
+          body.innerHTML = `<p class="text-red-400 text-center py-8 text-xs">统计加载失败：${escapeHtml(msg)}</p>`;
+        }
       } finally {
         statsLoading = false;
       }

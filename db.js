@@ -463,7 +463,25 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-App-Key': WORKER_KEY },
       body: JSON.stringify(payload),
-    }).then(r => r.json());
+    }).then(async r => {
+      const text = await r.text();
+      let d = {};
+      try { d = text ? JSON.parse(text) : {}; } catch { d = { ok: false, error: text.slice(0, 160) }; }
+      if (!r.ok && !d.error) d.error = `HTTP ${r.status}`;
+      d.httpStatus = r.status;
+      return d;
+    });
+  }
+
+  // 写入服务健康检查（读取走 GitHub CDN，跟写入服务是两条链路）
+  function pingWorker() {
+    if (!CLOUD_WRITE) return Promise.resolve({ ok: false, error: 'no_worker' });
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 10000);
+    return postWorker({ action: 'ping' })
+      .then(d => ({ ok: !!d.ok, error: d.error || '', kv: d.kv, status: d.httpStatus }))
+      .catch(e => ({ ok: false, error: String(e.message || e) }))
+      .finally(() => clearTimeout(timer));
   }
 
   function isOwner() {
@@ -552,7 +570,7 @@
     upsertGroup, deleteGroup,
     isCloudEnabled, isCloudOk, getPendingCount,
     reloadAll, flushPending, pendingLocalCount, getFailedDatasets: failedDatasets,
-    trackVisit, fetchStats, isOwner, setOwner,
+    trackVisit, fetchStats, isOwner, setOwner, pingWorker,
     updateStatusUI
   };
 })();

@@ -342,6 +342,10 @@ Deno.serve(async (request: Request): Promise<Response> => {
   if (!body || !body.action) {
     return json({ ok: false, error: "unknown_action" }, 400);
   }
+  if (body.action === "ping") {
+    const kv = await getKv();
+    return json({ ok: true, kv: !!kv, ts: Date.now() });
+  }
   if (body.action === "track") return await trackVisit(request, body, ip);
   if (body.action === "stats") return await readStats(body);
   if (body.action !== "commit") {
