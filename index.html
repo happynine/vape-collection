@@ -652,7 +652,7 @@
       const maxC = countries.reduce((m, x) => Math.max(m, x.count), 0);
       const title = d.range === 'month' ? d.key : `${d.key} 年`;
 
-      const kpi = `<div class="grid grid-cols-3 gap-3">
+      const kpi = `<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div class="rounded-xl bg-white/5 border border-white/10 p-3 text-center">
           <div class="text-2xl font-bold text-white tabular-nums">${d.pv}</div>
           <div class="text-[11px] text-gray-400 mt-1">访问量（PV）</div>
@@ -660,6 +660,10 @@
         <div class="rounded-xl bg-white/5 border border-white/10 p-3 text-center">
           <div class="text-2xl font-bold text-white tabular-nums">${d.uv}</div>
           <div class="text-[11px] text-gray-400 mt-1">访客数（UV）</div>
+        </div>
+        <div class="rounded-xl bg-white/5 border border-white/10 p-3 text-center" title="区间内首次到访、此前从未访问过的访客">
+          <div class="text-2xl font-bold text-emerald-300 tabular-nums">${d.newUv ?? 0}</div>
+          <div class="text-[11px] text-gray-400 mt-1">新访客</div>
         </div>
         <div class="rounded-xl bg-white/5 border border-white/10 p-3 text-center">
           <div class="text-2xl font-bold text-white tabular-nums">${d.excluded ? d.selfPv : 0}</div>

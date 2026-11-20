@@ -277,6 +277,21 @@ async function readStats(env, body) {
     `SELECT COUNT(*) AS c FROM uniques WHERE day LIKE ? AND kind = 'suv'`,
   ).bind(like).first();
 
+  // 新访客：区间内首次出现、此前从未记录过的访客
+  const periodStart = range === 'year' ? key + '-01-01' : key + '-01';
+  const newUvRow = await db.prepare(
+    `SELECT COUNT(DISTINCT u.vid) AS c FROM uniques u
+      WHERE u.day LIKE ? AND NOT EXISTS (
+        SELECT 1 FROM uniques p WHERE p.vid = u.vid AND p.day < ?
+      )`,
+  ).bind(like, periodStart).first();
+  const newSuvRow = await db.prepare(
+    `SELECT COUNT(DISTINCT u.vid) AS c FROM uniques u
+      WHERE u.kind = 'suv' AND u.day LIKE ? AND NOT EXISTS (
+        SELECT 1 FROM uniques p WHERE p.vid = u.vid AND p.kind = 'suv' AND p.day < ?
+      )`,
+  ).bind(like, periodStart).first();
+
   let pv = 0, selfPv = 0;
   const cc = new Map(), sc = new Map(), rg = new Map(), sr = new Map();
   for (const r of (res.results || [])) {
@@ -293,6 +308,8 @@ async function readStats(env, body) {
 
   const uv = Number(uvRow && uvRow.c) || 0;
   const suv = Number(suvRow && suvRow.c) || 0;
+  const newUvAll = Number(newUvRow && newUvRow.c) || 0;
+  const newSuv = Number(newSuvRow && newSuvRow.c) || 0;
   const countries = [];
   const provinces = [];
 
@@ -319,6 +336,8 @@ async function readStats(env, body) {
     key,
     pv: excludeSelf ? Math.max(0, pv - selfPv) : pv,
     uv: excludeSelf ? uv : uv + suv,
+    newUv: excludeSelf ? Math.max(0, newUvAll - newSuv) : newUvAll,
+    newSelfUv: newSuv,
     selfPv,
     selfUv: suv,
     countries,

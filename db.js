@@ -495,10 +495,15 @@
   function trackVisit() {
     if (!CLOUD_WRITE) return Promise.resolve();
     try {
-      if (sessionStorage.getItem('vape_tracked') === '1') return Promise.resolve();
-      sessionStorage.setItem('vape_tracked', '1');
+      if (sessionStorage.getItem('vape_tracked_v2') === '1') return Promise.resolve();
     } catch {}
-    return postWorker({ action: 'track', self: isOwner(), path: location.pathname }).catch(() => {});
+    return postWorker({ action: 'track', self: isOwner(), path: location.pathname })
+      .then(d => {
+        if (d && d.ok) {
+          try { sessionStorage.setItem('vape_tracked_v2', '1'); } catch {}
+        }
+      })
+      .catch(() => {});
   }
 
   function fetchStats(params) {
