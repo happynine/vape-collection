@@ -34,14 +34,30 @@
   // logo 外链基础（data/ 目录），用于把 "logos/xx.png" 解析成可显示的 URL
   const LOGO_URL_BASE = RAW_BASE;
 
-  // 多 CDN 源（国内网络 raw.githubusercontent.com 经常不稳定）
+  // 多源读取。国内网络 raw.githubusercontent.com / jsdelivr 经常被墙或不稳定，
+  // 而站点本身托管在 GitHub Pages —— 只要页面能打开，Pages 上的 data/*.json 就能取到，
+  // 所以首次加载把 Pages（同域）放第一位，其余镜像作为兜底。
   // 所有源都加时间戳防缓存，避免 CDN 返回旧数据导致"删除后复活"
-  const CDN_SOURCES = [
+  const PAGES_BASE = `https://${OWNER}.github.io/${REPO}/data`;
+  const READ_SOURCES = [
+    (f) => `${PAGES_BASE}/${f}.json?_t=${Date.now()}`,
     (f) => `${RAW_BASE}/${f}.json?_t=${Date.now()}`,
     (f) => `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json?_t=${Date.now()}`,
     (f) => `https://fastly.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json?_t=${Date.now()}`,
     (f) => `https://ghproxy.net/https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/${f}.json?_t=${Date.now()}`,
   ];
+  // 写入前取"最新"数据：Pages 有几分钟构建延迟，放最后；raw / jsdelivr 是秒级的
+  const FRESH_SOURCES = [
+    (f) => `${RAW_BASE}/${f}.json?_t=${Date.now()}`,
+    (f) => `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json?_t=${Date.now()}`,
+    (f) => `https://fastly.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json?_t=${Date.now()}`,
+    (f) => `https://ghproxy.net/https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/${f}.json?_t=${Date.now()}`,
+    (f) => `${PAGES_BASE}/${f}.json?_t=${Date.now()}`,
+  ];
+  // 记录每个数据集实际来自哪个源，便于排查"为什么这台设备是旧数据"
+  const loadedFrom = {};
+  const READ_LABELS  = ['GitHub Pages', 'raw.githubusercontent', 'jsdelivr', 'fastly.jsdelivr', 'ghproxy'];
+  const FRESH_LABELS = ['raw.githubusercontent', 'jsdelivr', 'fastly.jsdelivr', 'ghproxy', 'GitHub Pages'];
 
   const LS_BRANDS = 'cloud_brands_cache';
   const LS_SHOPS  = 'cloud_shops_cache';
@@ -128,20 +144,24 @@
   }
 
   // ---------- 读取：多 CDN 源依次尝试，全失败用缓存 ----------
-  async function fetchJSON(name) {
+  async function fetchJSON(name, fresh) {
+    const list = fresh ? FRESH_SOURCES : READ_SOURCES;
     let lastErr;
-    for (let i = 0; i < CDN_SOURCES.length; i++) {
-      const url = CDN_SOURCES[i](name);
+    for (let i = 0; i < list.length; i++) {
+      const url = list[i](name);
       try {
         const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), 20000);
+        // 8 秒足够；超时太长会让被墙的源把首屏拖到 1 分钟以上
+        const timer = setTimeout(() => ctrl.abort(), 8000);
         const res = await fetch(url, { cache: 'no-store', signal: ctrl.signal });
         clearTimeout(timer);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.json();
+        const data = await res.json();
+        loadedFrom[name] = (fresh ? FRESH_LABELS : READ_LABELS)[i] || `source${i + 1}`;
+        return data;
       } catch (e) {
         lastErr = e;
-        console.warn(`[VapeDB] CDN source ${i+1} failed for ${name}:`, e.message);
+        console.warn(`[VapeDB] CDN source ${i + 1} failed for ${name}:`, e.message);
       }
     }
     throw lastErr || new Error('All CDN sources failed');
@@ -204,7 +224,7 @@
   // 获取文件的最新 JSON（写入前调用，确保基于最新数据修改，防止删除复活）
   // 走公开 CDN，无需 token
   async function fetchLatestFile(name) {
-    const data = await fetchJSON(name);
+    const data = await fetchJSON(name, true);
     if (!Array.isArray(data)) throw new Error('CDN 返回非数组');
     return data;
   }
@@ -519,6 +539,18 @@
     });
   }
 
+  // 诊断信息：每个数据集来自哪个源、条数多少
+  function getLoadInfo() {
+    return {
+      ok: cloudOk,
+      write: CLOUD_WRITE,
+      datasets: Object.keys(loadedFrom).reduce((o, k) => {
+        o[k] = { source: loadedFrom[k], count: (memData[k] || []).length };
+        return o;
+      }, {}),
+    };
+  }
+
   function isCloudEnabled()  { return CLOUD_ENABLED; }
   function isCloudOk()       { return cloudOk; }
   function getPendingCount() { return pendingWrites; }
@@ -576,6 +608,6 @@
     isCloudEnabled, isCloudOk, getPendingCount,
     reloadAll, flushPending, pendingLocalCount, getFailedDatasets: failedDatasets,
     trackVisit, fetchStats, isOwner, setOwner, pingWorker,
-    updateStatusUI
+    updateStatusUI, getLoadInfo
   };
 })();

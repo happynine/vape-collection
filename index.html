@@ -58,6 +58,7 @@
     <p class="text-center text-gray-400 text-sm mb-2">快速查找全球 Vape 品牌官方网站信息</p>
     <div id="cloudStatusWrap" class="fixed top-4 left-4 z-50">
       <span id="cloudStatus" onclick="retryCloud()" class="hidden items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium shadow-lg backdrop-blur-sm cursor-pointer hover:brightness-125" title="点击重新连接云端"></span>
+      <div id="cloudWarn" class="hidden mt-2 max-w-xs text-[11px] leading-relaxed rounded-lg px-3 py-2 bg-red-500/15 border border-red-500/40 text-red-200 cursor-pointer" onclick="retryCloud()"></div>
     </div>
 
     <!-- Tab Navigation -->
@@ -691,8 +692,19 @@
         </div>
       </div>`;
 
+      // 本页数据来源（排查"这台设备看到的是旧数据"）
+      let srcLine = '';
+      try {
+        const li = window.VapeDB && VapeDB.getLoadInfo ? VapeDB.getLoadInfo() : null;
+        if (li) {
+          const srcs = Object.values(li.datasets).map(x => x.source).filter((v, i, a) => a.indexOf(v) === i);
+          const c = k => (li.datasets[k] ? li.datasets[k].count : 0);
+          srcLine = `<div class="text-[11px] text-gray-500 mt-1">本页数据源：${escapeHtml(srcs.join(' / ') || '内置快照（云端未连上）')} · 品牌 ${c('brands')} / 商城 ${c('shops')} / 集团 ${c('groups')}</div>`;
+        }
+      } catch (e) {}
+
       body.innerHTML = `<div class="text-xs text-gray-400 mb-1">统计区间：${escapeHtml(title)}</div>${kpi}
-        <div class="grid md:grid-cols-2 gap-3">${provBlock}${countryBlock}</div>`;
+        <div class="grid md:grid-cols-2 gap-3">${provBlock}${countryBlock}</div>${srcLine}`;
     }
 
     // ========== Fixed Bottom Bar Handlers ==========
@@ -864,6 +876,7 @@
       renderShopBrands();
       renderGroups();
       if (window.VapeDB) VapeDB.updateStatusUI();
+      updateCloudWarn();
       if (window.VapeDB && VapeDB.trackVisit) VapeDB.trackVisit();
 
       // Search debounce
@@ -962,6 +975,19 @@
       return `<div class="logo-fallback ${cls}">${escapeHtml(initial || '?')}</div>`;
     }
     // 根据保存接口返回的真实结果提示（不再无脑报"已同步云端"）
+    // 云端没连上时给出明确警告：当前展示的是内置快照（较旧），不是云端最新数据
+    function updateCloudWarn() {
+      const el = document.getElementById('cloudWarn');
+      if (!el) return;
+      if (!window.VapeDB || !VapeDB.getLoadInfo) { el.classList.add('hidden'); return; }
+      const info = VapeDB.getLoadInfo();
+      if (info.ok) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+      const miss = ['brands', 'shops', 'groups'].filter(k => !info.datasets[k]);
+      const nameMap = { brands: '品牌', shops: '商城', groups: '集团' };
+      el.innerHTML = `⚠ 云端数据没连上（${miss.map(k => nameMap[k]).join('、') || '全部'}），当前显示的是页面内置的旧快照，不是最新数据。点这里重试。`;
+      el.classList.remove('hidden');
+    }
+
     function toastSaveResult(res, okText, noun) {
       if (!res || res.mode === 'cloud') { showToast(okText); return; }
       if (res.ok && res.mode === 'local') {
@@ -1445,13 +1471,13 @@
         allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
         closeModal(); renderBrands();
         showToast('正在保存…');
-        if (window.VapeDB) VapeDB.upsertBrand(brand).then(() => showToast('品牌修改成功，已同步云端！'));
+        if (window.VapeDB) VapeDB.upsertBrand(brand).then(r => toastSaveResult(r, '品牌修改成功，已同步云端！', '品牌'));
       } else {
         const newBrand = { id: Date.now(), name_en: nameEn, name_cn: nameCn, url, region, rating: ratingVal, level: 3, dead: isDead, product_type: productType, company_location: companyLocation, logo: logoVal };
         allBrands.push(newBrand); allBrands.sort((a, b) => a.name_en.localeCompare(b.name_en, 'en'));
         closeModal(); buildLetterFilter(); renderBrands();
         showToast('正在保存…');
-        if (window.VapeDB) VapeDB.upsertBrand({ ...newBrand }).then(() => showToast('品牌添加成功，已同步云端！'));
+        if (window.VapeDB) VapeDB.upsertBrand({ ...newBrand }).then(r => toastSaveResult(r, '品牌添加成功，已同步云端！', '品牌'));
       }
     }
 
@@ -1643,13 +1669,13 @@
         const group = { ...groupData[idx] };
         closeGroupModal(); renderGroups();
         showToast('正在保存…');
-        if (window.VapeDB) VapeDB.upsertGroup(group).then(() => showToast('集团修改成功，已同步云端！'));
+        if (window.VapeDB) VapeDB.upsertGroup(group).then(r => toastSaveResult(r, '集团修改成功，已同步云端！', '集团'));
       } else {
         const newGroup = { id: Date.now(), name, desc, url, logo, sub_brands: [...currentSubBrands] };
         groupData.push(newGroup);
         closeGroupModal(); renderGroups();
         showToast('正在保存…');
-        if (window.VapeDB) VapeDB.upsertGroup({ ...newGroup }).then(() => showToast('集团添加成功，已同步云端！'));
+        if (window.VapeDB) VapeDB.upsertGroup({ ...newGroup }).then(r => toastSaveResult(r, '集团添加成功，已同步云端！', '集团'));
       }
     }
 
