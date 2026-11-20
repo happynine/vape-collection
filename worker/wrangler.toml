@@ -1,0 +1,9 @@
+name = "vape-writer"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# D1 绑定：统计数据的存储
+[[d1_databases]]
+binding = "DB"
+database_name = "vape-stats"
+database_id = "13cc4f1c-8fa6-43c1-9391-1a3e0391e702"
