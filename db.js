@@ -24,7 +24,7 @@
   const BRANCH = cfg.GITHUB_BRANCH || 'main';
 
   // 写入代理（Deno Deploy 服务端函数，持有 GitHub token）。两者都配置时才启用云端写入
-  const WORKER_URL = cfg.WORKER_URL || 'https://vape-collection.vapecollection.deno.net';
+  const WORKER_URL = cfg.WORKER_URL || 'https://vape-collection.funan9999.workers.dev';
   const WORKER_KEY = cfg.WORKER_KEY || 'x2RlxssDGxznKyxnTloKKmPQy6CPTt1Qb2jCpf0a4VhK';
   const CLOUD_READ  = !!(OWNER && REPO);
   const CLOUD_WRITE = !!(WORKER_URL && WORKER_KEY);
