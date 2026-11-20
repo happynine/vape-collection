@@ -3209,7 +3209,11 @@
     "url": "https://lafivape.com/",
     "region": "",
     "level": 1,
-    "logo": "logos/brand_391.png"
+    "logo": "logos/brand_391.png",
+    "rating": 0,
+    "dead": false,
+    "product_type": "不限",
+    "company_location": "未知"
   },
   {
     "id": 392,
