@@ -509,7 +509,7 @@
       key: params.key,
       excludeSelf: !!params.excludeSelf,
     }).then(d => {
-      if (!d || !d.ok) throw new Error((d && d.error) || 'stats_failed');
+      if (!d || !d.ok) throw new Error(((d && d.error) || 'stats_failed') + (d && d.message ? '：' + d.message : ''));
       return d;
     });
   }
