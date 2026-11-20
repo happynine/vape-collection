@@ -139,7 +139,7 @@ function restDb(env) {
     } catch {
       throw new Error('d1_rest_bad_json: ' + txt.slice(0, 120));
     }
-    if (!d.success) throw new Error('d1_rest_failed: ' + JSON.stringify(d.errors || d).slice(0, 200));
+    if (!d.success) throw new Error('d1_rest_failed(' + r.status + '): ' + JSON.stringify(d.errors || d).slice(0, 200));
     return d.result || [];
   }
   function stmt(sql) {
@@ -440,6 +440,16 @@ async function commitToGithub(env, body) {
 
 export default {
   async fetch(request, env) {
+    try {
+      return await handle(request, env);
+    } catch (e) {
+      const msg = String((e && e.message) || e).slice(0, 300);
+      return json({ ok: false, error: 'exception', message: msg }, 500);
+    }
+  },
+};
+
+async function handle(request, env) {
     const origin = request.headers.get('Origin') || '';
     if (origin && origin !== ALLOW_ORIGIN) {
       return json({ ok: false, error: 'forbidden_origin' }, 403);
@@ -481,5 +491,4 @@ export default {
       return json({ ok: false, error: 'unknown_action' }, 400);
     }
     return await commitToGithub(env, body);
-  },
-};
+}
