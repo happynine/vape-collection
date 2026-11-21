@@ -1842,22 +1842,26 @@
     }
 
     function onConfirmDelete() {
-      if (!deleteTargetId) return;
-      if (deleteTargetType === 'official') {
-        allBrands = allBrands.filter(b => b.id !== deleteTargetId);
+      // 必须先取出 id：closeDeleteModal() 会把 deleteTargetId 置为 null，
+      // 之前直接把 deleteTargetId 传下去，云端收到的是 null，一条都没删（空提交）
+      const targetId = deleteTargetId;
+      const targetType = deleteTargetType;
+      if (targetId === null || targetId === undefined) return;
+      if (targetType === 'official') {
+        allBrands = allBrands.filter(b => String(b.id) !== String(targetId));
         closeDeleteModal(); buildLetterFilter(); renderBrands();
         showToast('正在删除…');
-        if (window.VapeDB) VapeDB.deleteBrand(deleteTargetId).then(r => toastSaveResult(r, '品牌已删除，已同步云端', '品牌'));
-      } else if (deleteTargetType === 'shop') {
-        shopBrands = shopBrands.filter(b => b.id !== deleteTargetId);
+        if (window.VapeDB) VapeDB.deleteBrand(targetId).then(r => toastSaveResult(r, '品牌已删除，已同步云端', '品牌'));
+      } else if (targetType === 'shop') {
+        shopBrands = shopBrands.filter(b => String(b.id) !== String(targetId));
         closeDeleteModal(); renderShopBrands();
         showToast('正在删除…');
-        if (window.VapeDB) VapeDB.deleteShop(deleteTargetId).then(r => toastSaveResult(r, '商城已删除，已同步云端', '商城'));
-      } else if (deleteTargetType === 'group') {
-        groupData = groupData.filter(g => g.id !== deleteTargetId);
+        if (window.VapeDB) VapeDB.deleteShop(targetId).then(r => toastSaveResult(r, '商城已删除，已同步云端', '商城'));
+      } else if (targetType === 'group') {
+        groupData = groupData.filter(g => String(g.id) !== String(targetId));
         closeDeleteModal(); renderGroups();
         showToast('正在删除…');
-        if (window.VapeDB) VapeDB.deleteGroup(deleteTargetId).then(r => toastSaveResult(r, '集团已删除，已同步云端', '集团'));
+        if (window.VapeDB) VapeDB.deleteGroup(targetId).then(r => toastSaveResult(r, '集团已删除，已同步云端', '集团'));
       }
     }
 
