@@ -222,6 +222,7 @@
       <div id="statsBody" class="space-y-4 text-sm text-gray-300">
         <p class="text-gray-500 text-center py-8">加载中…</p>
       </div>
+      <div id="cloudInfoBox" class="mt-3 pt-3 border-t border-white/10"></div>
       <p class="text-[11px] text-gray-500 mt-4">口径：按北京时间切日；访问量＝页面打开次数，访客数＝按 IP+浏览器指纹去重；地区依据 IP 归属地。</p>
     </div>
   </div>
@@ -626,6 +627,7 @@
       try {
         const d = await VapeDB.fetchStats({ range: statsRange, key, excludeSelf });
         renderStats(d);
+        renderCloudInfo();
       } catch (e) {
         const msg = String((e && e.message) || e);
         if (/USAGE_EXCEEDED|suspended/i.test(msg)) {
@@ -637,6 +639,27 @@
         }
       } finally {
         statsLoading = false;
+      }
+    }
+
+    // 云端真实状态：GitHub 侧最新的 brands/shops/groups 文件 sha 与最近提交
+    async function renderCloudInfo() {
+      const el = document.getElementById('cloudInfoBox');
+      if (!el || !window.VapeDB || !VapeDB.cloudInfo) return;
+      el.innerHTML = '<span class="text-gray-500">正在读取云端状态…</span>';
+      try {
+        const c = await VapeDB.cloudInfo();
+        if (!c || !c.ok) { el.innerHTML = `<span class="text-red-300/80">云端状态读取失败：${escapeHtml((c && c.error) || 'unknown')}</span>`; return; }
+        const f = c.files || {};
+        const fmt = (k) => f[k] ? `${k} ${f[k].sha} (${(f[k].size / 1024).toFixed(0)}KB)` : `${k} ?`;
+        const head = c.head ? `${c.head.sha} · ${new Date(c.head.date).toLocaleString('zh-CN', { hour12: false })} · ${escapeHtml(c.head.message)}` : '?';
+        el.innerHTML = `<div class="text-[11px] text-gray-400 leading-relaxed">
+          <div class="text-gray-300 font-medium mb-1">云端真实状态（GitHub 侧）</div>
+          <div>最近提交：${head}</div>
+          <div class="mt-0.5">${fmt('brands')} · ${fmt('shops')} · ${fmt('groups')}</div>
+        </div>`;
+      } catch (e) {
+        el.innerHTML = `<span class="text-red-300/80">云端状态读取失败：${escapeHtml(String(e.message || e))}</span>`;
       }
     }
 
@@ -989,6 +1012,19 @@
       if (info.ok) { el.classList.add('hidden'); el.innerHTML = ''; return; }
       const miss = ['brands', 'shops', 'groups'].filter(k => !info.datasets[k]);
       const nameMap = { brands: '品牌', shops: '商城', groups: '集团' };
+      const srcs = Object.values(info.datasets).map(x => x.source || '');
+      const fromPages = srcs.some(x => x.indexOf('GitHub Pages') === 0);
+      if (fromPages) {
+        el.style.background = 'rgba(234,179,8,0.15)';
+        el.style.borderColor = 'rgba(234,179,8,0.4)';
+        el.style.color = '#fde68a';
+        el.innerHTML = '⚠ 实时源连不上，当前用的是 GitHub Pages 缓存（可能滞后几分钟）。刚删改的记录可能还显示着，点这里重试。';
+        el.classList.remove('hidden');
+        return;
+      }
+      el.style.background = 'rgba(239,68,68,0.15)';
+      el.style.borderColor = 'rgba(239,68,68,0.4)';
+      el.style.color = '#fecaca';
       el.innerHTML = `⚠ 云端数据没连上（${miss.map(k => nameMap[k]).join('、') || '全部'}），当前显示的是页面内置的旧快照，不是最新数据。点这里重试。`;
       el.classList.remove('hidden');
     }
@@ -1033,7 +1069,19 @@
     }
 
     function toastSaveResult(res, okText, noun) {
-      if (!res || res.mode === 'cloud') { showToast(okText); return; }
+      if (!res) { showToast(okText); return; }
+      if (res.mode === 'cloud') {
+        if (res.unchanged) {
+          showToast(`${noun}已提交，但云端内容没变化（这条可能本来就不在云端），刷新后可能还原`);
+        } else {
+          showToast(okText);
+        }
+        return;
+      }
+      if (res.reason === 'offline') {
+        showToast(`云端没连上，${noun}只改了本地，刷新会还原`);
+        return;
+      }
       if (res.ok && res.mode === 'local') {
         showToast(`${noun}已保存在本地（当前离线，刷新后可能丢失）`);
       } else {
@@ -1799,17 +1847,17 @@
         allBrands = allBrands.filter(b => b.id !== deleteTargetId);
         closeDeleteModal(); buildLetterFilter(); renderBrands();
         showToast('正在删除…');
-        if (window.VapeDB) VapeDB.deleteBrand(deleteTargetId).then(() => showToast('品牌已删除，已同步云端'));
+        if (window.VapeDB) VapeDB.deleteBrand(deleteTargetId).then(r => toastSaveResult(r, '品牌已删除，已同步云端', '品牌'));
       } else if (deleteTargetType === 'shop') {
         shopBrands = shopBrands.filter(b => b.id !== deleteTargetId);
         closeDeleteModal(); renderShopBrands();
         showToast('正在删除…');
-        if (window.VapeDB) VapeDB.deleteShop(deleteTargetId).then(() => showToast('商城已删除，已同步云端'));
+        if (window.VapeDB) VapeDB.deleteShop(deleteTargetId).then(r => toastSaveResult(r, '商城已删除，已同步云端', '商城'));
       } else if (deleteTargetType === 'group') {
         groupData = groupData.filter(g => g.id !== deleteTargetId);
         closeDeleteModal(); renderGroups();
         showToast('正在删除…');
-        if (window.VapeDB) VapeDB.deleteGroup(deleteTargetId).then(() => showToast('集团已删除，已同步云端'));
+        if (window.VapeDB) VapeDB.deleteGroup(deleteTargetId).then(r => toastSaveResult(r, '集团已删除，已同步云端', '集团'));
       }
     }
 

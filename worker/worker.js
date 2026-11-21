@@ -346,6 +346,40 @@ async function readStats(env, body) {
   });
 }
 
+// ---------------- 云端信息（诊断用） ----------------
+async function cloudInfo(env) {
+  const OWNER = env.GITHUB_OWNER || 'happynine';
+  const REPO = env.GITHUB_REPO || 'vape-collection';
+  const API = `https://api.github.com/repos/${OWNER}/${REPO}`;
+  const h = {
+    Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'User-Agent': 'vape-collection-worker',
+  };
+  const out = { ok: true, head: null, files: {} };
+  try {
+    const r = await fetch(`${API}/commits?per_page=1`, { headers: h });
+    const j = await r.json();
+    if (Array.isArray(j) && j[0]) {
+      out.head = {
+        sha: String(j[0].sha || '').slice(0, 7),
+        date: j[0].commit && j[0].commit.author ? j[0].commit.author.date : '',
+        message: String((j[0].commit && j[0].commit.message) || '').split('\n')[0].slice(0, 60),
+      };
+    }
+    for (const f of ['brands', 'shops', 'groups']) {
+      const rr = await fetch(`${API}/contents/data/${f}.json?ref=${Date.now()}`, { headers: h });
+      const jj = await rr.json();
+      if (rr.ok) out.files[f] = { sha: String(jj.sha || '').slice(0, 7), size: jj.size };
+    }
+  } catch (e) {
+    out.ok = false;
+    out.error = String((e && e.message) || e);
+  }
+  return json(out);
+}
+
 // ---------------- GitHub 原子提交 ----------------
 async function commitToGithub(env, body) {
   const OWNER = env.GITHUB_OWNER || 'happynine';
@@ -438,17 +472,17 @@ async function commitToGithub(env, body) {
       err.conflict = updR.status === 409 || updR.status === 422;
       throw err;
     }
-    return { commitSha: newComR.data.sha };
+    return { commitSha: newComR.data.sha, unchanged: treeR.data.sha === baseTreeSha };
   };
 
   try {
     try {
       const r = await doCommit();
-      return json({ ok: true, mode: 'cloud', commitSha: r.commitSha });
+      return json({ ok: true, mode: 'cloud', commitSha: r.commitSha, unchanged: !!r.unchanged });
     } catch (e) {
       if (e.conflict) {
         const r = await doCommit();
-        return json({ ok: true, mode: 'cloud', commitSha: r.commitSha, retried: true });
+        return json({ ok: true, mode: 'cloud', commitSha: r.commitSha, unchanged: !!r.unchanged, retried: true });
       }
       throw e;
     }
@@ -505,6 +539,7 @@ async function handle(request, env) {
       return json({ ok: true, db: !!getDb(env), db_mode: env.DB ? 'binding' : (getDb(env) ? 'rest' : 'none'), ts: Date.now() });
     }
     if (body.action === 'track') return await trackVisit(request, env, body);
+    if (body.action === 'cloudinfo') return await cloudInfo(env);
     if (body.action === 'stats') return await readStats(env, body);
     if (body.action !== 'commit') {
       return json({ ok: false, error: 'unknown_action' }, 400);

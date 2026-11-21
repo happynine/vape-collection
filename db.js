@@ -39,12 +39,14 @@
   // 所以首次加载把 Pages（同域）放第一位，其余镜像作为兜底。
   // 所有源都加时间戳防缓存，避免 CDN 返回旧数据导致"删除后复活"
   const PAGES_BASE = `https://${OWNER}.github.io/${REPO}/data`;
+  // 顺序很重要：raw 是实时的，Pages 有约 10 分钟构建/缓存延迟。
+  // Pages 放最后只做兜底 —— 否则刚删掉的记录会在刷新后"复活"。
   const READ_SOURCES = [
-    (f) => `${PAGES_BASE}/${f}.json?_t=${Date.now()}`,
     (f) => `${RAW_BASE}/${f}.json?_t=${Date.now()}`,
     (f) => `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json?_t=${Date.now()}`,
     (f) => `https://fastly.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json?_t=${Date.now()}`,
     (f) => `https://ghproxy.net/https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/${f}.json?_t=${Date.now()}`,
+    (f) => `${PAGES_BASE}/${f}.json?_t=${Date.now()}`,
   ];
   // 写入前取"最新"数据：Pages 有几分钟构建延迟，放最后；raw / jsdelivr 是秒级的
   const FRESH_SOURCES = [
@@ -52,12 +54,11 @@
     (f) => `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json?_t=${Date.now()}`,
     (f) => `https://fastly.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/${f}.json?_t=${Date.now()}`,
     (f) => `https://ghproxy.net/https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/${f}.json?_t=${Date.now()}`,
-    (f) => `${PAGES_BASE}/${f}.json?_t=${Date.now()}`,
   ];
   // 记录每个数据集实际来自哪个源，便于排查"为什么这台设备是旧数据"
   const loadedFrom = {};
-  const READ_LABELS  = ['GitHub Pages', 'raw.githubusercontent', 'jsdelivr', 'fastly.jsdelivr', 'ghproxy'];
-  const FRESH_LABELS = ['raw.githubusercontent', 'jsdelivr', 'fastly.jsdelivr', 'ghproxy', 'GitHub Pages'];
+  const READ_LABELS  = ['raw.githubusercontent', 'jsdelivr', 'fastly.jsdelivr', 'ghproxy', 'GitHub Pages(缓存)'];
+  const FRESH_LABELS = ['raw.githubusercontent', 'jsdelivr', 'fastly.jsdelivr', 'ghproxy'];
 
   const LS_BRANDS = 'cloud_brands_cache';
   const LS_SHOPS  = 'cloud_shops_cache';
@@ -93,6 +94,8 @@
 
   let cloudOk = false;
   let pendingWrites = 0;
+  // 最近一次云端提交结果（unchanged=true 表示提交成功但内容没变）
+  let lastCloud = null;
   // 每次加载时因 CDN 滞后而回填的本地记录数
   const staleKept = { brands: 0, shops: 0, groups: 0 };
 
@@ -281,7 +284,7 @@
       console.warn(`[VapeDB] ${dataset} 未从云端加载，跳过云端写入以保护数据`);
       if (window.showToast) window.showToast('未连上云端，已存本地；点左下角「☁ 同步」重连后再保存');
       updateStatusUI();
-      return Promise.resolve({ ok: true, mode: 'local', reason: 'offline' });
+      return Promise.resolve({ ok: false, mode: 'local', reason: 'offline', error: 'offline' });
     }
 
     trackPending();
@@ -300,7 +303,18 @@
           message: `db: update ${dataset}`,
           files,
           deletes,
-        }).then(() => cloudArray);
+        }).then(r => {
+          lastCloud = {
+            dataset,
+            commitSha: r.commitSha || '',
+            unchanged: !!r.unchanged,
+            ts: Date.now(),
+          };
+          if (r.unchanged) {
+            console.warn(`[VapeDB] ${dataset} 提交成功但云端内容没有变化（这条记录可能在云端不存在）`);
+          }
+          return cloudArray;
+        });
       });
     };
 
@@ -320,7 +334,12 @@
         }
         writeCache(lsKey, cloudArray);
         updateStatusUI();
-        return { ok: true, mode: 'cloud' };
+        return {
+          ok: true,
+          mode: 'cloud',
+          unchanged: !!(lastCloud && lastCloud.unchanged && lastCloud.dataset === dataset),
+          commitSha: lastCloud ? lastCloud.commitSha : '',
+        };
       })
       .catch(e => {
         console.warn('[VapeDB] 云端同步失败（已保存在本地缓存）:', e.message);
@@ -361,12 +380,14 @@
   // ---------- CRUD 基础变换 ----------
   function applyUpsert(list, item, idKey) {
     const arr = Array.isArray(list) ? list.slice() : [];
-    const idx = arr.findIndex(x => x[idKey] === item[idKey]);
+    const key = String(item[idKey]);
+    const idx = arr.findIndex(x => String(x[idKey]) === key);
     if (idx >= 0) arr[idx] = item; else arr.push(item);
     return arr;
   }
   function applyDelete(list, id, idKey) {
-    return (Array.isArray(list) ? list : []).filter(x => x[idKey] !== id);
+    const key = String(id);
+    return (Array.isArray(list) ? list : []).filter(x => String(x[idKey]) !== key);
   }
 
   function upsertBrand(brand) {
@@ -526,6 +547,12 @@
       .catch(() => {});
   }
 
+  // 云端真实状态（提交后用 GitHub 侧数据核对）
+  function cloudInfo() {
+    if (!CLOUD_WRITE) return Promise.resolve({ ok: false, error: 'no_worker' });
+    return postWorker({ action: 'cloudinfo' }).catch(e => ({ ok: false, error: String(e.message || e) }));
+  }
+
   function fetchStats(params) {
     if (!CLOUD_WRITE) return Promise.reject(new Error('no_worker'));
     return postWorker({
@@ -544,6 +571,7 @@
     return {
       ok: cloudOk,
       write: CLOUD_WRITE,
+      lastCloud,
       datasets: Object.keys(loadedFrom).reduce((o, k) => {
         o[k] = { source: loadedFrom[k], count: (memData[k] || []).length };
         return o;
@@ -608,6 +636,6 @@
     isCloudEnabled, isCloudOk, getPendingCount,
     reloadAll, flushPending, pendingLocalCount, getFailedDatasets: failedDatasets,
     trackVisit, fetchStats, isOwner, setOwner, pingWorker,
-    updateStatusUI, getLoadInfo
+    updateStatusUI, getLoadInfo, cloudInfo
   };
 })();
