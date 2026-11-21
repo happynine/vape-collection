@@ -1125,5 +1125,16 @@
     "country": "全球首家电子烟按月订阅盒商商城",
     "logo": "logos/shop_9073.ico",
     "biz_type": "retailer"
+  },
+  {
+    "id": 1795252135290,
+    "name_en": "IJOY Bar Vape",
+    "name_cn": "",
+    "url": "https://ijoybarvape.com/",
+    "region": "全球",
+    "country": "",
+    "biz_type": "brand",
+    "logo": "logos/brand_320.png",
+    "rating": 0
   }
 ]
