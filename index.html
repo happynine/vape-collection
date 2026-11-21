@@ -1788,8 +1788,10 @@
     }
 
     function onConfirmTransfer() {
-      if (!transferTargetId) return;
-      const brand = allBrands.find(b => b.id === transferTargetId);
+      // 先取出 id：closeTransferModal() 会把它置 null
+      const targetId = transferTargetId;
+      if (targetId === null || targetId === undefined) return;
+      const brand = allBrands.find(b => String(b.id) === String(targetId));
       if (!brand) { closeTransferModal(); showToast('未找到该品牌'); return; }
 
       // Create shop entry from brand data
@@ -1805,12 +1807,14 @@
         rating: brand.rating || 0
       };
 
-      // Add to shopBrands
+      // 页面数据：从官网移除 + 加入商城（之前漏了这一步，卡片一直留在原地）
+      allBrands = allBrands.filter(b => String(b.id) !== String(targetId));
       shopBrands.push(newShop);
+
       showToast('正在转移…');
       Promise.allSettled([
         window.VapeDB ? VapeDB.upsertShop({ ...newShop }) : Promise.resolve(),
-        window.VapeDB ? VapeDB.deleteBrand(transferTargetId) : Promise.resolve()
+        window.VapeDB ? VapeDB.deleteBrand(targetId) : Promise.resolve()
       ]).then(results => {
         const failed = results.some(r => r.status === 'rejected' || (r.value && r.value.ok === false));
         if (failed) showToast(`「${brand.name_en}」转移时云端同步异常，已暂存本地`);
@@ -1823,7 +1827,6 @@
       renderBrands();
       renderShopBrands();
       updateStatsBar();
-      showToast(`「${brand.name_en}」已转移到商城`);
     }
 
     // ========== Delete ==========
