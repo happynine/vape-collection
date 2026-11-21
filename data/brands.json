@@ -7279,5 +7279,18 @@
     "level": 3,
     "dead": false,
     "logo": "logos/brand_1794968269623.png"
+  },
+  {
+    "id": 1795249848480,
+    "name_en": "NikBar",
+    "name_cn": "",
+    "url": "https://nikbarofficial.com/",
+    "region": "全球",
+    "rating": 3,
+    "level": 3,
+    "dead": false,
+    "product_type": "不限",
+    "company_location": "未知",
+    "logo": "logos/brand_1795249848480.png"
   }
 ]
