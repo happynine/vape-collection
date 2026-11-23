@@ -3192,9 +3192,13 @@
     "name_en": "L&A",
     "name_cn": "",
     "url": "https://www.la-vape.com/en/",
-    "region": "",
+    "region": "美国",
     "level": 1,
-    "logo": "logos/brand_390.png"
+    "logo": "logos/brand_390.png",
+    "rating": 0,
+    "dead": false,
+    "product_type": "烟油",
+    "company_location": "其他"
   },
   {
     "id": 391,
